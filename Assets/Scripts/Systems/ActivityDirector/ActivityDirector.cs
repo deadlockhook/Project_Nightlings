@@ -42,6 +42,11 @@ public class ActivityDirector : MonoBehaviour
             currentTime = 0;
         }
 
+        float GetProgress()
+        {
+            return currentTime / triggerTime;
+        }
+
         private int triggerIndex;
         private float currentTime;
         private float triggerTime;
