@@ -52,10 +52,50 @@ public class ActivityDirector : MonoBehaviour
         private float triggerTime;
         private timedActivityTrigger action;
     }
+
+    [SerializeField] private List<GameObject> toySpawnGameObjects;
+    [SerializeField] private int minToySpawnLocations = 12; // Minimum number of locations to select
+    [SerializeField] private int maxToySpawnLocations = 20; // Maximum number of locations to select
+
+    private List<Vector3> toySpawnLocations;
+   
     void Start()
     {
+        toySpawnLocations = new List<Vector3>();
+
+        if (toySpawnGameObjects == null)
+            toySpawnGameObjects = new List<GameObject>();
+
+        for (int i = 0; i < toySpawnGameObjects.Count; i++)
+        {
+            toySpawnLocations.Add(toySpawnGameObjects[i].transform.position);
+            Destroy(toySpawnGameObjects[i]);
+        }
+    }
+
+    public void SpawnToys()
+    {
+        int countToSelect = Mathf.Clamp(Random.Range(minToySpawnLocations, maxToySpawnLocations + 1), 0, toySpawnLocations.Count);
+
+        List<Vector3> shuffledLocations = new List<Vector3>(toySpawnLocations);
+        for (int i = shuffledLocations.Count - 1; i > 0; i--)
+        {
+            int randomIndex = Random.Range(0, i + 1);
+            Vector3 temp = shuffledLocations[i];
+            shuffledLocations[i] = shuffledLocations[randomIndex];
+            shuffledLocations[randomIndex] = temp;
+        }
+
+        List<Vector3> spawnLocations = shuffledLocations.GetRange(0, countToSelect);
+
+        for (int i = 0; i < spawnLocations.Count; i++)
+        {
+            //Select random toy prefab
+            //Spawn toy at location
+        }
 
     }
+
 
     void Update()
     {

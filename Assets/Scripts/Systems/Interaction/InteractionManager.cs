@@ -58,21 +58,31 @@ public class InteractionManager : MonoBehaviour
                     break;
                 }
             case Interactions.FlushToilet:
-                break;
+                {
+                    break;
+                }
             case Interactions.CloseSkylightWithRemote:
-                break;
+                {
+                    break;
+                }
             case Interactions.CloseBasementHatch:
-                break;
+                {
+                    break;
+                }
+            default:
+                {
+                    break;
+                }
         }
     }
 
     void Start()
     {
-        
+
     }
 
     void Update()
     {
-        
+
     }
 }
