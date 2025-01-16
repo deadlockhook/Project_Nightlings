@@ -4,13 +4,37 @@ using UnityEngine;
 
 public class InteractionManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private InteractionManager interactionInstance = null;
+    private void Awake()
+    {
+        if (interactionInstance == null)
+        {
+            interactionInstance = this;
+            DontDestroyOnLoad(interactionInstance);
+        }
+        else
+            Destroy(this);
+    }
+    public enum Interactions
+    {
+        PickUpToy = 0,
+        PickUpFirewood,
+        CloseWindows,
+        FlushToilet,
+        CloseSkylightWithRemote,
+        CloseBasementHatch,
+    }
+
+    void OnLocalPlayerViewUpdate()
+    {
+
+    }
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
