@@ -18,7 +18,7 @@ public class WindowsActivity : MonoBehaviour
     }
     void TriggerWindowActivity(int triggerIndex)
     {
-
+              
     }
     // Update is called once per frame
     void Update()
