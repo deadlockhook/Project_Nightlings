@@ -29,7 +29,7 @@ public class ActivityDirector : MonoBehaviour
 
         void OnUpdate()
         {
-            currentTime += Time.deltaTime;
+            currentTime += (Time.deltaTime * 1000f);
             if (currentTime >= triggerTime)
             {
                 action(triggerIndex);
