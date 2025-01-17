@@ -5,7 +5,10 @@ using UnityEngine;
 // SoundManager.Instance.PlaySound("Sound Name");
 
 // To play sound on a specific object Ex: Anything 3D
-//SoundManager.Instance.PlaySound("Sound Name", AudioSource);
+// SoundManager.Instance.PlaySound("Sound Name", AudioSource);
+
+// To play background music
+// SoundManager.Instance.PlayMusic("Music Name");
 
 public class SoundManager : MonoBehaviour
 {
@@ -21,6 +24,7 @@ public class SoundManager : MonoBehaviour
     public List<Sound> sounds;
     private Dictionary<string, AudioClip> soundDictionary;
     private Dictionary<string, AudioSource> audioSources;
+    private AudioSource musicSource;
 
     private void Awake()
     {
@@ -42,6 +46,8 @@ public class SoundManager : MonoBehaviour
         }
 
         audioSources = new Dictionary<string, AudioSource>();
+        musicSource = gameObject.AddComponent<AudioSource>();
+        musicSource.loop = true;
     }
 
     public void PlaySound(string soundName, AudioSource source = null)
@@ -74,5 +80,20 @@ public class SoundManager : MonoBehaviour
         }
 
         source2D.PlayOneShot(clip);
+    }
+
+    public void PlayMusic(string musicName)
+    {
+        if (!soundDictionary.TryGetValue(musicName, out AudioClip clip))
+        {
+            Debug.LogWarning("Music not found");
+            return;
+        }
+
+        if (musicSource.clip == clip && musicSource.isPlaying)
+            return;
+
+        musicSource.clip = clip;
+        musicSource.Play();
     }
 }
