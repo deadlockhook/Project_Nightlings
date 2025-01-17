@@ -30,7 +30,6 @@ public class PlayerController : MonoBehaviour
 	private void Start()
 	{
 		characterController = GetComponent<CharacterController>();
-		Cursor.lockState = CursorLockMode.Locked;
 		currentFOV = normalFOV;
 	}
 

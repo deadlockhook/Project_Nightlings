@@ -46,11 +46,13 @@ public class UIManager : MonoBehaviour
         switch (state)
         {
             case UIState.MainMenu:
+                Cursor.lockState = CursorLockMode.None;
                 Time.timeScale = 0f;
                 mainMenuUI.SetActive(true);
                 break;
 
             case UIState.PauseMenu:
+                Cursor.lockState = CursorLockMode.None;
                 Time.timeScale = 0f;
                 pauseMenuUI.SetActive(true);
                 break;
@@ -58,6 +60,7 @@ public class UIManager : MonoBehaviour
             case UIState.Gameplay:
                 Time.timeScale = 1f;
                 gameplayUI.SetActive(true);
+                Cursor.lockState = CursorLockMode.Locked;
                 break;
         }
     }
@@ -75,6 +78,8 @@ public class UIManager : MonoBehaviour
                 PauseGame();
             }
         }
+
+
     }
 
     public void PauseGame()
