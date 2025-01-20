@@ -47,13 +47,6 @@ public class PlayerController : MonoBehaviour
 		if (interactionManager != null)
             interactionManager.OnLocalPlayerUpdate();
     }
-
-    private void FixedUpdate()
-    {
-        if (interactionManager != null)
-            interactionManager.OnLocalPlayerFixedUpdate();
-    }
-
     private void HandleMovement()
 	{
 		float moveX = Input.GetAxis("Horizontal");

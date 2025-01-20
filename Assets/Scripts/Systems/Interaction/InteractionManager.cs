@@ -33,7 +33,7 @@ public class InteractionManager : MonoBehaviour
 
     private float interactionDistance = 1.6f;
     private KeyCode interactionKey = KeyCode.Mouse0;
-    private float interactableMovementSpeed = 5.0f;
+    private float interactableMovementSpeed = 20.0f;
 
     public LayerMask interactableLayer;   
     public LayerMask obstacleLayer;
@@ -49,11 +49,6 @@ public class InteractionManager : MonoBehaviour
        playerController = targetController;
        playerCamera = targetCamera;
     }
-
-    public void OnLocalPlayerFixedUpdate()
-    {
-       
-    }
     public void OnLocalPlayerUpdate()
     {
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
@@ -65,7 +60,6 @@ public class InteractionManager : MonoBehaviour
 
         if (interactableObject != null)
         {
-
             if (interactableObject.IsDestroyed())
             {
                 interactableObject = null;
@@ -89,9 +83,12 @@ public class InteractionManager : MonoBehaviour
                     Vector3 direction = (endPoint - interactableObjRigidBody.position).normalized;
                     float distance = Vector3.Distance(interactableObjRigidBody.position, endPoint);
 
-                    if (!Physics.Raycast(interactableObjRigidBody.position, direction, distance, LayerMask.GetMask("Default")))
+                    if (!Physics.Raycast(interactableObjRigidBody.position, direction, distance, obstacleLayer))
                     {
-                        interactableObjRigidBody.MovePosition(Vector3.Lerp(interactableObjRigidBody.position, endPoint, Time.deltaTime * interactableMovementSpeed));
+                        Vector3 targetVelocity = direction * (distance * interactableMovementSpeed);
+                        interactableObjRigidBody.velocity = Vector3.Lerp(interactableObjRigidBody.velocity, targetVelocity, Time.deltaTime * interactableMovementSpeed);
+                        interactableObjRigidBody.velocity *= 0.95f;
+                        interactableObjRigidBody.angularVelocity *= 0.9f; 
                     }
                 }
                 else
