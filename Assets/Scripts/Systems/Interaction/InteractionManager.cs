@@ -15,6 +15,13 @@ public class InteractionManager : MonoBehaviour
         else
             Destroy(this);
     }
+
+    private PlayerController playerController = null;
+    void Start()
+    {
+        playerController = FindObjectOfType<PlayerController>();
+    }
+
     public enum Interactions
     {
         PickUpToy = 0,
@@ -27,8 +34,9 @@ public class InteractionManager : MonoBehaviour
         CloseBasementHatch,
     }
 
-    void OnLocalPlayerViewUpdate()
+    public void OnLocalPlayerViewUpdate()
     {
+        
         //Raycast and get the tagged object
         //Check if the object is interactable
         //Set the held object to the interactable type and trigger specific time
@@ -74,11 +82,6 @@ public class InteractionManager : MonoBehaviour
                     break;
                 }
         }
-    }
-
-    void Start()
-    {
-
     }
 
     void Update()

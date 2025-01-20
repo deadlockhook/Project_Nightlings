@@ -27,10 +27,12 @@ public class PlayerController : MonoBehaviour
 	private float verticalRotation = 0f;
 	private bool isRunning = false;
 
-	private void Start()
+	private InteractionManager interactionManager;
+    private void Start()
 	{
 		characterController = GetComponent<CharacterController>();
-		currentFOV = normalFOV;
+        interactionManager = FindObjectOfType<InteractionManager>();
+        currentFOV = normalFOV;
 	}
 
 	private void Update()
@@ -38,7 +40,10 @@ public class PlayerController : MonoBehaviour
 		HandleMovement();
 		HandleLook();
 		UpdateFOV();
-	}
+		if (interactionManager != null)
+            interactionManager.OnLocalPlayerViewUpdate();
+
+    }
 
 	private void HandleMovement()
 	{
