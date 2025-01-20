@@ -48,7 +48,13 @@ public class PlayerController : MonoBehaviour
             interactionManager.OnLocalPlayerUpdate();
     }
 
-	private void HandleMovement()
+    private void FixedUpdate()
+    {
+        if (interactionManager != null)
+            interactionManager.OnLocalPlayerFixedUpdate();
+    }
+
+    private void HandleMovement()
 	{
 		float moveX = Input.GetAxis("Horizontal");
 		float moveZ = Input.GetAxis("Vertical");

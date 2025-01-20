@@ -1,16 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class InteractionManager : MonoBehaviour
 {
+
     private InteractionManager interactionInstance = null;
-
-    private float interactionDistance = 1.6f;
-    private KeyCode interactionKey = KeyCode.Mouse0;
-
-    public LayerMask interactableLayer;   
-    public LayerMask obstacleLayer;
     private void Awake()
     {
         if (interactionInstance == null)
@@ -21,10 +19,6 @@ public class InteractionManager : MonoBehaviour
         else
             Destroy(this);
     }
-
-    private PlayerController playerController = null;
-    private Camera playerCamera = null;
-
     public enum Interactions
     {
         PickUpToy = 0,
@@ -37,10 +31,28 @@ public class InteractionManager : MonoBehaviour
         CloseBasementHatch,
     }
 
+    private float interactionDistance = 1.6f;
+    private KeyCode interactionKey = KeyCode.Mouse0;
+    private float interactableMovementSpeed = 5.0f;
+
+    public LayerMask interactableLayer;   
+    public LayerMask obstacleLayer;
+
+    private PlayerController playerController = null;
+    private Camera playerCamera = null;
+
+    private GameObject interactableObject;
+    private Rigidbody interactableObjRigidBody;
+
     public void OnLocalPlayerSetup(PlayerController targetController, Camera targetCamera)
     {
        playerController = targetController;
        playerCamera = targetCamera;
+    }
+
+    public void OnLocalPlayerFixedUpdate()
+    {
+       
     }
     public void OnLocalPlayerUpdate()
     {
@@ -48,17 +60,46 @@ public class InteractionManager : MonoBehaviour
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, interactionDistance, interactableLayer | obstacleLayer))
-        {
             if (((1 << hit.collider.gameObject.layer) & interactableLayer) != 0)
-            {
                 OnInteractableFound(hit.transform.gameObject, hit);
+
+        if (interactableObject != null)
+        {
+
+            if (interactableObject.IsDestroyed())
+            {
+                interactableObject = null;
+                interactableObjRigidBody = null;
+            }
+            else if (!Input.GetKey(interactionKey))
+            {
+                interactableObject = null;
+                if (interactableObjRigidBody)
+                {
+                    interactableObjRigidBody.useGravity = true;
+                    interactableObjRigidBody.constraints = RigidbodyConstraints.None;
+                    interactableObjRigidBody = null;
+                }
+            }
+            else
+            {
+                if (interactableObjRigidBody)
+                {
+                    Vector3 endPoint = playerCamera.transform.position + (playerCamera.transform.forward * interactionDistance);
+                    Vector3 direction = (endPoint - interactableObjRigidBody.position).normalized;
+                    float distance = Vector3.Distance(interactableObjRigidBody.position, endPoint);
+
+                    if (!Physics.Raycast(interactableObjRigidBody.position, direction, distance, LayerMask.GetMask("Default")))
+                    {
+                        interactableObjRigidBody.MovePosition(Vector3.Lerp(interactableObjRigidBody.position, endPoint, Time.deltaTime * interactableMovementSpeed));
+                    }
+                }
+                else
+                    interactableObject.transform.position = playerCamera.transform.position + playerCamera.transform.forward;
             }
         }
-
-
     }
 
-    private GameObject interactableObject;
     private void OnInteractableFound(GameObject interactable, RaycastHit hit)
     {
         if (interactable.tag == "Interactable_Pickup")
@@ -66,8 +107,11 @@ public class InteractionManager : MonoBehaviour
             if (Input.GetKeyDown(interactionKey))
             {
                 interactableObject = interactable;
-                Debug.Log("Interactable found: " + interactable.name);
-                interactable.transform.position = playerCamera.transform.position + playerCamera.transform.forward;
+                interactableObjRigidBody = interactableObject.GetComponent<Rigidbody>();
+                interactableObjRigidBody.useGravity = false;  
+                interactableObjRigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+                interactableObjRigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+                interactableObjRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             }
         }
 
