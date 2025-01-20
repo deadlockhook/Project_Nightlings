@@ -5,6 +5,12 @@ using UnityEngine;
 public class InteractionManager : MonoBehaviour
 {
     private InteractionManager interactionInstance = null;
+
+    private float interactionDistance = 1.6f;
+    private KeyCode interactionKey = KeyCode.Mouse0;
+
+    public LayerMask interactableLayer;   
+    public LayerMask obstacleLayer;
     private void Awake()
     {
         if (interactionInstance == null)
@@ -17,10 +23,7 @@ public class InteractionManager : MonoBehaviour
     }
 
     private PlayerController playerController = null;
-    void Start()
-    {
-        playerController = FindObjectOfType<PlayerController>();
-    }
+    private Camera playerCamera = null;
 
     public enum Interactions
     {
@@ -34,14 +37,40 @@ public class InteractionManager : MonoBehaviour
         CloseBasementHatch,
     }
 
-    public void OnLocalPlayerViewUpdate()
+    public void OnLocalPlayerSetup(PlayerController targetController, Camera targetCamera)
     {
-        
-        //Raycast and get the tagged object
-        //Check if the object is interactable
-        //Set the held object to the interactable type and trigger specific time
+       playerController = targetController;
+       playerCamera = targetCamera;
+    }
+    public void OnLocalPlayerUpdate()
+    {
+        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+        RaycastHit hit;
 
-        //TriggerEvent(); //Trigger the event if the interaction key is pressed
+        if (Physics.Raycast(ray, out hit, interactionDistance, interactableLayer | obstacleLayer))
+        {
+            if (((1 << hit.collider.gameObject.layer) & interactableLayer) != 0)
+            {
+                OnInteractableFound(hit.transform.gameObject, hit);
+            }
+        }
+
+
+    }
+
+    private GameObject interactableObject;
+    private void OnInteractableFound(GameObject interactable, RaycastHit hit)
+    {
+        if (interactable.tag == "Interactable_Pickup")
+        {
+            if (Input.GetKeyDown(interactionKey))
+            {
+                interactableObject = interactable;
+                Debug.Log("Interactable found: " + interactable.name);
+                interactable.transform.position = playerCamera.transform.position + playerCamera.transform.forward;
+            }
+        }
+
     }
 
     void TriggerEvent(Interactions action)
@@ -84,8 +113,18 @@ public class InteractionManager : MonoBehaviour
         }
     }
 
-    void Update()
-    {
+    private int lineLength = 10; 
+    private int lineThickness = 2;  
+    private Color crosshairColor = Color.white;  
 
+    void OnGUI()
+    {
+        GUI.color = crosshairColor;
+
+        float centerX = Screen.width / 2;
+        float centerY = Screen.height / 2;
+
+        GUI.DrawTexture(new Rect(centerX - lineLength, centerY - (lineThickness / 2), lineLength * 2, lineThickness), Texture2D.whiteTexture);
+        GUI.DrawTexture(new Rect(centerX - (lineThickness / 2), centerY - lineLength, lineThickness, lineLength * 2), Texture2D.whiteTexture);
     }
 }

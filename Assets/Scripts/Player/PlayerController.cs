@@ -33,16 +33,19 @@ public class PlayerController : MonoBehaviour
 		characterController = GetComponent<CharacterController>();
         interactionManager = FindObjectOfType<InteractionManager>();
         currentFOV = normalFOV;
-	}
+       
+		if (interactionManager != null)
+            interactionManager.OnLocalPlayerSetup(this, playerCamera);
+    }
 
 	private void Update()
 	{
 		HandleMovement();
 		HandleLook();
 		UpdateFOV();
-		if (interactionManager != null)
-            interactionManager.OnLocalPlayerViewUpdate();
 
+		if (interactionManager != null)
+            interactionManager.OnLocalPlayerUpdate();
     }
 
 	private void HandleMovement()
