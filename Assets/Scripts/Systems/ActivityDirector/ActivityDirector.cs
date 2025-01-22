@@ -21,12 +21,13 @@ public class ActivityDirector : MonoBehaviour
     private List<timedActivity> activeActivites;
     public class timedActivity
     {
-        public timedActivity(float _triggerTimeMilliSeconds, int _triggerIndex, timedActivityTrigger _actionStart, timedActivityTrigger _actionEnd)
+        public timedActivity(float _triggerTimeMilliSeconds, int _triggerIndex, timedActivityTrigger _actionStart, timedActivityTrigger _actionEnd, timedActivityTrigger _actionOnUpdate)
         {
             currentTime = 0;
             triggerTime = _triggerTimeMilliSeconds;
             actionStart = _actionStart;
             actionEnd = _actionEnd;
+            actionOnUpdate = _actionOnUpdate;
             triggerIndex = _triggerIndex;
             active = false;
         }
@@ -38,6 +39,7 @@ public class ActivityDirector : MonoBehaviour
             
 
             currentTime += (Time.deltaTime * 1000f);
+            actionOnUpdate(triggerIndex);
             if (currentTime >= triggerTime)
             {
                 actionEnd(triggerIndex);
@@ -70,16 +72,17 @@ public class ActivityDirector : MonoBehaviour
         private float triggerTime;
         private timedActivityTrigger actionStart;
         private timedActivityTrigger actionEnd;
+        private timedActivityTrigger actionOnUpdate;
     }
     public class windowActivity
     {
-        public windowActivity(GameObject _gameObj, float triggerTimeMilliSeconds, int triggerIndex, timedActivityTrigger actionStart, timedActivityTrigger actionEnd)
+        public windowActivity(GameObject _gameObj, float triggerTimeMilliSeconds, int triggerIndex, timedActivityTrigger actionStart, timedActivityTrigger actionEnd, timedActivityTrigger actionOnUpdate)
         {
             gameObj = _gameObj;
-            eventTime = new timedActivity(triggerTimeMilliSeconds, triggerIndex, actionStart, actionEnd);
+            eventTime = new timedActivity(triggerTimeMilliSeconds, triggerIndex, actionStart, actionEnd, actionOnUpdate);
         }
 
-        private GameObject gameObj;
+        public GameObject gameObj;
         public timedActivity eventTime;
     }
 
@@ -122,22 +125,32 @@ public class ActivityDirector : MonoBehaviour
         for (int currentIndex = 0;currentIndex < windows.Length;currentIndex++)
         {
             GameObject obj = windows[currentIndex];
-            windowEventObjects.Add(new windowActivity(obj, windowsActivityTimeLimit, currentIndex, OnWindowActivityStart, OnWindowActivityFinished));
+            windowEventObjects.Add(new windowActivity(obj, windowsActivityTimeLimit, currentIndex, OnWindowActivityStart, OnWindowActivityFinished, OnWindowActivityUpdate));
         }
 
     }
-
     private void OnWindowActivityStart(int activityIndex)
     {
         windowActivity activityObject = windowEventObjects[activityIndex];
+
+        activityObject.gameObj.GetComponent<WindowsActivity>().ActivityTriggerStart();
         Debug.Log("Activity Start");
       
     }
 
+    private void OnWindowActivityUpdate(int activityIndex)
+    {
+        windowActivity activityObject = windowEventObjects[activityIndex];
+
+        activityObject.gameObj.GetComponent<WindowsActivity>().OnActivityUpdate(activityObject.eventTime.GetProgress());
+        Debug.Log("Activity Start");
+
+    }
     private void OnWindowActivityFinished(int activityIndex)
     {
         windowActivity activityObject = windowEventObjects[activityIndex];
         activityObject.eventTime.Deactivate( activeActivites);
+        activityObject.gameObj.GetComponent<WindowsActivity>().ActivityTriggerEnd();
         Debug.Log("Activity End");
     }
     public void SpawnToys()
@@ -163,7 +176,6 @@ public class ActivityDirector : MonoBehaviour
         }
 
     }
-
     void Update()
     {
         currentDeltaTime += Time.deltaTime * 1000f;

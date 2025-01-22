@@ -4,21 +4,24 @@ using UnityEngine;
 
 public class WindowsActivity : MonoBehaviour
 {
-    private ActivityDirector activityDirector;
-
-    private List<ActivityDirector.timedActivity> sixWindows = new List<ActivityDirector.timedActivity>();
     void Start()
     {
-        activityDirector = FindObjectOfType<ActivityDirector>();
 
     }
-    void TriggerWindowActivity(int triggerIndex)
+    public void ActivityTriggerStart()
     {
-              
+
     }
-    // Update is called once per frame
+    public void OnActivityUpdate(float activityProgress)
+    {
+
+    }
+    public void ActivityTriggerEnd()
+    {
+
+    }
     void Update()
     {
-        
+
     }
 }
