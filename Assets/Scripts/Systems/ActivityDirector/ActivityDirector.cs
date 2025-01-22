@@ -18,7 +18,6 @@ public class ActivityDirector : MonoBehaviour
 
     public delegate void timedActivityTrigger(int val);
 
-    private List<timedActivity> activeActivites;
     public class timedActivity
     {
         public timedActivity(float _triggerTimeMilliSeconds, int _triggerIndex, timedActivityTrigger _actionStart, timedActivityTrigger _actionEnd, timedActivityTrigger _actionOnUpdate)
@@ -87,6 +86,8 @@ public class ActivityDirector : MonoBehaviour
         public timedActivity eventTime;
     }
 
+    private List<timedActivity> activeActivites;
+
     [SerializeField] private List<GameObject> toySpawnGameObjects;
     [SerializeField] private List<GameObject> toyPrefabs;
     [SerializeField] private int minToySpawnLocations = 12; 
@@ -135,9 +136,7 @@ public class ActivityDirector : MonoBehaviour
             windowEventObjects.Add(new activityTrigger(obj, windowsActivityTimeLimit, currentIndex, OnWindowActivityStart, OnWindowActivityFinished, OnWindowActivityUpdate));
         }
 
-        GameObject activityPetDoor = GameObject.FindGameObjectWithTag("Activity_PetDoor");
-
-        petdoorEventObject = new activityTrigger(activityPetDoor, windowsActivityTimeLimit, 0, OnPetDoorActivityStart, OnPetDoorActivityFinished, OnPetDoorActivityUpdate);
+        petdoorEventObject = new activityTrigger(GameObject.FindGameObjectWithTag("Activity_PetDoor"), windowsActivityTimeLimit, 0, OnPetDoorActivityStart, OnPetDoorActivityFinished, OnPetDoorActivityUpdate);
 
     }
     private void OnPetDoorActivityStart(int activityIndex)
@@ -199,7 +198,6 @@ public class ActivityDirector : MonoBehaviour
             GameObject selectedPrefab = toyPrefabs[Random.Range(0, toyPrefabs.Count)];
             Instantiate(selectedPrefab, spawnLocations[i], Quaternion.identity);
         }
-
     }
     void Update()
     {
