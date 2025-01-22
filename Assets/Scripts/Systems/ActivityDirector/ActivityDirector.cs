@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ActivityDirector : MonoBehaviour
 {
-    private static ActivityDirector directorInstance = null;
+    public static ActivityDirector directorInstance { get; private set; }
     private void Awake()
     {
         if (directorInstance == null)
