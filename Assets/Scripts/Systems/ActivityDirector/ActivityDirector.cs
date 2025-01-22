@@ -40,6 +40,7 @@ public class ActivityDirector : MonoBehaviour
 
             currentTime += (Time.deltaTime * 1000f);
             actionOnUpdate(triggerIndex);
+
             if (currentTime >= triggerTime)
             {
                 actionEnd(triggerIndex);
@@ -141,10 +142,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnWindowActivityUpdate(int activityIndex)
     {
         windowActivity activityObject = windowEventObjects[activityIndex];
-
         activityObject.gameObj.GetComponent<WindowsActivity>().OnActivityUpdate(activityObject.eventTime.GetProgress());
-        Debug.Log("Activity Start");
-
     }
     private void OnWindowActivityFinished(int activityIndex)
     {
@@ -182,16 +180,11 @@ public class ActivityDirector : MonoBehaviour
 
         if (currentDeltaTime - lastDeltaTime >= triggerWindowsActivityLogic )
         {
-            for (int currentIndex = 0;currentIndex < windowEventObjects.Count;currentIndex++)
-            {
-                windowEventObjects[currentIndex].eventTime.Activate( activeActivites);
-            }
-
+            windowEventObjects[Mathf.Clamp(Random.Range(0, windowEventObjects.Count), 0, windowEventObjects.Count)].eventTime.Activate(activeActivites);
             lastDeltaTime = currentDeltaTime;
         }
 
         for (int currentIndex = 0;currentIndex  < activeActivites.Count;currentIndex++)
             activeActivites[currentIndex].OnUpdate();
-        
     }
 }

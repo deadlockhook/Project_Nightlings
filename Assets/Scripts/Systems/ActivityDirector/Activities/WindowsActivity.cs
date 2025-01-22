@@ -14,7 +14,7 @@ public class WindowsActivity : MonoBehaviour
     }
     public void OnActivityUpdate(float activityProgress)
     {
-
+        Debug.Log(activityProgress);
     }
     public void ActivityTriggerEnd()
     {
