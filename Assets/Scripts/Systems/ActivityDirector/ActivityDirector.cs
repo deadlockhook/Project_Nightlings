@@ -17,13 +17,16 @@ public class ActivityDirector : MonoBehaviour
     }
 
     public delegate void timedActivityTrigger(int val);
-    public struct timedActivity
+
+    private List<timedActivity> activeActivites;
+    public class timedActivity
     {
-        public timedActivity(float _triggerTimeMilliSeconds, int _triggerIndex, timedActivityTrigger _action)
+        public timedActivity(float _triggerTimeMilliSeconds, int _triggerIndex, timedActivityTrigger _actionStart, timedActivityTrigger _actionEnd)
         {
             currentTime = 0;
             triggerTime = _triggerTimeMilliSeconds;
-            action = _action;
+            actionStart = _actionStart;
+            actionEnd = _actionEnd;
             triggerIndex = _triggerIndex;
             active = false;
         }
@@ -32,16 +35,24 @@ public class ActivityDirector : MonoBehaviour
         {
             if (!active)
                 return;
+            
 
             currentTime += (Time.deltaTime * 1000f);
             if (currentTime >= triggerTime)
             {
-                action(triggerIndex);
+                actionEnd(triggerIndex);
                 Reset();
             }
         }
-        public void Activate() { active = true; }
-        public void Deactivate() { active = false; }
+        public void Activate(List<timedActivity> activites) {
+            activites.Add(this);
+            active = true;
+            actionStart(triggerIndex);
+        }
+        public void Deactivate(List<timedActivity> activites) { 
+            active = false;
+            activites.Remove(this);
+        }
 
         public void Reset()
         {
@@ -57,14 +68,15 @@ public class ActivityDirector : MonoBehaviour
         private int triggerIndex;
         private float currentTime;
         private float triggerTime;
-        private timedActivityTrigger action;
+        private timedActivityTrigger actionStart;
+        private timedActivityTrigger actionEnd;
     }
-    public struct windowActivity
+    public class windowActivity
     {
-        public windowActivity(GameObject _gameObj, float triggerTimeMilliSeconds, int triggerIndex, timedActivityTrigger action)
+        public windowActivity(GameObject _gameObj, float triggerTimeMilliSeconds, int triggerIndex, timedActivityTrigger actionStart, timedActivityTrigger actionEnd)
         {
             gameObj = _gameObj;
-            eventTime = new timedActivity(triggerTimeMilliSeconds, triggerIndex, action);
+            eventTime = new timedActivity(triggerTimeMilliSeconds, triggerIndex, actionStart, actionEnd);
         }
 
         private GameObject gameObj;
@@ -76,7 +88,7 @@ public class ActivityDirector : MonoBehaviour
     [SerializeField] private int minToySpawnLocations = 12; 
     [SerializeField] private int maxToySpawnLocations = 20;
 
-    private float triggerWindowsActivityLogic = 1000.0f;
+    private float triggerWindowsActivityLogic = 2000.0f;
     private float windowsActivityTimeLimit = 500.0f;
 
     private List<windowActivity> windowEventObjects;
@@ -87,6 +99,7 @@ public class ActivityDirector : MonoBehaviour
     private float lastDeltaTime = 0;
     void Start()
     {
+        activeActivites = new List<timedActivity>();
         windowEventObjects = new List<windowActivity>();
         lastDeltaTime = Time.deltaTime * 1000.0f;
 
@@ -109,17 +122,23 @@ public class ActivityDirector : MonoBehaviour
         for (int currentIndex = 0;currentIndex < windows.Length;currentIndex++)
         {
             GameObject obj = windows[currentIndex];
-            windowEventObjects.Add(new windowActivity(obj, windowsActivityTimeLimit, currentIndex, OnWindowActivityFinished));
+            windowEventObjects.Add(new windowActivity(obj, windowsActivityTimeLimit, currentIndex, OnWindowActivityStart, OnWindowActivityFinished));
         }
 
+    }
+
+    private void OnWindowActivityStart(int activityIndex)
+    {
+        windowActivity activityObject = windowEventObjects[activityIndex];
+        Debug.Log("Activity Start");
+      
     }
 
     private void OnWindowActivityFinished(int activityIndex)
     {
         windowActivity activityObject = windowEventObjects[activityIndex];
-       
-
-        activityObject.eventTime.Deactivate();
+        activityObject.eventTime.Deactivate( activeActivites);
+        Debug.Log("Activity End");
     }
     public void SpawnToys()
     {
@@ -151,8 +170,16 @@ public class ActivityDirector : MonoBehaviour
 
         if (currentDeltaTime - lastDeltaTime >= triggerWindowsActivityLogic )
         {
-            Debug.Log("Activity Triggered");
+            for (int currentIndex = 0;currentIndex < windowEventObjects.Count;currentIndex++)
+            {
+                windowEventObjects[currentIndex].eventTime.Activate( activeActivites);
+            }
+
             lastDeltaTime = currentDeltaTime;
         }
+
+        for (int currentIndex = 0;currentIndex  < activeActivites.Count;currentIndex++)
+            activeActivites[currentIndex].OnUpdate();
+        
     }
 }

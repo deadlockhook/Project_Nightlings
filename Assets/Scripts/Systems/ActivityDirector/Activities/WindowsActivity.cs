@@ -11,10 +11,6 @@ public class WindowsActivity : MonoBehaviour
     {
         activityDirector = FindObjectOfType<ActivityDirector>();
 
-        sixWindows = new List<ActivityDirector.timedActivity>();
-
-        for (int i = 0; i < 6; i++)
-            sixWindows.Add(new ActivityDirector.timedActivity(10, i, TriggerWindowActivity));
     }
     void TriggerWindowActivity(int triggerIndex)
     {
