@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - Interactable_Pickup
+  - Activity_Window
   layers:
   - Default
   - TransparentFX

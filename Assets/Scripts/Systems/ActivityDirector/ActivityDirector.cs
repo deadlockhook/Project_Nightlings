@@ -25,10 +25,14 @@ public class ActivityDirector : MonoBehaviour
             triggerTime = _triggerTimeMilliSeconds;
             action = _action;
             triggerIndex = _triggerIndex;
+            active = false;
         }
 
-        void OnUpdate()
+        public void OnUpdate()
         {
+            if (!active)
+                return;
+
             currentTime += (Time.deltaTime * 1000f);
             if (currentTime >= triggerTime)
             {
@@ -36,31 +40,56 @@ public class ActivityDirector : MonoBehaviour
                 Reset();
             }
         }
+        public void Activate() { active = true; }
+        public void Deactivate() { active = false; }
 
-        void Reset()
+        public void Reset()
         {
             currentTime = 0;
         }
 
-        float GetProgress()
+        public float GetProgress()
         {
             return currentTime / triggerTime;
         }
 
+        private bool active;
         private int triggerIndex;
         private float currentTime;
         private float triggerTime;
         private timedActivityTrigger action;
     }
+    public struct windowActivity
+    {
+        public windowActivity(GameObject _gameObj, float triggerTimeMilliSeconds, int triggerIndex, timedActivityTrigger action)
+        {
+            gameObj = _gameObj;
+            eventTime = new timedActivity(triggerTimeMilliSeconds, triggerIndex, action);
+        }
+
+        private GameObject gameObj;
+        public timedActivity eventTime;
+    }
 
     [SerializeField] private List<GameObject> toySpawnGameObjects;
     [SerializeField] private List<GameObject> toyPrefabs;
-    [SerializeField] private int minToySpawnLocations = 12; // Minimum number of locations to select
-    [SerializeField] private int maxToySpawnLocations = 20; // Maximum number of locations to select
+    [SerializeField] private int minToySpawnLocations = 12; 
+    [SerializeField] private int maxToySpawnLocations = 20;
+
+    private float triggerWindowsActivityLogic = 1000.0f;
+    private float windowsActivityTimeLimit = 500.0f;
+
+    private List<windowActivity> windowEventObjects;
 
     private List<Vector3> toySpawnLocations;
+
+    private float currentDeltaTime = 0;
+    private float lastDeltaTime = 0;
     void Start()
     {
+        windowEventObjects = new List<windowActivity>();
+        lastDeltaTime = Time.deltaTime * 1000.0f;
+
         toySpawnLocations = new List<Vector3>();
 
         if (toySpawnGameObjects == null)
@@ -74,8 +103,24 @@ public class ActivityDirector : MonoBehaviour
             toySpawnLocations.Add(toySpawnGameObjects[i].transform.position);
             Destroy(toySpawnGameObjects[i]);
         }
+
+        GameObject[] windows = GameObject.FindGameObjectsWithTag("Activity_Window");
+
+        for (int currentIndex = 0;currentIndex < windows.Length;currentIndex++)
+        {
+            GameObject obj = windows[currentIndex];
+            windowEventObjects.Add(new windowActivity(obj, windowsActivityTimeLimit, currentIndex, OnWindowActivityFinished));
+        }
+
     }
 
+    private void OnWindowActivityFinished(int activityIndex)
+    {
+        windowActivity activityObject = windowEventObjects[activityIndex];
+       
+
+        activityObject.eventTime.Deactivate();
+    }
     public void SpawnToys()
     {
         int countToSelect = Mathf.Clamp(Random.Range(minToySpawnLocations, maxToySpawnLocations + 1), 0, toySpawnLocations.Count);
@@ -96,16 +141,18 @@ public class ActivityDirector : MonoBehaviour
         {
             GameObject selectedPrefab = toyPrefabs[Random.Range(0, toyPrefabs.Count)];
             Instantiate(selectedPrefab, spawnLocations[i], Quaternion.identity);
-
-            //Select random toy prefab
-            //Spawn toy at location
         }
 
     }
 
-
     void Update()
     {
-        
+        currentDeltaTime += Time.deltaTime * 1000f;
+
+        if (currentDeltaTime - lastDeltaTime >= triggerWindowsActivityLogic )
+        {
+            Debug.Log("Activity Triggered");
+            lastDeltaTime = currentDeltaTime;
+        }
     }
 }
