@@ -4,24 +4,32 @@ using UnityEngine;
 
 public class WindowsActivity : MonoBehaviour
 {
-    void Start()
+    private bool shouldReset = false;
+    public void ResetWindow()
     {
-
+        shouldReset = true;
     }
     public void ActivityTriggerStart()
     {
-
+        shouldReset = false;
     }
-    public void OnActivityUpdate(float activityProgress)
+    public bool OnActivityUpdate(float activityProgress)
     {
+        if (shouldReset)
+        {
+            //reset window trigger animation
+            shouldReset = false;
+            return true;
+        }
+
+        //progress trigger animation
         Debug.Log(activityProgress);
+
+        return false;
     }
     public void ActivityTriggerEnd()
     {
-
+        //trigger monster event as window has been opened
     }
-    void Update()
-    {
 
-    }
 }

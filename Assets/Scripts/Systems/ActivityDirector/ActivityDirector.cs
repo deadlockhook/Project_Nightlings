@@ -142,7 +142,11 @@ public class ActivityDirector : MonoBehaviour
     private void OnWindowActivityUpdate(int activityIndex)
     {
         windowActivity activityObject = windowEventObjects[activityIndex];
-        activityObject.gameObj.GetComponent<WindowsActivity>().OnActivityUpdate(activityObject.eventTime.GetProgress());
+        if (activityObject.gameObj.GetComponent<WindowsActivity>().OnActivityUpdate(activityObject.eventTime.GetProgress()))
+        {
+            activityObject.eventTime.Deactivate(activeActivites);
+            activityObject.eventTime.Reset();
+        }
     }
     private void OnWindowActivityFinished(int activityIndex)
     {
