@@ -95,17 +95,23 @@ public class ActivityDirector : MonoBehaviour
     private float triggerWindowsActivityLogic = 2000.0f;
     private float windowsActivityTimeLimit = 500.0f;
 
+    private float triggerPetdoorActivityLogic = 1000.0f;
+    private float oetdoorActivityTimeLimit = 200.0f;
+
     private List<windowActivity> windowEventObjects;
+    private List<windowActivity> petdoorEventObjects;
 
     private List<Vector3> toySpawnLocations;
 
     private float currentDeltaTime = 0;
-    private float lastDeltaTime = 0;
+    private float lastDeltaTimeForWindowEvents = 0;
+    private float lastDeltaTimeForPetDoorEvents = 0;
     void Start()
     {
         activeActivites = new List<timedActivity>();
         windowEventObjects = new List<windowActivity>();
-        lastDeltaTime = Time.deltaTime * 1000.0f;
+        lastDeltaTimeForWindowEvents = Time.deltaTime * 1000.0f;
+        lastDeltaTimeForPetDoorEvents = lastDeltaTimeForWindowEvents;
 
         toySpawnLocations = new List<Vector3>();
 
@@ -129,14 +135,38 @@ public class ActivityDirector : MonoBehaviour
             windowEventObjects.Add(new windowActivity(obj, windowsActivityTimeLimit, currentIndex, OnWindowActivityStart, OnWindowActivityFinished, OnWindowActivityUpdate));
         }
 
+        GameObject[] activityPetDoor = GameObject.FindGameObjectsWithTag("Activity_PetDoor");
+
+        for (int currentIndex = 0; currentIndex < windows.Length; currentIndex++)
+        {
+            GameObject obj = windows[currentIndex];
+            petdoorEventObjects.Add(new windowActivity(obj, windowsActivityTimeLimit, currentIndex, OnPetDoorActivityStart, OnPetDoorActivityFinished, OnPetDoorActivityUpdate));
+        }
+
+    }
+    private void OnPetDoorActivityStart(int activityIndex)
+    {
+        petdoorEventObjects[activityIndex].gameObj.GetComponent<PetDoorActivity>().ActivityTriggerStart();
+    }
+
+    private void OnPetDoorActivityUpdate(int activityIndex)
+    {
+        windowActivity activityObject = petdoorEventObjects[activityIndex];
+        if (activityObject.gameObj.GetComponent<PetDoorActivity>().OnActivityUpdate(activityObject.eventTime.GetProgress()))
+        {
+            activityObject.eventTime.Deactivate(activeActivites);
+            activityObject.eventTime.Reset();
+        }
+    }
+    private void OnPetDoorActivityFinished(int activityIndex)
+    {
+        windowActivity activityObject = petdoorEventObjects[activityIndex];
+        activityObject.eventTime.Deactivate(activeActivites);
+        activityObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerEnd();
     }
     private void OnWindowActivityStart(int activityIndex)
     {
-        windowActivity activityObject = windowEventObjects[activityIndex];
-
-        activityObject.gameObj.GetComponent<WindowsActivity>().ActivityTriggerStart();
-        Debug.Log("Activity Start");
-      
+        windowEventObjects[activityIndex].gameObj.GetComponent<WindowsActivity>().ActivityTriggerStart();
     }
 
     private void OnWindowActivityUpdate(int activityIndex)
@@ -153,7 +183,6 @@ public class ActivityDirector : MonoBehaviour
         windowActivity activityObject = windowEventObjects[activityIndex];
         activityObject.eventTime.Deactivate( activeActivites);
         activityObject.gameObj.GetComponent<WindowsActivity>().ActivityTriggerEnd();
-        Debug.Log("Activity End");
     }
     public void SpawnToys()
     {
@@ -182,10 +211,16 @@ public class ActivityDirector : MonoBehaviour
     {
         currentDeltaTime += Time.deltaTime * 1000f;
 
-        if (currentDeltaTime - lastDeltaTime >= triggerWindowsActivityLogic )
+        if (currentDeltaTime - lastDeltaTimeForWindowEvents >= triggerWindowsActivityLogic )
         {
             windowEventObjects[Mathf.Clamp(Random.Range(0, windowEventObjects.Count), 0, windowEventObjects.Count)].eventTime.Activate(activeActivites);
-            lastDeltaTime = currentDeltaTime;
+            lastDeltaTimeForWindowEvents = currentDeltaTime;
+        }
+
+        if (currentDeltaTime - lastDeltaTimeForPetDoorEvents >= triggerPetdoorActivityLogic)
+        {
+            petdoorEventObjects[Mathf.Clamp(Random.Range(0, petdoorEventObjects.Count), 0, petdoorEventObjects.Count)].eventTime.Activate(activeActivites);
+            lastDeltaTimeForPetDoorEvents = currentDeltaTime;
         }
 
         for (int currentIndex = 0;currentIndex  < activeActivites.Count;currentIndex++)

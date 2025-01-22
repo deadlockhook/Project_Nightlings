@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WindowsActivity : MonoBehaviour
+public class PetDoorActivity : MonoBehaviour
 {
     private bool shouldReset = false;
     public void ResetWindow()
@@ -34,5 +34,4 @@ public class WindowsActivity : MonoBehaviour
 
         //trigger monster event as window has been opened
     }
-
 }
