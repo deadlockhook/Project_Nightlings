@@ -23,7 +23,6 @@ public class PetDoorActivity : MonoBehaviour
         }
 
         //progress trigger animation
-        Debug.Log(activityProgress);
 
         return false;
     }

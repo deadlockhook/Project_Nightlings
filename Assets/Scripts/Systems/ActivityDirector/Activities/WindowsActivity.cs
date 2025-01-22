@@ -23,7 +23,6 @@ public class WindowsActivity : MonoBehaviour
         }
 
         //progress trigger animation
-        Debug.Log(activityProgress);
 
         return false;
     }
