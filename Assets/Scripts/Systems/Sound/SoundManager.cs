@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 // To play 2D sounds Ex: UI
 // SoundManager.Instance.PlaySound("Sound Name");
@@ -14,6 +15,10 @@ public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
 
+    public Slider masterVolumeSlider;
+    public Slider sfxVolumeSlider;
+    public Slider musicVolumeSlider;
+
     [System.Serializable]
     public class Sound
     {
@@ -25,6 +30,10 @@ public class SoundManager : MonoBehaviour
     private Dictionary<string, AudioClip> soundDictionary;
     private Dictionary<string, AudioSource> audioSources;
     private AudioSource musicSource;
+
+    [Range(0f, 1f)] public float masterVolume = 1f;
+    [Range(0f, 1f)] public float sfxVolume = 1f;
+    [Range(0f, 1f)] public float musicVolume = 1f;
 
     private void Awake()
     {
@@ -48,7 +57,20 @@ public class SoundManager : MonoBehaviour
         audioSources = new Dictionary<string, AudioSource>();
         musicSource = gameObject.AddComponent<AudioSource>();
         musicSource.loop = true;
+        musicSource.volume = musicVolume * masterVolume;
     }
+
+    private void Start()
+    {
+        masterVolumeSlider.value = masterVolume;
+        sfxVolumeSlider.value = sfxVolume;
+        musicVolumeSlider.value = musicVolume;
+
+        masterVolumeSlider.onValueChanged.AddListener(SetMasterVolume);
+        sfxVolumeSlider.onValueChanged.AddListener(SetSFXVolume);
+        musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
+    }
+
 
     public void PlaySound(string soundName, AudioSource source = null)
     {
@@ -60,6 +82,7 @@ public class SoundManager : MonoBehaviour
 
         if (source != null)
         {
+            source.volume = sfxVolume * masterVolume;
             source.PlayOneShot(clip);
         }
         else
@@ -70,7 +93,9 @@ public class SoundManager : MonoBehaviour
 
     private void Play2DSound(AudioClip clip)
     {
-        if (!audioSources.TryGetValue("2D", out AudioSource source2D))
+        AudioSource source2D;
+
+        if (!audioSources.ContainsKey("2D"))
         {
             GameObject obj = new GameObject("2DAudioSource");
             source2D = obj.AddComponent<AudioSource>();
@@ -78,7 +103,12 @@ public class SoundManager : MonoBehaviour
             DontDestroyOnLoad(obj);
             audioSources["2D"] = source2D;
         }
+        else
+        {
+            source2D = audioSources["2D"];
+        }
 
+        source2D.volume = sfxVolume * masterVolume;
         source2D.PlayOneShot(clip);
     }
 
@@ -94,6 +124,36 @@ public class SoundManager : MonoBehaviour
             return;
 
         musicSource.clip = clip;
+        UpdateVolumes();
         musicSource.Play();
     }
+
+    public void SetMasterVolume(float volume)
+    {
+        masterVolume = volume;
+        UpdateVolumes();
+    }
+
+    public void SetSFXVolume(float volume)
+    {
+        sfxVolume = volume;
+        UpdateVolumes();
+    }
+
+    public void SetMusicVolume(float volume)
+    {
+        musicVolume = volume;
+        UpdateVolumes();
+    }
+
+    private void UpdateVolumes()
+    {
+        musicSource.volume = musicVolume * masterVolume;
+
+        foreach (var source in audioSources.Values)
+        {
+            source.volume = sfxVolume * masterVolume;
+        }
+    }
 }
+
