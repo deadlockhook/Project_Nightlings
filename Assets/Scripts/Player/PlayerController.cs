@@ -28,15 +28,16 @@ public class PlayerController : MonoBehaviour
 	private bool isRunning = false;
 
 	private InteractionManager interactionManager;
-    private void Start()
+
+	private void Start()
 	{
 		characterController = GetComponent<CharacterController>();
-        interactionManager = FindObjectOfType<InteractionManager>();
-        currentFOV = normalFOV;
-       
+		interactionManager = FindObjectOfType<InteractionManager>();
+		currentFOV = normalFOV;
+
 		if (interactionManager != null)
-            interactionManager.OnLocalPlayerSetup(this, playerCamera);
-    }
+			interactionManager.OnLocalPlayerSetup(this, playerCamera);
+	}
 
 	private void Update()
 	{
@@ -45,9 +46,10 @@ public class PlayerController : MonoBehaviour
 		UpdateFOV();
 
 		if (interactionManager != null)
-            interactionManager.OnLocalPlayerUpdate();
-    }
-    private void HandleMovement()
+			interactionManager.OnLocalPlayerUpdate();
+	}
+
+	private void HandleMovement()
 	{
 		float moveX = Input.GetAxis("Horizontal");
 		float moveZ = Input.GetAxis("Vertical");
