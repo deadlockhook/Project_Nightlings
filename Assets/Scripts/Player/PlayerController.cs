@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+
+// Handles the player movement and interaction
 
 public class PlayerController : MonoBehaviour
 {
@@ -18,6 +21,14 @@ public class PlayerController : MonoBehaviour
 	public float sprintFOV = 80f;
 	private float currentFOV;
 
+	[Header("Stamina Settings")]
+	public float maxStamina = 100f;
+	public float staminaDrainRate = 1f;
+	private float currentStamina;
+
+	[Header("UI Settings")]
+	public TextMeshProUGUI staminaText;
+
 	private CharacterController characterController;
 	private Vector3 moveDirection = Vector3.zero;
 
@@ -34,6 +45,7 @@ public class PlayerController : MonoBehaviour
 		characterController = GetComponent<CharacterController>();
 		interactionManager = FindObjectOfType<InteractionManager>();
 		currentFOV = normalFOV;
+		currentStamina = maxStamina;
 
 		if (interactionManager != null)
 			interactionManager.OnLocalPlayerSetup(this, playerCamera);
@@ -44,6 +56,7 @@ public class PlayerController : MonoBehaviour
 		HandleMovement();
 		HandleLook();
 		UpdateFOV();
+		UpdateStaminaUI();
 
 		if (interactionManager != null)
 			interactionManager.OnLocalPlayerUpdate();
@@ -60,7 +73,17 @@ public class PlayerController : MonoBehaviour
 			inputDirection.Normalize();
 		}
 
-		isRunning = Input.GetKey(KeyCode.LeftShift);
+		if (Input.GetKey(KeyCode.LeftShift) && currentStamina > 0 && inputDirection.magnitude > 0)
+		{
+			isRunning = true;
+			currentStamina -= staminaDrainRate * Time.deltaTime;
+			if (currentStamina < 0) currentStamina = 0;
+		}
+		else
+		{
+			isRunning = false;
+		}
+
 		float targetSpeed = isRunning ? runSpeed : walkSpeed;
 		if (inputDirection.magnitude == 0) targetSpeed = 0;
 
@@ -102,5 +125,10 @@ public class PlayerController : MonoBehaviour
 		float targetFOV = isRunning ? sprintFOV : normalFOV;
 		currentFOV = Mathf.Lerp(currentFOV, targetFOV, Time.deltaTime * 5f);
 		playerCamera.fieldOfView = currentFOV;
+	}
+
+	private void UpdateStaminaUI()
+	{
+		staminaText.text = $"Stamina: {Mathf.CeilToInt(currentStamina)}";
 	}
 }
