@@ -29,6 +29,10 @@ public class PlayerController : MonoBehaviour
 	[Header("UI Settings")]
 	public TextMeshProUGUI staminaText;
 
+	[Header("Head Bob Settings")]
+	public float headBobPower = 0.05f;
+	public float headBobSpeed = 5f;
+
 	private CharacterController characterController;
 	private Vector3 moveDirection = Vector3.zero;
 
@@ -38,6 +42,9 @@ public class PlayerController : MonoBehaviour
 	private float verticalRotation = 0f;
 	private bool isRunning = false;
 
+	private float headBobTimer = 0f;
+	private Vector3 cameraOriginalPosition;
+
 	private InteractionManager interactionManager;
 
 	private void Start()
@@ -46,6 +53,8 @@ public class PlayerController : MonoBehaviour
 		interactionManager = FindObjectOfType<InteractionManager>();
 		currentFOV = normalFOV;
 		currentStamina = maxStamina;
+
+		cameraOriginalPosition = playerCamera.transform.localPosition;
 
 		if (interactionManager != null)
 			interactionManager.OnLocalPlayerSetup(this, playerCamera);
@@ -57,6 +66,7 @@ public class PlayerController : MonoBehaviour
 		HandleLook();
 		UpdateFOV();
 		UpdateStaminaUI();
+		HandleHeadBob();
 
 		if (interactionManager != null)
 			interactionManager.OnLocalPlayerUpdate();
@@ -130,5 +140,24 @@ public class PlayerController : MonoBehaviour
 	private void UpdateStaminaUI()
 	{
 		staminaText.text = $"Stamina: {Mathf.CeilToInt(currentStamina)}";
+	}
+
+	private void HandleHeadBob()
+	{
+		if (currentSpeed > 0 && characterController.isGrounded)
+		{
+			float bobSpeed = currentSpeed * headBobSpeed / walkSpeed;
+
+			headBobTimer += Time.deltaTime * bobSpeed;
+
+			float bobOffsetY = Mathf.Sin(headBobTimer) * headBobPower;
+
+			playerCamera.transform.localPosition = cameraOriginalPosition + new Vector3(0f, bobOffsetY, 0f);
+		}
+		else
+		{
+			headBobTimer = 0f;
+			playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, cameraOriginalPosition, Time.deltaTime * 5f);
+		}
 	}
 }

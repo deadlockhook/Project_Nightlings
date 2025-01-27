@@ -1130,6 +1130,8 @@ MonoBehaviour:
   maxStamina: 100
   staminaDrainRate: 1
   staminaText: {fileID: 722893218}
+  headBobPower: 0.075
+  headBobSpeed: 8
 --- !u!143 &506620930
 CharacterController:
   m_ObjectHideFlags: 0
