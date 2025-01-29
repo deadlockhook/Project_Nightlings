@@ -89,7 +89,10 @@ public class PlayerController : MonoBehaviour
 		{
 			isRunning = true;
 			currentStamina -= staminaDrainRate * Time.deltaTime;
-			staminaBar.value = currentStamina;
+
+			if (staminaBar)
+		    	staminaBar.value = currentStamina;
+
             if (currentStamina < 0) currentStamina = 0;
 		}
 		else
@@ -142,6 +145,7 @@ public class PlayerController : MonoBehaviour
 
 	private void UpdateStaminaUI()
 	{
+		if (staminaText)
 		staminaText.text = $"Stamina: {Mathf.CeilToInt(currentStamina)}";
 	}
 
