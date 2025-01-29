@@ -100,7 +100,7 @@ public class InteractionManager : MonoBehaviour
 
     private void OnInteractableFound(GameObject interactable, RaycastHit hit)
     {
-        if (interactable.tag == "Interactable_Pickup")
+        if (interactable.tag.Contains("Interactable_"))
         {
             if (Input.GetKeyDown(interactionKey))
             {
@@ -112,6 +112,15 @@ public class InteractionManager : MonoBehaviour
                 interactableObjRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             }
         }
+
+        if (interactable.tag.Contains("Activity_Window"))
+        {
+            if (Input.GetKeyDown(interactionKey))
+            {
+                interactable.GetComponent<WindowsActivity>().ResetActivity();
+            }
+        }
+
 
     }
 
