@@ -15,10 +15,10 @@ public class UIManager : MonoBehaviour
     }
 
     [Header("UI Screens")]
-    public GameObject mainMenuUI;
-    public GameObject pauseMenuUI;
-    public GameObject gameplayUI;
-    public GameObject optionsUI;
+    private GameObject mainMenuUI;
+    private GameObject pauseMenuUI;
+    private GameObject gameplayUI;
+    private GameObject optionsUI;
 
     private bool isPaused = false;
 
@@ -36,6 +36,10 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        mainMenuUI = transform.Find("MainMenu").gameObject;
+        pauseMenuUI = transform.Find("Pause").gameObject;
+        gameplayUI = transform.Find("Gameplay").gameObject;
+        optionsUI = transform.Find("Options").gameObject;
         ChangeUIState(UIState.MainMenu);
     }
 
