@@ -1129,6 +1129,7 @@ MonoBehaviour:
   sprintFOV: 80
   maxStamina: 100
   staminaDrainRate: 1
+  staminaBar: {fileID: 1379926267}
   staminaText: {fileID: 722893218}
   headBobPower: 0.075
   headBobSpeed: 8
@@ -2480,7 +2481,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -2814,7 +2815,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1095657961}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1
+  m_MaxValue: 100
   m_WholeNumbers: 0
   m_Value: 0
   m_OnValueChanged:
