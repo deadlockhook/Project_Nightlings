@@ -118,6 +118,7 @@ public class InteractionManager : MonoBehaviour
             if (Input.GetKeyDown(interactionKey))
             {
                 interactable.GetComponent<WindowsActivity>().ResetActivity();
+                Debug.Log("Activity Reset");
             }
         }
 

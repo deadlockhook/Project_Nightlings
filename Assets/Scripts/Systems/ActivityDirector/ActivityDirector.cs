@@ -98,8 +98,8 @@ public class ActivityDirector : MonoBehaviour
     [SerializeField] private int minToySpawnLocations = 12; 
     [SerializeField] private int maxToySpawnLocations = 20;
 
-    private float triggerWindowsActivityLogic = 2000.0f;
-    private float windowsActivityTimeLimit = 500.0f;
+    private float triggerWindowsActivityLogic = 4000.0f;
+    private float windowsActivityTimeLimit = 2000.0f;
 
     private float triggerPetdoorActivityLogic = 4000.0f;
     private float petdoorActivityTimeLimit = 2000.0f;
@@ -220,7 +220,7 @@ public class ActivityDirector : MonoBehaviour
 
     void DispatchPetdoorEvent()
     {
-        if (currentDeltaTime - lastDeltaTimeForPetDoorEvents >= triggerPetdoorActivityLogic && !petdoorEventObject.eventTime.IsActive())
+        if (petdoorEventObject.gameObj && currentDeltaTime - lastDeltaTimeForPetDoorEvents >= triggerPetdoorActivityLogic && !petdoorEventObject.eventTime.IsActive())
         {
             petdoorEventObject.eventTime.Activate(activeActivites);
             lastDeltaTimeForPetDoorEvents = currentDeltaTime;

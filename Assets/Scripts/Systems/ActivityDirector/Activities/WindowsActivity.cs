@@ -1,52 +1,62 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class WindowsActivity : MonoBehaviour
 {
     private bool shouldReset = false;
     private bool resetAnimBegin = false;
     private float resetProgress = 0.0f;
-    private float rotationXOnResetBegin = 0.0f;
+    private float positionYOnResetBegin = 0.0f;
     private bool activityFinished = false;
+    private bool inActivity = false;
 
     private float endYPosition = 0.0f;
+    private float startYPosition = 0.0f;
+    private float lastActivityProgress = 0.0f;
 
     private void Start()
     {
-        endYPosition =  transform.position.y + 0.8972201f;
+        startYPosition = transform.position.y;
+        endYPosition = startYPosition + 0.8972201f;
     }
     public void ResetActivity()
     {
-        if (activityFinished)
+        if (activityFinished || !inActivity)
             return;
+
+        inActivity = false;
         shouldReset = true;
         resetAnimBegin = true;
-        resetProgress = 0.0f;
-        rotationXOnResetBegin = transform.eulerAngles.x;
+        resetProgress = 1.0f- lastActivityProgress;
+        positionYOnResetBegin = transform.position.y;
     }
     public void ActivityTriggerStart()
     {
+        if (activityFinished)
+            return;
+
+        inActivity = true;
         shouldReset = false;
     }
     public bool OnActivityUpdate(float activityProgress)
     {
-        //  transform.rotation = Quaternion.Slerp(transform.rotation, target, activityProgress * Time.deltaTime);
-
         if (activityFinished)
             return true;
 
         if (shouldReset)
         {
-            //reset window trigger animation
             shouldReset = false;
             return true;
         }
 
-        Quaternion target = Quaternion.Euler(90.0f * activityProgress, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
-        transform.rotation = target;
+        Debug.Log(0.8972201f * activityProgress);
 
-        //progress trigger animation
+        Vector3 target = new Vector3(transform.position.x, startYPosition + (0.8972201f * activityProgress), transform.position.z);
+        transform.position = target;
+
+        lastActivityProgress = activityProgress;
 
         return false;
     }
@@ -55,8 +65,8 @@ public class WindowsActivity : MonoBehaviour
         if (shouldReset)
             return;
 
+        inActivity = false;
         activityFinished = true;
-        //trigger monster event as window has been opened
     }
 
     public void Update()
@@ -67,15 +77,17 @@ public class WindowsActivity : MonoBehaviour
 
             Debug.Log(resetProgress);
 
+            resetProgress = Mathf.Clamp(resetProgress, 0.0f, 1.0f);
+
             if (resetProgress >= 1.0f)
             {
                 resetProgress = 0.0f;
                 resetAnimBegin = false;
+                transform.position = new Vector3(transform.position.x, startYPosition, transform.position.z);
             }
             else
             {
-                Quaternion target = Quaternion.Euler(rotationXOnResetBegin - (rotationXOnResetBegin * resetProgress), transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
-                transform.rotation = target;
+                transform.position = new Vector3(transform.position.x, endYPosition - (0.8972201f * ( resetProgress)), transform.position.z);
             }
         }
 

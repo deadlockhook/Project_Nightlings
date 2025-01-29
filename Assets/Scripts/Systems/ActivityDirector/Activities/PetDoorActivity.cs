@@ -9,10 +9,11 @@ public class PetDoorActivity : MonoBehaviour
     private float resetProgress = 0.0f;
     private float rotationXOnResetBegin = 0.0f;
     private bool activityFinished = false;
+    private bool inActivity = false;
 
     private void OnTriggerEnter(Collider collision)
     {
-        if (activityFinished)
+        if (activityFinished || !inActivity)
             return;
 
         if (collision.gameObject.tag == "Interactable_Toy")
@@ -27,6 +28,7 @@ public class PetDoorActivity : MonoBehaviour
         if (activityFinished)
             return;
 
+        inActivity = false;
         shouldReset = true;
         resetAnimBegin = true;
         resetProgress = 0.0f;
@@ -34,6 +36,10 @@ public class PetDoorActivity : MonoBehaviour
     }
     public void ActivityTriggerStart()
     {
+        if (activityFinished)
+            return;
+
+        inActivity = true;
         shouldReset = false;
     }
     public bool OnActivityUpdate(float activityProgress)
@@ -62,6 +68,7 @@ public class PetDoorActivity : MonoBehaviour
         if (shouldReset)
             return;
 
+        inActivity = false;
         activityFinished = true;
         //trigger monster event as window has been opened
     }
