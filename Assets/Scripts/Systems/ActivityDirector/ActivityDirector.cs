@@ -66,6 +66,11 @@ public class ActivityDirector : MonoBehaviour
             return currentTime / triggerTime;
         }
 
+        public bool IsActive()
+        {
+            return active;
+        }
+
         private bool active;
         private int triggerIndex;
         private float currentTime;
@@ -96,8 +101,8 @@ public class ActivityDirector : MonoBehaviour
     private float triggerWindowsActivityLogic = 2000.0f;
     private float windowsActivityTimeLimit = 500.0f;
 
-    private float triggerPetdoorActivityLogic = 1000.0f;
-    private float petdoorActivityTimeLimit = 200.0f;
+    private float triggerPetdoorActivityLogic = 4000.0f;
+    private float petdoorActivityTimeLimit = 2000.0f;
 
     private List<activityTrigger> windowEventObjects;
     private activityTrigger petdoorEventObject;
@@ -202,16 +207,20 @@ public class ActivityDirector : MonoBehaviour
 
     void DispatchWindowEvents()
     {
-        if (currentDeltaTime - lastDeltaTimeForWindowEvents >= triggerWindowsActivityLogic && windowEventObjects.Count > 0)
+        if (currentDeltaTime - lastDeltaTimeForWindowEvents >= triggerWindowsActivityLogic && windowEventObjects.Count > 0 )
         {
-            windowEventObjects[Mathf.Clamp(Random.Range(0, windowEventObjects.Count), 0, windowEventObjects.Count)].eventTime.Activate(activeActivites);
+            activityTrigger activity = windowEventObjects[Mathf.Clamp(Random.Range(0, windowEventObjects.Count), 0, windowEventObjects.Count)];
+
+            if (!activity.eventTime.IsActive())
+                 activity.eventTime.Activate(activeActivites);
+
             lastDeltaTimeForWindowEvents = currentDeltaTime;
         }
     }
 
     void DispatchPetdoorEvent()
     {
-        if (currentDeltaTime - lastDeltaTimeForPetDoorEvents >= triggerPetdoorActivityLogic)
+        if (currentDeltaTime - lastDeltaTimeForPetDoorEvents >= triggerPetdoorActivityLogic && !petdoorEventObject.eventTime.IsActive())
         {
             petdoorEventObject.eventTime.Activate(activeActivites);
             lastDeltaTimeForPetDoorEvents = currentDeltaTime;

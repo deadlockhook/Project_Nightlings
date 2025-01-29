@@ -8,6 +8,7 @@ TagManager:
   - Interactable_Pickup
   - Activity_Window
   - Activity_PetDoor
+  - Interactable_Toy
   layers:
   - Default
   - TransparentFX
