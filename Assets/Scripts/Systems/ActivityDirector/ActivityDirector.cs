@@ -202,7 +202,7 @@ public class ActivityDirector : MonoBehaviour
 
     void DispatchWindowEvents()
     {
-        if (currentDeltaTime - lastDeltaTimeForWindowEvents >= triggerWindowsActivityLogic && windowEventObjects.Count)
+        if (currentDeltaTime - lastDeltaTimeForWindowEvents >= triggerWindowsActivityLogic && windowEventObjects.Count > 0)
         {
             windowEventObjects[Mathf.Clamp(Random.Range(0, windowEventObjects.Count), 0, windowEventObjects.Count)].eventTime.Activate(activeActivites);
             lastDeltaTimeForWindowEvents = currentDeltaTime;

@@ -689,7 +689,7 @@ GameObject:
   - component: {fileID: 259395977}
   - component: {fileID: 259395976}
   - component: {fileID: 259395975}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (1)
   m_TagString: Interactable_Pickup
   m_Icon: {fileID: 0}
@@ -9722,6 +9722,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -4754080349074290867, guid: 7f4eb7cef56fed942849041a4fa4426d,
+        type: 3}
+      propertyPath: m_TagString
+      value: Activity_PetDoor
+      objectReference: {fileID: 0}
     - target: {fileID: -1950733119399844177, guid: 7f4eb7cef56fed942849041a4fa4426d,
         type: 3}
       propertyPath: m_LocalRotation.w
@@ -9775,6 +9780,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1758270547}
+    - targetCorrespondingSourceObject: {fileID: -4754080349074290867, guid: 7f4eb7cef56fed942849041a4fa4426d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 939762085}
   m_SourcePrefab: {fileID: 100100000, guid: 7f4eb7cef56fed942849041a4fa4426d, type: 3}
 --- !u!1 &879212252
 GameObject:
@@ -16763,6 +16772,24 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!1 &939762081 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -4754080349074290867, guid: 7f4eb7cef56fed942849041a4fa4426d,
+    type: 3}
+  m_PrefabInstance: {fileID: 871124689}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &939762085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939762081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d6ab37b92dd1f4d8c188bd574be042, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &944287924 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: de8c2c8feb50b88489ed19b089a14d53,
@@ -29175,6 +29202,7 @@ MonoBehaviour:
   sprintFOV: 80
   maxStamina: 100
   staminaDrainRate: 1
+  staminaBar: {fileID: 0}
   staminaText: {fileID: 0}
   headBobPower: 0.075
   headBobSpeed: 8
