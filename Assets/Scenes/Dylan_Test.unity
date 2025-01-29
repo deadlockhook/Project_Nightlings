@@ -851,6 +851,7 @@ MonoBehaviour:
   sprintFOV: 80
   maxStamina: 100
   staminaDrainRate: 1
+  staminaBar: {fileID: 0}
   staminaText: {fileID: 0}
   headBobPower: 0.05
   headBobSpeed: 5
@@ -3560,8 +3561,26 @@ MonoBehaviour:
   sfxVolumeSlider: {fileID: 1124251357}
   musicVolumeSlider: {fileID: 855135879}
   sounds:
-  - name: Test
-    clip: {fileID: 8300000, guid: 37dc1512933729a458e003c33d53e5f7, type: 3}
+  - name: PlayerWalk
+    clip: {fileID: 8300000, guid: 83d577976823b4246a45797985e4cc49, type: 3}
+  - name: PlayerRun
+    clip: {fileID: 8300000, guid: f9de5ed18092de74da1efa72d0b14613, type: 3}
+  - name: MonsterFootsteps
+    clip: {fileID: 8300000, guid: e0c53302883dfab449d25da5a556b6a3, type: 3}
+  - name: Flashlight
+    clip: {fileID: 8300000, guid: d28bc450d8277c94d930ed0b755e858c, type: 3}
+  - name: Jumpscare
+    clip: {fileID: 8300000, guid: 5e78e5620e474d64cb9b232fca392898, type: 3}
+  - name: WindowTap1
+    clip: {fileID: 8300000, guid: 1e451d4c9c61d8a4da754e8393a359f6, type: 3}
+  - name: WindowTap2
+    clip: {fileID: 8300000, guid: cb42607211b1c2345a9cb976364e43b0, type: 3}
+  - name: Creak1
+    clip: {fileID: 8300000, guid: 6bb31dbdbe842ba41be7d0bb892ddca2, type: 3}
+  - name: Creak2
+    clip: {fileID: 8300000, guid: bfd197f971abfaa458cf947b676c9c8f, type: 3}
+  - name: Creak3
+    clip: {fileID: 8300000, guid: bfd197f971abfaa458cf947b676c9c8f, type: 3}
   masterVolume: 1
   sfxVolume: 1
   musicVolume: 1

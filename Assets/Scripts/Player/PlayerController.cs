@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 // Handles the player movement and interaction
 
@@ -24,6 +25,7 @@ public class PlayerController : MonoBehaviour
 	[Header("Stamina Settings")]
 	public float maxStamina = 100f;
 	public float staminaDrainRate = 1f;
+	public Slider staminaBar;
 	private float currentStamina;
 
 	[Header("UI Settings")]
@@ -87,7 +89,8 @@ public class PlayerController : MonoBehaviour
 		{
 			isRunning = true;
 			currentStamina -= staminaDrainRate * Time.deltaTime;
-			if (currentStamina < 0) currentStamina = 0;
+			staminaBar.value = currentStamina;
+            if (currentStamina < 0) currentStamina = 0;
 		}
 		else
 		{
