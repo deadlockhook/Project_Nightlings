@@ -32,6 +32,7 @@ public class InteractionManager : MonoBehaviour
     }
 
     private float interactionDistance = 1.6f;
+    private float objectLockDistance = 1.2f;
     private KeyCode interactionKey = KeyCode.Mouse0;
     private float interactableMovementSpeed = 20.0f;
 
@@ -79,7 +80,7 @@ public class InteractionManager : MonoBehaviour
             {
                 if (interactableObjRigidBody)
                 {
-                    Vector3 endPoint = playerCamera.transform.position + (playerCamera.transform.forward * interactionDistance);
+                    Vector3 endPoint = playerCamera.transform.position + (playerCamera.transform.forward * objectLockDistance);
                     Vector3 direction = (endPoint - interactableObjRigidBody.position).normalized;
                     float distance = Vector3.Distance(interactableObjRigidBody.position, endPoint);
 
