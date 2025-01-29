@@ -139,6 +139,7 @@ public class PlayerController : MonoBehaviour
 
 	private void UpdateStaminaUI()
 	{
+		if (staminaText)
 		staminaText.text = $"Stamina: {Mathf.CeilToInt(currentStamina)}";
 	}
 

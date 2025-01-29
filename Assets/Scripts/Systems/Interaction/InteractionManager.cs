@@ -79,7 +79,7 @@ public class InteractionManager : MonoBehaviour
             {
                 if (interactableObjRigidBody)
                 {
-                    Vector3 endPoint = playerCamera.transform.position + (playerCamera.transform.forward * interactionDistance);
+                    Vector3 endPoint = playerCamera.transform.position + (playerCamera.transform.forward * interactionDistance/ 2.0f);
                     Vector3 direction = (endPoint - interactableObjRigidBody.position).normalized;
                     float distance = Vector3.Distance(interactableObjRigidBody.position, endPoint);
 
