@@ -10,13 +10,15 @@ public class UIManager : MonoBehaviour
     {
         MainMenu,
         PauseMenu,
-        Gameplay
+        Gameplay,
+        Options
     }
 
     [Header("UI Screens")]
-    public GameObject mainMenuUI;
-    public GameObject pauseMenuUI;
-    public GameObject gameplayUI;
+    private GameObject mainMenuUI;
+    private GameObject pauseMenuUI;
+    private GameObject gameplayUI;
+    private GameObject optionsUI;
 
     private bool isPaused = false;
 
@@ -34,6 +36,10 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        mainMenuUI = transform.Find("MainMenu").gameObject;
+        pauseMenuUI = transform.Find("Pause").gameObject;
+        gameplayUI = transform.Find("Gameplay").gameObject;
+        optionsUI = transform.Find("Options").gameObject;
         ChangeUIState(UIState.MainMenu);
     }
 
@@ -42,6 +48,7 @@ public class UIManager : MonoBehaviour
         mainMenuUI.SetActive(false);
         pauseMenuUI.SetActive(false);
         gameplayUI.SetActive(false);
+        optionsUI.SetActive(false);
 
         switch (state)
         {
@@ -61,6 +68,12 @@ public class UIManager : MonoBehaviour
                 Time.timeScale = 1f;
                 gameplayUI.SetActive(true);
                 Cursor.lockState = CursorLockMode.Locked;
+                break;
+
+            case UIState.Options:
+                Time.timeScale = 0f;
+                optionsUI.SetActive(true);
+                Cursor.lockState = CursorLockMode.None;
                 break;
         }
     }
@@ -102,6 +115,11 @@ public class UIManager : MonoBehaviour
     public void GoToMainMenu()
     {
         ChangeUIState(UIState.MainMenu);
+    }
+
+    public void GoToOptions()
+    {
+        ChangeUIState(UIState.Options);
     }
 
     public void QuitGame()
