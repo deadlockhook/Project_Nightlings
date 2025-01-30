@@ -91,19 +91,12 @@ public class UIManager : MonoBehaviour
                 PauseGame();
             }
         }
-
-
     }
 
     public void PauseGame()
     {
         isPaused = true;
         ChangeUIState(UIState.PauseMenu);
-    }
-
-    public bool IsGamePaused()
-    {
-        return isPaused;
     }
 
     public void ResumeGame()
@@ -126,5 +119,15 @@ public class UIManager : MonoBehaviour
     {
         Debug.Log("Quitting game");
         Application.Quit();
+    }
+
+    public bool IsPaused()
+    {
+        return isPaused;
+    }
+
+    public bool IsInGame()
+    {
+        return !isPaused && gameplayUI.activeSelf;
     }
 }
