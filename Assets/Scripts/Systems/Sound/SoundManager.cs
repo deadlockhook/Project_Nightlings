@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,9 +16,13 @@ public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
 
-    public Slider masterVolumeSlider;
-    public Slider sfxVolumeSlider;
-    public Slider musicVolumeSlider;
+    private GameObject masterSliderGameObject;
+    private GameObject sfxSliderGameObject;
+    private GameObject musicSliderGameObject;
+
+    private Slider masterVolumeSlider;
+    private Slider sfxVolumeSlider;
+    private Slider musicVolumeSlider;
 
     [System.Serializable]
     public class Sound
@@ -62,6 +67,29 @@ public class SoundManager : MonoBehaviour
 
     private void Start()
     {
+        masterSliderGameObject = GameObject.Find("MasterSlider");
+        if (masterSliderGameObject == null)
+        {
+            masterSliderGameObject = GameObject.FindObjectsOfType<GameObject>(true)
+                    .FirstOrDefault(o => o.name == "MasterSlider");
+        }
+        sfxSliderGameObject = GameObject.Find("SFXSlider");
+        if (sfxSliderGameObject == null)
+        {
+            sfxSliderGameObject = GameObject.FindObjectsOfType<GameObject>(true)
+                    .FirstOrDefault(o => o.name == "SFXSlider");
+        }
+        musicSliderGameObject = GameObject.Find("MusicSlider");
+        if (musicSliderGameObject == null)
+        {
+            musicSliderGameObject = GameObject.FindObjectsOfType<GameObject>(true)
+                    .FirstOrDefault(o => o.name == "MusicSlider");
+        }
+
+        masterVolumeSlider = masterSliderGameObject.GetComponent<Slider>();
+        sfxVolumeSlider = sfxSliderGameObject.GetComponent<Slider>();
+        musicVolumeSlider = musicSliderGameObject.GetComponent<Slider>();
+
         masterVolumeSlider.value = masterVolume;
         sfxVolumeSlider.value = sfxVolume;
         musicVolumeSlider.value = musicVolume;

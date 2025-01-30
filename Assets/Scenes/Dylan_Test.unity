@@ -228,18 +228,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &86527632 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6855982350951247314, guid: 6769968cd7103954bae9d9072bab020f,
-    type: 3}
-  m_PrefabInstance: {fileID: 561704922447140047}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &261203149
 GameObject:
   m_ObjectHideFlags: 0
@@ -576,30 +564,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1506692398}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &855135879 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6575462307125006853, guid: 6769968cd7103954bae9d9072bab020f,
-    type: 3}
-  m_PrefabInstance: {fileID: 561704922447140047}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1124251357 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1083622146750263243, guid: 6769968cd7103954bae9d9072bab020f,
-    type: 3}
-  m_PrefabInstance: {fileID: 561704922447140047}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1374888375
 GameObject:
   m_ObjectHideFlags: 0
@@ -629,9 +593,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bbdb9f15384e924d90778fcc866fffa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  masterVolumeSlider: {fileID: 86527632}
-  sfxVolumeSlider: {fileID: 1124251357}
-  musicVolumeSlider: {fileID: 855135879}
   sounds:
   - name: PlayerWalk
     clip: {fileID: 8300000, guid: 83d577976823b4246a45797985e4cc49, type: 3}
@@ -973,6 +934,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UIManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4458562638018240015, guid: 6769968cd7103954bae9d9072bab020f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6323113044611115339, guid: 6769968cd7103954bae9d9072bab020f,
         type: 3}
