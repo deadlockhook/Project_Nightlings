@@ -517,7 +517,7 @@ MonoBehaviour:
   - name: PlayerWalk
     clip: {fileID: 8300000, guid: 83d577976823b4246a45797985e4cc49, type: 3}
   - name: PlayerRun
-    clip: {fileID: 8300000, guid: f9de5ed18092de74da1efa72d0b14613, type: 3}
+    clip: {fileID: 8300000, guid: e0078014c73b63d46bc5d2f820fee255, type: 3}
   - name: MonsterFootsteps
     clip: {fileID: 8300000, guid: e0c53302883dfab449d25da5a556b6a3, type: 3}
   - name: Flashlight
