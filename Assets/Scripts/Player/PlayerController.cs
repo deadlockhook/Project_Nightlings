@@ -35,6 +35,15 @@ public class PlayerController : MonoBehaviour
 	public float headBobPower = 0.05f;
 	public float headBobSpeed = 5f;
 
+	[Header("Flashlight Settings")]
+	public Light flashlight;
+	public float maxLightIntensity = 5f;
+	public float minLightIntensity = 0f;
+	public float drainRate = 0.1f;
+	public float rechargeRate = 0.5f;
+	private float currentLightIntensity;
+	private bool isShaking = false;
+
 	private CharacterController characterController;
 	private Vector3 moveDirection = Vector3.zero;
 
@@ -60,6 +69,12 @@ public class PlayerController : MonoBehaviour
 
 		if (interactionManager != null)
 			interactionManager.OnLocalPlayerSetup(this, playerCamera);
+
+		if (flashlight != null)
+		{
+			currentLightIntensity = maxLightIntensity;
+			flashlight.intensity = currentLightIntensity;
+		}
 	}
 
 	private void Update()
@@ -69,6 +84,7 @@ public class PlayerController : MonoBehaviour
 		UpdateFOV();
 		UpdateStaminaUI();
 		HandleHeadBob();
+		HandleFlashlight();
 
 		if (interactionManager != null)
 			interactionManager.OnLocalPlayerUpdate();
@@ -91,9 +107,9 @@ public class PlayerController : MonoBehaviour
 			currentStamina -= staminaDrainRate * Time.deltaTime;
 
 			if (staminaBar)
-		    	staminaBar.value = currentStamina;
+				staminaBar.value = currentStamina;
 
-            if (currentStamina < 0) currentStamina = 0;
+			if (currentStamina < 0) currentStamina = 0;
 		}
 		else
 		{
@@ -146,7 +162,7 @@ public class PlayerController : MonoBehaviour
 	private void UpdateStaminaUI()
 	{
 		if (staminaText)
-		staminaText.text = $"Stamina: {Mathf.CeilToInt(currentStamina)}";
+			staminaText.text = $"Stamina: {Mathf.CeilToInt(currentStamina)}";
 	}
 
 	private void HandleHeadBob()
@@ -166,5 +182,33 @@ public class PlayerController : MonoBehaviour
 			headBobTimer = 0f;
 			playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, cameraOriginalPosition, Time.deltaTime * 5f);
 		}
+	}
+
+	private void HandleFlashlight()
+	{
+		if (flashlight == null)
+			return;
+
+		if (!isShaking)
+		{
+			currentLightIntensity -= drainRate * Time.deltaTime;
+			if (currentLightIntensity < minLightIntensity)
+				currentLightIntensity = minLightIntensity;
+		}
+
+		if (Input.GetMouseButton(1))
+		{
+			isShaking = true;
+			currentLightIntensity += rechargeRate * Time.deltaTime;
+		}
+		else
+		{
+			isShaking = false;
+		}
+
+		if (currentLightIntensity > maxLightIntensity)
+			currentLightIntensity = maxLightIntensity;
+
+		flashlight.intensity = currentLightIntensity;
 	}
 }
