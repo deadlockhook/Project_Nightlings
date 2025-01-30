@@ -76,20 +76,25 @@ public class SoundManager : MonoBehaviour
     {
         if (!soundDictionary.TryGetValue(soundName, out AudioClip clip))
         {
-            Debug.LogWarning("Sound not found");
+            Debug.LogWarning($"Sound '{soundName}' not found");
             return;
         }
 
         if (source != null)
         {
+            if (source.isPlaying && source.clip == clip)
+                return;
+
+            source.clip = clip;
             source.volume = sfxVolume * masterVolume;
-            source.PlayOneShot(clip);
+            source.Play();
         }
         else
         {
             Play2DSound(clip);
         }
     }
+
 
     private void Play2DSound(AudioClip clip)
     {

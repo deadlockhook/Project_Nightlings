@@ -58,9 +58,14 @@ public class PlayerController : MonoBehaviour
 
 	private InteractionManager interactionManager;
 
+	private GameObject footstepsGameObject;
+	private AudioSource footsteps;
+
 	private void Start()
 	{
-		characterController = GetComponent<CharacterController>();
+		footstepsGameObject = transform.Find("Footsteps").gameObject;
+        footsteps = footstepsGameObject.GetComponent<AudioSource>();
+        characterController = GetComponent<CharacterController>();
 		interactionManager = FindObjectOfType<InteractionManager>();
 		currentFOV = normalFOV;
 		currentStamina = maxStamina;
@@ -99,7 +104,8 @@ public class PlayerController : MonoBehaviour
 		if (inputDirection.magnitude > 1f)
 		{
 			inputDirection.Normalize();
-		}
+            SoundManager.Instance.PlaySound("PlayerWalk", footsteps);
+        }
 
 		if (Input.GetKey(KeyCode.LeftShift) && currentStamina > 0 && inputDirection.magnitude > 0)
 		{
@@ -110,11 +116,13 @@ public class PlayerController : MonoBehaviour
 				staminaBar.value = currentStamina;
 
 			if (currentStamina < 0) currentStamina = 0;
-		}
+			SoundManager.Instance.PlaySound("PlayerRun", footsteps);
+        }
 		else
 		{
 			isRunning = false;
-		}
+			footsteps.Stop();
+        }
 
 		float targetSpeed = isRunning ? runSpeed : walkSpeed;
 		if (inputDirection.magnitude == 0) targetSpeed = 0;
