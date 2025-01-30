@@ -65,8 +65,8 @@ public class PlayerController : MonoBehaviour
 	private void Start()
 	{
 		footstepsGameObject = transform.Find("Footsteps").gameObject;
-        footsteps = footstepsGameObject.GetComponent<AudioSource>();
-        characterController = GetComponent<CharacterController>();
+		footsteps = footstepsGameObject.GetComponent<AudioSource>();
+		characterController = GetComponent<CharacterController>();
 		interactionManager = FindObjectOfType<InteractionManager>();
 		currentFOV = normalFOV;
 		currentStamina = maxStamina;
@@ -98,15 +98,15 @@ public class PlayerController : MonoBehaviour
 
 	private void HandleMovement()
 	{
-        float moveX = Input.GetAxis("Horizontal");
+		float moveX = Input.GetAxis("Horizontal");
 		float moveZ = Input.GetAxis("Vertical");
 		Vector3 inputDirection = transform.right * moveX + transform.forward * moveZ;
-       
 
-        if (inputDirection.magnitude > 1f)
+
+		if (inputDirection.magnitude > 1f)
 		{
 			inputDirection.Normalize();
-        }
+		}
 
 		if (Input.GetKey(KeyCode.LeftShift) && currentStamina > 0 && inputDirection.magnitude > 0)
 		{
@@ -118,12 +118,12 @@ public class PlayerController : MonoBehaviour
 				staminaBar.value = currentStamina;
 
 			if (currentStamina < 0) currentStamina = 0;
-        }
+		}
 		else
 		{
-            isWalking = true;
-            isRunning = false;
-        }
+			isWalking = true;
+			isRunning = false;
+		}
 
 		float targetSpeed = isRunning ? runSpeed : walkSpeed;
 		if (inputDirection.magnitude == 0) targetSpeed = 0;
@@ -147,17 +147,17 @@ public class PlayerController : MonoBehaviour
 
 		moveDirection.y = verticalVelocity;
 		characterController.Move(moveDirection * Time.deltaTime);
-        
+
 		if (isRunning && characterController.isGrounded && inputDirection.magnitude > 0f && currentStamina > 0)
-        {
-            SoundManager.Instance.PlaySound("PlayerRun", footsteps);
-        }
-        else if (isWalking && characterController.isGrounded && inputDirection.magnitude > 0f)
-        {
-            SoundManager.Instance.PlaySound("PlayerWalk", footsteps);
-        }
-        else footsteps.Stop();
-    }
+		{
+			SoundManager.Instance.PlaySound("PlayerRun", footsteps);
+		}
+		else if (isWalking && characterController.isGrounded && inputDirection.magnitude > 0f)
+		{
+			SoundManager.Instance.PlaySound("PlayerWalk", footsteps);
+		}
+		else footsteps.Stop();
+	}
 
 	private void HandleLook()
 	{
@@ -189,7 +189,7 @@ public class PlayerController : MonoBehaviour
 	{
 		if (currentSpeed > 0 && characterController.isGrounded)
 		{
-            float bobSpeed = currentSpeed * headBobSpeed / walkSpeed;
+			float bobSpeed = currentSpeed * headBobSpeed / walkSpeed;
 
 			headBobTimer += Time.deltaTime * bobSpeed;
 
