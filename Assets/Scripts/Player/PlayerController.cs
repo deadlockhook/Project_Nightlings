@@ -148,11 +148,11 @@ public class PlayerController : MonoBehaviour
 		moveDirection.y = verticalVelocity;
 		characterController.Move(moveDirection * Time.deltaTime);
         
-		if (isRunning && inputDirection.magnitude > 0f && currentStamina > 0)
+		if (isRunning && characterController.isGrounded && inputDirection.magnitude > 0f && currentStamina > 0)
         {
             SoundManager.Instance.PlaySound("PlayerRun", footsteps);
         }
-        else if (isWalking && inputDirection.magnitude > 0f)
+        else if (isWalking && characterController.isGrounded && inputDirection.magnitude > 0f)
         {
             SoundManager.Instance.PlaySound("PlayerWalk", footsteps);
         }
