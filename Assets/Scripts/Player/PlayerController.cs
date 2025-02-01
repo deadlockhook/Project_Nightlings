@@ -215,7 +215,9 @@ public class PlayerController : MonoBehaviour
 			float bobSpeed = currentSpeed * headBobSpeed / walkSpeed;
 			headBobTimer += Time.deltaTime * bobSpeed;
 			float bobOffsetY = Mathf.Sin(headBobTimer) * headBobPower;
-			playerCamera.transform.localPosition = cameraOriginalPosition + new Vector3(0f, bobOffsetY, 0f);
+			float bobOffsetX = Mathf.Cos(headBobTimer * 0.5f) * headBobPower * 0.5f;
+
+			playerCamera.transform.localPosition = cameraOriginalPosition + new Vector3(bobOffsetX, bobOffsetY, 0f);
 		}
 		else
 		{
