@@ -46,6 +46,8 @@ public class PlayerController : MonoBehaviour
 	public float rechargeRate = 0.5f;
 	private float currentLightIntensity;
 	private bool isShaking = false;
+	public KeyCode flashlightToggleKey = KeyCode.F;
+	private bool flashlightEnabled = true;
 
 	private CharacterController characterController;
 	private Vector3 moveDirection = Vector3.zero;
@@ -88,6 +90,15 @@ public class PlayerController : MonoBehaviour
 
 	private void Update()
 	{
+		if (Input.GetKeyDown(flashlightToggleKey))
+		{
+			flashlightEnabled = !flashlightEnabled;
+			if (flashlight != null)
+			{
+				flashlight.enabled = flashlightEnabled;
+			}
+		}
+
 		HandleMovement();
 		HandleLook();
 		UpdateFOV();
@@ -231,7 +242,7 @@ public class PlayerController : MonoBehaviour
 
 	private void HandleFlashlight()
 	{
-		if (flashlight == null)
+		if (flashlight == null || !flashlightEnabled)
 			return;
 
 		if (!isShaking)
