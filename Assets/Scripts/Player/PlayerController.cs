@@ -184,6 +184,9 @@ public class PlayerController : MonoBehaviour
 
 	private void HandleLook()
 	{
+		if (UIManager.Instance != null && UIManager.Instance.IsPaused())
+			return;
+
 		float mouseX = Input.GetAxis("Mouse X") * lookSensitivity;
 		float mouseY = Input.GetAxis("Mouse Y") * lookSensitivity;
 
