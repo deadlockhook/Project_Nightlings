@@ -24,7 +24,10 @@ public class PlayerController : MonoBehaviour
 
 	[Header("Stamina Settings")]
 	public float maxStamina = 100f;
-	public float staminaDrainRate = 1f;
+	public float staminaDrainRate = 10f;
+	public float staminaRechargeRate = 8f;
+	public float staminaCoolDown = 1f;
+	private float staminaCoolDownTimer = 0f;
 	public Slider staminaBar;
 	private float currentStamina;
 
@@ -92,6 +95,22 @@ public class PlayerController : MonoBehaviour
 		HandleHeadBob();
 		HandleFlashlight();
 
+		if (isRunning)
+		{
+			staminaCoolDownTimer = 0f;
+		}
+		else
+		{
+			staminaCoolDownTimer += Time.deltaTime;
+			if (staminaCoolDownTimer >= staminaCoolDown && currentStamina < maxStamina)
+			{
+				currentStamina += staminaRechargeRate * Time.deltaTime;
+				currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
+				if (staminaBar)
+					staminaBar.value = currentStamina;
+			}
+		}
+
 		if (interactionManager != null)
 			interactionManager.OnLocalPlayerUpdate();
 	}
@@ -101,7 +120,6 @@ public class PlayerController : MonoBehaviour
 		float moveX = Input.GetAxis("Horizontal");
 		float moveZ = Input.GetAxis("Vertical");
 		Vector3 inputDirection = transform.right * moveX + transform.forward * moveZ;
-
 
 		if (inputDirection.magnitude > 1f)
 		{
@@ -117,7 +135,8 @@ public class PlayerController : MonoBehaviour
 			if (staminaBar)
 				staminaBar.value = currentStamina;
 
-			if (currentStamina < 0) currentStamina = 0;
+			if (currentStamina < 0)
+				currentStamina = 0;
 		}
 		else
 		{
@@ -126,7 +145,8 @@ public class PlayerController : MonoBehaviour
 		}
 
 		float targetSpeed = isRunning ? runSpeed : walkSpeed;
-		if (inputDirection.magnitude == 0) targetSpeed = 0;
+		if (inputDirection.magnitude == 0)
+			targetSpeed = 0;
 
 		currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.deltaTime * 10f);
 
@@ -156,7 +176,10 @@ public class PlayerController : MonoBehaviour
 		{
 			SoundManager.Instance.PlaySound("PlayerWalk", footsteps);
 		}
-		else footsteps.Stop();
+		else
+		{
+			footsteps.Stop();
+		}
 	}
 
 	private void HandleLook()
@@ -190,11 +213,8 @@ public class PlayerController : MonoBehaviour
 		if (currentSpeed > 0 && characterController.isGrounded)
 		{
 			float bobSpeed = currentSpeed * headBobSpeed / walkSpeed;
-
 			headBobTimer += Time.deltaTime * bobSpeed;
-
 			float bobOffsetY = Mathf.Sin(headBobTimer) * headBobPower;
-
 			playerCamera.transform.localPosition = cameraOriginalPosition + new Vector3(0f, bobOffsetY, 0f);
 		}
 		else
