@@ -43,8 +43,12 @@ public class PlayerController : MonoBehaviour
 	public Light flashlight;
 	public float maxLightIntensity = 5f;
 	public float minLightIntensity = 0f;
+	public float maxLightRange = 15f;
+	public float minLightRange = 0f;
 	public float drainRate = 0.1f;
 	private float currentLightIntensity;
+	private float currentLightRange;
+	private float rangeDrainRate;
 	private bool isRecharging = false;
 
 	public KeyCode flashlightToggleKey = KeyCode.F;
@@ -91,6 +95,18 @@ public class PlayerController : MonoBehaviour
 		{
 			currentLightIntensity = maxLightIntensity;
 			flashlight.intensity = currentLightIntensity;
+
+			currentLightRange = maxLightRange;
+			flashlight.range = currentLightRange;
+
+			if (maxLightIntensity != minLightIntensity)
+			{
+				rangeDrainRate = drainRate * (maxLightRange - minLightRange) / (maxLightIntensity - minLightIntensity);
+			}
+			else
+			{
+				rangeDrainRate = 0f;
+			}
 		}
 	}
 
@@ -258,6 +274,10 @@ public class PlayerController : MonoBehaviour
 			currentLightIntensity -= drainRate * Time.deltaTime;
 			currentLightIntensity = Mathf.Clamp(currentLightIntensity, minLightIntensity, maxLightIntensity);
 			flashlight.intensity = currentLightIntensity;
+
+			currentLightRange -= rangeDrainRate * Time.deltaTime;
+			currentLightRange = Mathf.Clamp(currentLightRange, minLightRange, maxLightRange);
+			flashlight.range = currentLightRange;
 		}
 
 		if (Input.GetMouseButtonDown(1) && !isRecharging)
@@ -283,6 +303,9 @@ public class PlayerController : MonoBehaviour
 
 		currentLightIntensity = maxLightIntensity;
 		flashlight.intensity = currentLightIntensity;
+
+		currentLightRange = maxLightRange;
+		flashlight.range = currentLightRange;
 
 		flashlight.enabled = true;
 		SoundManager.Instance.PlaySound("Flashlight");
