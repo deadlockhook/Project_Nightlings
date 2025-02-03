@@ -44,9 +44,9 @@ public class PlayerController : MonoBehaviour
 	public float maxLightIntensity = 5f;
 	public float minLightIntensity = 0f;
 	public float drainRate = 0.1f;
-	public float rechargeRate = 0.5f;
 	private float currentLightIntensity;
-	private bool isShaking = false;
+	private bool isRecharging = false;
+
 	public KeyCode flashlightToggleKey = KeyCode.F;
 	private bool flashlightEnabled = true;
 	private Animation flashlightShake;
@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
 		if (Input.GetKeyDown(flashlightToggleKey))
 		{
 			SoundManager.Instance.PlaySound("Flashlight");
-            flashlightEnabled = !flashlightEnabled;
+			flashlightEnabled = !flashlightEnabled;
 			if (flashlight != null)
 			{
 				flashlight.enabled = flashlightEnabled;
@@ -248,28 +248,40 @@ public class PlayerController : MonoBehaviour
 		if (flashlight == null || !flashlightEnabled)
 			return;
 
-		if (!isShaking)
+		if (!isRecharging)
 		{
 			currentLightIntensity -= drainRate * Time.deltaTime;
-			if (currentLightIntensity < minLightIntensity)
-				currentLightIntensity = minLightIntensity;
+			currentLightIntensity = Mathf.Clamp(currentLightIntensity, minLightIntensity, maxLightIntensity);
+			flashlight.intensity = currentLightIntensity;
 		}
 
-		if (Input.GetMouseButton(1))
+		if (Input.GetMouseButtonDown(1) && !isRecharging)
 		{
-			isShaking = true;
+			StartCoroutine(RechargeFlashlight());
+		}
+	}
+
+	private IEnumerator RechargeFlashlight()
+	{
+		isRecharging = true;
+
+		flashlight.enabled = false;
+		SoundManager.Instance.PlaySound("Flashlight");
+		SoundManager.Instance.PlaySound("FlashlightShake");
+
+		if (flashlightShake != null)
+		{
 			flashlightShake.Play();
-            SoundManager.Instance.PlaySound("FlashlightShake");
-            currentLightIntensity += rechargeRate * Time.deltaTime;
-		}
-		else
-		{
-			isShaking = false;
 		}
 
-		if (currentLightIntensity > maxLightIntensity)
-			currentLightIntensity = maxLightIntensity;
+		yield return new WaitForSeconds(1.5f);
 
+		currentLightIntensity = maxLightIntensity;
 		flashlight.intensity = currentLightIntensity;
+
+		flashlight.enabled = true;
+		SoundManager.Instance.PlaySound("Flashlight");
+
+		isRecharging = false;
 	}
 }

@@ -124,31 +124,22 @@ public class SoundManager : MonoBehaviour
         }
     }
 
+	private void Play2DSound(AudioClip clip)
+	{
+		AudioSource source2D;
 
-    private void Play2DSound(AudioClip clip)
-    {
-        AudioSource source2D;
+		if (!audioSources.TryGetValue("2D", out source2D))
+		{
+			GameObject obj = new GameObject("2DAudioSource");
+			source2D = obj.AddComponent<AudioSource>();
+			source2D.spatialBlend = 0;
+			DontDestroyOnLoad(obj);
+			audioSources["2D"] = source2D;
+		}
 
-        if (!audioSources.ContainsKey("2D"))
-        {
-            GameObject obj = new GameObject("2DAudioSource");
-            source2D = obj.AddComponent<AudioSource>();
-            source2D.spatialBlend = 0;
-            DontDestroyOnLoad(obj);
-            audioSources["2D"] = source2D;
-        }
-        else
-        {
-            source2D = audioSources["2D"];
-        }
-
-        if (!source2D.isPlaying && !source2D.clip == clip)
-        {
-            source2D.volume = sfxVolume * masterVolume;
-            source2D.PlayOneShot(clip);
-        }
-        else return;
-    }
+		source2D.volume = sfxVolume * masterVolume;
+		source2D.PlayOneShot(clip);
+	}
 
     public void PlayMusic(string musicName)
     {
@@ -194,4 +185,3 @@ public class SoundManager : MonoBehaviour
         }
     }
 }
-
