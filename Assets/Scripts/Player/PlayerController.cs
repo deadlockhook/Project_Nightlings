@@ -69,6 +69,8 @@ public class PlayerController : MonoBehaviour
 	private GameObject footstepsGameObject;
 	private AudioSource footsteps;
 
+	private bool isDead = false;
+
 	private void Start()
 	{
 		footstepsGameObject = transform.Find("Footsteps").gameObject;
@@ -94,6 +96,9 @@ public class PlayerController : MonoBehaviour
 
 	private void Update()
 	{
+		if (isDead)
+			return;
+
 		if (Input.GetKeyDown(flashlightToggleKey) && !isRecharging)
 		{
 			SoundManager.Instance.PlaySound("Flashlight");
@@ -284,4 +289,25 @@ public class PlayerController : MonoBehaviour
 
 		isRecharging = false;
 	}
+
+	public void Die()
+	{
+		if (isDead)
+			return;
+
+		isDead = true;
+
+		if (characterController != null)
+			characterController.enabled = false;
+
+		if (flashlight != null)
+			flashlight.enabled = false;
+
+		footsteps.Stop();
+		Debug.Log("player died");
+	}
+
+	// TODO - Disable all activitys on player death
+	// Swith to lose UI state which will have button to reload scene
+	// If an activity has fully progressed, ex window opened, trigger player death after 10 seconds
 }
