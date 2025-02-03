@@ -165,7 +165,7 @@ public class InteractionManager : MonoBehaviour
         }
     }
 
-    private int lineLength = 10; 
+    /*private int lineLength = 10; 
     private int lineThickness = 2;  
     private Color crosshairColor = Color.white;  
 
@@ -178,5 +178,5 @@ public class InteractionManager : MonoBehaviour
 
         GUI.DrawTexture(new Rect(centerX - lineLength, centerY - (lineThickness / 2), lineLength * 2, lineThickness), Texture2D.whiteTexture);
         GUI.DrawTexture(new Rect(centerX - (lineThickness / 2), centerY - lineLength, lineThickness, lineLength * 2), Texture2D.whiteTexture);
-    }
+    }*/
 }
