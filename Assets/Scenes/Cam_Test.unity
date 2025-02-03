@@ -340,7 +340,6 @@ MonoBehaviour:
   maxLightIntensity: 5
   minLightIntensity: 0
   drainRate: 0.1
-  rechargeRate: 0.5
   flashlightToggleKey: 102
 --- !u!143 &151590513
 CharacterController:
@@ -6060,6 +6059,11 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1718464532}
+    - target: {fileID: 4477890095919621354, guid: f2d7c5f5c04993641bcbb98579ea937c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4502196276357788726, guid: f2d7c5f5c04993641bcbb98579ea937c,
         type: 3}
       propertyPath: m_Mesh
@@ -6199,6 +6203,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: House
+      objectReference: {fileID: 0}
+    - target: {fileID: 6687178040360240538, guid: f2d7c5f5c04993641bcbb98579ea937c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6776555103492173899, guid: f2d7c5f5c04993641bcbb98579ea937c,
         type: 3}
@@ -7818,7 +7827,7 @@ PrefabInstance:
     - target: {fileID: 8398739316948983775, guid: f2d7c5f5c04993641bcbb98579ea937c,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8634735935147147869, guid: f2d7c5f5c04993641bcbb98579ea937c,
         type: 3}
