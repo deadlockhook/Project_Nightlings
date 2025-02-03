@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
 	public float headBobSpeed = 5f;
 
 	[Header("Flashlight Settings")]
+	public GameObject flashlightGameObject;
 	public Light flashlight;
 	public float maxLightIntensity = 5f;
 	public float minLightIntensity = 0f;
@@ -48,6 +49,7 @@ public class PlayerController : MonoBehaviour
 	private bool isShaking = false;
 	public KeyCode flashlightToggleKey = KeyCode.F;
 	private bool flashlightEnabled = true;
+	private Animation flashlightShake;
 
 	private CharacterController characterController;
 	private Vector3 moveDirection = Vector3.zero;
@@ -75,6 +77,8 @@ public class PlayerController : MonoBehaviour
 		interactionManager = FindObjectOfType<InteractionManager>();
 		currentFOV = normalFOV;
 		currentStamina = maxStamina;
+
+		flashlightShake = flashlightGameObject.GetComponent<Animation>();
 
 		cameraOriginalPosition = playerCamera.transform.localPosition;
 
@@ -254,6 +258,7 @@ public class PlayerController : MonoBehaviour
 		if (Input.GetMouseButton(1))
 		{
 			isShaking = true;
+			flashlightShake.Play();
 			currentLightIntensity += rechargeRate * Time.deltaTime;
 		}
 		else
