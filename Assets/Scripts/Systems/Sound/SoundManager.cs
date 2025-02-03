@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using static Unity.VisualScripting.Member;
 
 // To play 2D sounds Ex: UI
 // SoundManager.Instance.PlaySound("Sound Name");
@@ -141,8 +142,12 @@ public class SoundManager : MonoBehaviour
             source2D = audioSources["2D"];
         }
 
-        source2D.volume = sfxVolume * masterVolume;
-        source2D.PlayOneShot(clip);
+        if (!source2D.isPlaying && !source2D.clip == clip)
+        {
+            source2D.volume = sfxVolume * masterVolume;
+            source2D.PlayOneShot(clip);
+        }
+        else return;
     }
 
     public void PlayMusic(string musicName)

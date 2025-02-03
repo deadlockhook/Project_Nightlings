@@ -694,7 +694,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 944454822}
-  m_LocalEulerAnglesHint: {x: 3.568, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 89.406, y: 0, z: 0}
 --- !u!23 &498016513
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1278,6 +1278,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5417322594430981804, guid: 001c8bae2afc116459804d90f6183274,
+        type: 3}
+      propertyPath: sounds.Array.size
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 5417322594430981804, guid: 001c8bae2afc116459804d90f6183274,
+        type: 3}
+      propertyPath: sounds.Array.data[10].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 897ea8374f24d204295cca447091ff9f, type: 3}
+    - target: {fileID: 5417322594430981804, guid: 001c8bae2afc116459804d90f6183274,
+        type: 3}
+      propertyPath: sounds.Array.data[10].name
+      value: FlashlightShake
       objectReference: {fileID: 0}
     - target: {fileID: 6874945791814882280, guid: 001c8bae2afc116459804d90f6183274,
         type: 3}

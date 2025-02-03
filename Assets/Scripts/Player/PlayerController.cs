@@ -259,7 +259,8 @@ public class PlayerController : MonoBehaviour
 		{
 			isShaking = true;
 			flashlightShake.Play();
-			currentLightIntensity += rechargeRate * Time.deltaTime;
+            SoundManager.Instance.PlaySound("FlashlightShake");
+            currentLightIntensity += rechargeRate * Time.deltaTime;
 		}
 		else
 		{
