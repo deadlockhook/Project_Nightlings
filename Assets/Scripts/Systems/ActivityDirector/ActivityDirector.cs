@@ -87,10 +87,10 @@ public class ActivityDirector : MonoBehaviour
     [SerializeField] private int minToySpawnLocations = 12;
     [SerializeField] private int maxToySpawnLocations = 20;
 
-    private float triggerWindowsActivityLogic = 4000.0f;
-    private float windowsActivityTimeLimit = 2000.0f;
+    private float triggerWindowsActivityLogic = 2000.0f;
+    private float windowsActivityTimeLimit = 1000.0f;
 
-    private float triggerPetdoorActivityLogic = 4000.0f;
+    private float triggerPetdoorActivityLogic = 6000.0f;
     private float petdoorActivityTimeLimit = 2000.0f;
 
     private List<activityTrigger> windowEventObjects;
@@ -143,7 +143,6 @@ public class ActivityDirector : MonoBehaviour
     private void OnPetDoorActivityStart(int activityIndex)
     {
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerStart();
-        soundManager.PlaySound("WindowTap2");
     }
 
     private void OnPetDoorActivityUpdate(int activityIndex)
@@ -163,7 +162,6 @@ public class ActivityDirector : MonoBehaviour
     private void OnWindowActivityStart(int activityIndex)
     {
         windowEventObjects[activityIndex].gameObj.GetComponent<WindowsActivity>().ActivityTriggerStart();
-        soundManager.PlaySound("Creak1");
     }
 
     private void OnWindowActivityUpdate(int activityIndex)

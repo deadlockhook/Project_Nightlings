@@ -16,10 +16,13 @@ public class WindowsActivity : MonoBehaviour
     private float startYPosition = 0.0f;
     private float lastActivityProgress = 0.0f;
 
+    private AudioSource triggerAudio;
+
     private void Start()
     {
         startYPosition = transform.position.y;
         endYPosition = startYPosition + 0.8972201f;
+        triggerAudio = GetComponent<AudioSource>();
     }
     public void ResetActivity()
     {
@@ -39,6 +42,7 @@ public class WindowsActivity : MonoBehaviour
 
         inActivity = true;
         shouldReset = false;
+        triggerAudio.Play();
     }
     public bool OnActivityUpdate(float activityProgress)
     {
