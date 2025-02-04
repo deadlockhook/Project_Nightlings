@@ -72,15 +72,15 @@ public class UIManager : MonoBehaviour
 				Cursor.lockState = CursorLockMode.None;
 				Time.timeScale = 0f;
 				pauseMenuUI.SetActive(true);
-                isPaused = true;
-                break;
+				isPaused = true;
+				break;
 
 			case UIState.Gameplay:
 				Time.timeScale = 1f;
 				gameplayUI.SetActive(true);
 				Cursor.lockState = CursorLockMode.Locked;
-                isPaused = false;
-                break;
+				isPaused = false;
+				break;
 
 			case UIState.Options:
 				Time.timeScale = 0f;
@@ -104,6 +104,11 @@ public class UIManager : MonoBehaviour
 
 	private void Update()
 	{
+		if (winUI.activeSelf || loseUI.activeSelf)
+		{
+			return;
+		}
+
 		if (Input.GetKeyDown(KeyCode.Escape) && !mainMenuUI.activeSelf)
 		{
 			if (isPaused)
@@ -119,12 +124,18 @@ public class UIManager : MonoBehaviour
 
 	public void PauseGame()
 	{
+		if (winUI.activeSelf || loseUI.activeSelf)
+			return;
+
 		isPaused = true;
 		ChangeUIState(UIState.PauseMenu);
 	}
 
 	public void ResumeGame()
 	{
+		if (winUI.activeSelf || loseUI.activeSelf)
+			return;
+
 		isPaused = false;
 		ChangeUIState(UIState.Gameplay);
 	}
@@ -155,7 +166,7 @@ public class UIManager : MonoBehaviour
 	{
 		isPaused = true;
 		ChangeUIState(UIState.Lose);
-    }
+	}
 
 	public bool IsPaused()
 	{
@@ -169,9 +180,8 @@ public class UIManager : MonoBehaviour
 
 	public void RestartScene()
 	{
-
 		Time.timeScale = 1f;
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        ChangeUIState(UIState.Gameplay);
-    }
+		ChangeUIState(UIState.Gameplay);
+	}
 }

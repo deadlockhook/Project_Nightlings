@@ -121,11 +121,13 @@ public class ActivityDirector : MonoBehaviour
     [SerializeField] private int minToySpawnLocations = 12;
     [SerializeField] private int maxToySpawnLocations = 20;
 
-    private float triggerWindowsActivityLogic = 6000.0f;
-    private float windowsActivityTimeLimit = 5000.0f;
+    private float triggerWindowsActivityLogicRangeStart = 35000.0f;
+    private float triggerWindowsActivityLogicRangeEnd = 45000.0f;
+    private float windowsActivityTimeLimit = 25000.0f;
 
-    private float triggerPetdoorActivityLogic = 6000.0f;
-    private float petdoorActivityTimeLimit = 5000.0f;
+    private float triggerPetdoorActivityLogicRangeStart = 45000.0f;
+    private float triggerPetdoorActivityLogicRangeEnd = 55000.0f;
+    private float petdoorActivityTimeLimit = 20000.0f;
 
     private List<activityTrigger> windowEventObjects;
     private activityTrigger petdoorEventObject;
@@ -149,7 +151,7 @@ public class ActivityDirector : MonoBehaviour
         lastDeltaTimeForWindowEvents = Time.deltaTime * 1000.0f;
         lastDeltaTimeForPetDoorEvents = lastDeltaTimeForWindowEvents;
 
-        nightActivity = new timedActivity(2000, 0, null, OnWin, null);
+        nightActivity = new timedActivity(420000, 0, null, OnWin, null);
         deathTrigger = new timedActivity(10000, 0, null, OnDeath, null);
 
         toySpawnLocations = new List<Vector3>();
@@ -256,7 +258,7 @@ public class ActivityDirector : MonoBehaviour
         if (windowActivityFinished)
             return;
 
-        if (currentDeltaTime - lastDeltaTimeForWindowEvents >= triggerWindowsActivityLogic && windowEventObjects.Count > 0)
+        if (currentDeltaTime - lastDeltaTimeForWindowEvents >= Random.Range(triggerWindowsActivityLogicRangeStart, triggerWindowsActivityLogicRangeEnd) && windowEventObjects.Count > 0)
         {
             activityTrigger activity = windowEventObjects[Mathf.Clamp(Random.Range(0, windowEventObjects.Count), 0, windowEventObjects.Count)];
 
@@ -274,7 +276,7 @@ public class ActivityDirector : MonoBehaviour
 
         Debug.Log("Petdoor active " + (currentDeltaTime - lastDeltaTimeForPetDoorEvents));
 
-        if (petdoorEventObject.gameObj && currentDeltaTime - lastDeltaTimeForPetDoorEvents >= triggerPetdoorActivityLogic && !petdoorEventObject.eventTime.IsActive())
+        if (petdoorEventObject.gameObj && currentDeltaTime - lastDeltaTimeForPetDoorEvents >= Random.Range(triggerPetdoorActivityLogicRangeStart, triggerPetdoorActivityLogicRangeEnd) && !petdoorEventObject.eventTime.IsActive())
         {
             petdoorEventObject.eventTime.Activate(activeActivites);
             lastDeltaTimeForPetDoorEvents = currentDeltaTime;
