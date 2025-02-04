@@ -47,8 +47,8 @@ Light:
   m_Color: {r: 0.78431374, g: 1, b: 1, a: 1}
   m_Intensity: 3
   m_Range: 15
-  m_SpotAngle: 60
-  m_InnerSpotAngle: 50
+  m_SpotAngle: 107.53319
+  m_InnerSpotAngle: 97.53319
   m_CookieSize: 10
   m_Shadows:
     m_Type: 0
@@ -279,16 +279,14 @@ MonoBehaviour:
   staminaDrainRate: 10
   staminaRechargeRate: 8
   staminaCoolDown: 1
-  staminaBar: {fileID: 0}
-  staminaText: {fileID: 0}
   headBobPower: 0.075
   headBobSpeed: 10
   flashlightGameObject: {fileID: 8916961133800133634}
   flashlight: {fileID: 9077902820812710601}
   maxLightIntensity: 3
   minLightIntensity: 0
-  maxLightRange: 15
-  minLightRange: 0
+  maxLightRange: 25
+  minLightRange: 10
   drainRate: 0.1
 --- !u!114 &8345334328223838854
 MonoBehaviour:
