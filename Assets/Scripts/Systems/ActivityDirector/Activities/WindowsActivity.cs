@@ -32,7 +32,6 @@ public class WindowsActivity : MonoBehaviour
         soundTriggers[1] = new ActivityDirector.playedSoundAtTrigger(0.50f, triggerAudio);
         soundTriggers[2] = new ActivityDirector.playedSoundAtTrigger(0.75f, triggerAudio);
     }
-
     private void PlayTriggerAudio()
     {
         soundManager.PlaySound("Creak2", triggerAudio);
