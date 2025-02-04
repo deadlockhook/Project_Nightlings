@@ -11,6 +11,12 @@ public class PetDoorActivity : MonoBehaviour
     private bool activityFinished = false;
     private bool inActivity = false;
 
+    private AudioSource triggerAudio;
+
+    private void Start()
+    {
+        triggerAudio = GetComponent<AudioSource>();
+    }
     private void OnTriggerEnter(Collider collision)
     {
         if (activityFinished || !inActivity)
@@ -41,6 +47,7 @@ public class PetDoorActivity : MonoBehaviour
 
         inActivity = true;
         shouldReset = false;
+        triggerAudio.Play();
     }
     public bool OnActivityUpdate(float activityProgress)
     {
