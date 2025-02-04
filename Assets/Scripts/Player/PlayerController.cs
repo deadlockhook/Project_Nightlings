@@ -52,7 +52,6 @@ public class PlayerController : MonoBehaviour
 	private float rangeDrainRate;
 	private bool isRecharging = false;
 
-	public KeyCode flashlightToggleKey = KeyCode.F;
 	private bool flashlightEnabled = true;
 	private Animation flashlightShake;
 
