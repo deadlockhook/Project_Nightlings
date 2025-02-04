@@ -67,7 +67,7 @@ public class SoundManager : MonoBehaviour
         musicSource.loop = true;
         musicSource.volume = musicVolume * masterVolume;
         masterVolume = 1f;
-        sfxVolume = 0.5f;
+        sfxVolume = 1f;
         musicVolume = 0.1f;
     }
 
