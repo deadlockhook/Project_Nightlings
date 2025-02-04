@@ -8121,6 +8121,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 9077902820812710601, guid: 9cd28fbef222abc4b81fee8c0d362a2e,
+        type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9077902820812710601, guid: 9cd28fbef222abc4b81fee8c0d362a2e,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 375
+      objectReference: {fileID: 0}
+    - target: {fileID: 9077902820812710601, guid: 9cd28fbef222abc4b81fee8c0d362a2e,
+        type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 0.1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
