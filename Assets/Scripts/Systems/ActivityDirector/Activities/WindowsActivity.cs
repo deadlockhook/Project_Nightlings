@@ -18,11 +18,17 @@ public class WindowsActivity : MonoBehaviour
 
     private AudioSource triggerAudio;
 
+    private ActivityDirector.playedSoundAtTrigger[] soundTriggers;
+
     private void Start()
     {
         startYPosition = transform.position.y;
         endYPosition = startYPosition + 0.8972201f;
         triggerAudio = GetComponent<AudioSource>();
+        soundTriggers = new ActivityDirector.playedSoundAtTrigger[3];
+        soundTriggers[0] = new ActivityDirector.playedSoundAtTrigger(0.25f, triggerAudio);
+        soundTriggers[1] = new ActivityDirector.playedSoundAtTrigger(0.50f, triggerAudio);
+        soundTriggers[2] = new ActivityDirector.playedSoundAtTrigger(0.75f, triggerAudio);
     }
     public void ResetActivity()
     {
@@ -32,8 +38,9 @@ public class WindowsActivity : MonoBehaviour
         inActivity = false;
         shouldReset = true;
         resetAnimBegin = true;
-        resetProgress = 1.0f- lastActivityProgress;
+        resetProgress = 1.0f - lastActivityProgress;
         positionYOnResetBegin = transform.position.y;
+        //triggerAudio.Play();
     }
     public void ActivityTriggerStart()
     {
@@ -54,6 +61,10 @@ public class WindowsActivity : MonoBehaviour
             shouldReset = false;
             return true;
         }
+
+        foreach (var trigger in soundTriggers)
+            trigger.Play(activityProgress);
+        
         Vector3 target = new Vector3(transform.position.x, startYPosition + (0.8972201f * activityProgress), transform.position.z);
         transform.position = target;
 
@@ -68,6 +79,7 @@ public class WindowsActivity : MonoBehaviour
 
         inActivity = false;
         activityFinished = true;
+        triggerAudio.Play();
     }
 
     public void Update()
@@ -75,7 +87,6 @@ public class WindowsActivity : MonoBehaviour
         if (resetAnimBegin)
         {
             resetProgress += Time.deltaTime;
-
             resetProgress = Mathf.Clamp(resetProgress, 0.0f, 1.0f);
 
             if (resetProgress >= 1.0f)

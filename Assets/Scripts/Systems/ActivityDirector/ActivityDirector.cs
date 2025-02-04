@@ -5,6 +5,32 @@ using UnityEngine;
 public class ActivityDirector : MonoBehaviour
 {
     public delegate void timedActivityTrigger(int val);
+    public class playedSoundAtTrigger
+    {
+        public playedSoundAtTrigger(float _percentage, AudioSource _source)
+        {
+            percentage = _percentage;
+            played = false;
+            source = _source;
+        }
+
+        public void Play(float _percentage)
+        {
+            if (played)
+                return;
+
+            if (_percentage >= percentage)
+            {
+                Debug.Log(_percentage);
+                source.Play();
+                played = true;
+            }
+        }
+
+        private AudioSource source;
+        private bool played;
+        private float percentage;
+    }
     public class timedActivity
     {
         public timedActivity(float _triggerTimeMilliSeconds, int _triggerIndex, timedActivityTrigger _actionStart, timedActivityTrigger _actionEnd, timedActivityTrigger _actionOnUpdate)
@@ -25,11 +51,15 @@ public class ActivityDirector : MonoBehaviour
 
 
             currentTime += (Time.deltaTime * 1000f);
-            actionOnUpdate(triggerIndex);
+     
+            if (actionOnUpdate != null)
+                actionOnUpdate(triggerIndex);
 
             if (currentTime >= triggerTime)
             {
-                actionEnd(triggerIndex);
+                if (actionEnd != null)
+                   actionEnd(triggerIndex);
+
                 Reset();
             }
         }
@@ -37,7 +67,9 @@ public class ActivityDirector : MonoBehaviour
         {
             activites.Add(this);
             active = true;
-            actionStart(triggerIndex);
+           
+            if (actionStart != null)
+                actionStart(triggerIndex);
         }
         public void Deactivate(List<timedActivity> activites)
         {
@@ -81,17 +113,19 @@ public class ActivityDirector : MonoBehaviour
     }
 
     private SoundManager soundManager;
+    private UIManager uiManager;
+    private PlayerController playerController;
     private List<timedActivity> activeActivites;
 
     public List<GameObject> toyPrefabs;
     [SerializeField] private int minToySpawnLocations = 12;
     [SerializeField] private int maxToySpawnLocations = 20;
 
-    private float triggerWindowsActivityLogic = 2000.0f;
-    private float windowsActivityTimeLimit = 1000.0f;
+    private float triggerWindowsActivityLogic = 6000.0f;
+    private float windowsActivityTimeLimit = 5000.0f;
 
     private float triggerPetdoorActivityLogic = 6000.0f;
-    private float petdoorActivityTimeLimit = 2000.0f;
+    private float petdoorActivityTimeLimit = 5000.0f;
 
     private List<activityTrigger> windowEventObjects;
     private activityTrigger petdoorEventObject;
@@ -101,13 +135,20 @@ public class ActivityDirector : MonoBehaviour
     private float currentDeltaTime = 0;
     private float lastDeltaTimeForWindowEvents = 0;
     private float lastDeltaTimeForPetDoorEvents = 0;
+
+    private timedActivity nightActivity;
     void Start()
     {
+   
+        uiManager = FindObjectOfType<UIManager>();
+        playerController = FindObjectOfType<PlayerController>();
         soundManager = FindObjectOfType<SoundManager>();
         activeActivites = new List<timedActivity>();
         windowEventObjects = new List<activityTrigger>();
         lastDeltaTimeForWindowEvents = Time.deltaTime * 1000.0f;
         lastDeltaTimeForPetDoorEvents = lastDeltaTimeForWindowEvents;
+
+        nightActivity = new timedActivity(7000, 0, OnNightEnd, null, null);
 
         toySpawnLocations = new List<Vector3>();
 
@@ -136,7 +177,16 @@ public class ActivityDirector : MonoBehaviour
         //test
         SpawnToys();
     }
-        
+    private void OnNightEnd(int activityIndex)
+    {
+    
+
+       // if (uiManager)
+        //    uiManager.win
+
+
+    }
+
     private bool petdoorActivityFinished = false;
     private bool windowActivityFinished = false;
     private void OnPetDoorActivityStart(int activityIndex)
@@ -146,6 +196,8 @@ public class ActivityDirector : MonoBehaviour
 
     private void OnPetDoorActivityUpdate(int activityIndex)
     {
+        lastDeltaTimeForPetDoorEvents = currentDeltaTime;
+
         if (petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().OnActivityUpdate(petdoorEventObject.eventTime.GetProgress()))
         {
             petdoorEventObject.eventTime.Deactivate(activeActivites);
@@ -165,6 +217,8 @@ public class ActivityDirector : MonoBehaviour
 
     private void OnWindowActivityUpdate(int activityIndex)
     {
+        lastDeltaTimeForWindowEvents = currentDeltaTime;
+
         activityTrigger activityObject = windowEventObjects[activityIndex];
         if (activityObject.gameObj.GetComponent<WindowsActivity>().OnActivityUpdate(activityObject.eventTime.GetProgress()))
         {
@@ -203,8 +257,8 @@ public class ActivityDirector : MonoBehaviour
 
     void DispatchWindowEvents()
     {
-       // if (windowActivityFinished)
-          //  return;
+        if (windowActivityFinished)
+            return;
 
         if (currentDeltaTime - lastDeltaTimeForWindowEvents >= triggerWindowsActivityLogic && windowEventObjects.Count > 0)
         {

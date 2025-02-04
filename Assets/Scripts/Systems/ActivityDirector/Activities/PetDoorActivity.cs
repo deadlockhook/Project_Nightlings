@@ -12,10 +12,14 @@ public class PetDoorActivity : MonoBehaviour
     private bool inActivity = false;
 
     private AudioSource triggerAudio;
-
+    private ActivityDirector.playedSoundAtTrigger[] soundTriggers;
     private void Start()
     {
         triggerAudio = GetComponent<AudioSource>();
+        soundTriggers = new ActivityDirector.playedSoundAtTrigger[3];
+        soundTriggers[0] = new ActivityDirector.playedSoundAtTrigger(0.25f, triggerAudio);
+        soundTriggers[1] = new ActivityDirector.playedSoundAtTrigger(0.50f, triggerAudio);
+        soundTriggers[2] = new ActivityDirector.playedSoundAtTrigger(0.75f, triggerAudio);
     }
     private void OnTriggerEnter(Collider collision)
     {
@@ -63,11 +67,12 @@ public class PetDoorActivity : MonoBehaviour
             return true;
         }
 
+        foreach (var trigger in soundTriggers)
+            trigger.Play(activityProgress);
+
         Quaternion target = Quaternion.Euler(90.0f * activityProgress, transform.localRotation.eulerAngles.y, transform.localRotation.eulerAngles.z);
 
         transform.localRotation = target;
-
-        Debug.Log(transform.localRotation.eulerAngles.x);
 
         //progress trigger animation
 
@@ -97,7 +102,6 @@ public class PetDoorActivity : MonoBehaviour
             else
             {
                 Quaternion target = Quaternion.Euler(rotationXOnResetBegin - (rotationXOnResetBegin * resetProgress), transform.localRotation.eulerAngles.y, transform.localRotation.eulerAngles.z);
-                Debug.Log(target.eulerAngles.x);
 
                 transform.localRotation = target;
             }
