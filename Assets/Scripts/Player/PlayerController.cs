@@ -142,7 +142,7 @@ public class PlayerController : MonoBehaviour
         if (isDead)
 			return;
 
-		if (Input.GetKeyDown(flashlightToggleKey) && !isRecharging)
+		if (playerControlActions.Player.FlashlightReload.triggered && !isRecharging)
 		{
 			SoundManager.Instance.PlaySound("Flashlight");
 			flashlightEnabled = !flashlightEnabled;
