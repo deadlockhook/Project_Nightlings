@@ -74,7 +74,6 @@ public class PlayerController : MonoBehaviour
 	private GameObject footstepsGameObject;
 	private AudioSource footsteps;
 
-	private PlayerInput playerInput;
 	private PlayerControlActions playerControlActions;
 
 	private bool isDead = false;
@@ -89,14 +88,11 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         playerControlActions.Player.Enable();
-    //    playerControlActions.Player.Move.performed += OnMoveLeftEnter;
     }
 
     private void OnDisable()
     {
         playerControlActions.Player.Disable();
-  //      playerControlActions.Player.Move.performed -= OnMoveLeftEnter;
-  //      playerControlActions.Player.Move. -= OnMoveLeftEnter;
     }
 
     private void OnMoveLeftEnter(InputAction.CallbackContext context)
@@ -110,12 +106,9 @@ public class PlayerController : MonoBehaviour
         footstepsGameObject = transform.Find("Footsteps").gameObject;
 		footsteps = footstepsGameObject.GetComponent<AudioSource>();
 		characterController = GetComponent<CharacterController>();
-        playerInput = GetComponent<PlayerInput>();
         interactionManager = FindObjectOfType<InteractionManager>();
 		currentFOV = normalFOV;
 		currentStamina = maxStamina;
-
-        
 
         flashlightShake = flashlightGameObject.GetComponent<Animation>();
 
@@ -231,7 +224,7 @@ public class PlayerController : MonoBehaviour
 
 		if (characterController.isGrounded)
 		{
-			if (Input.GetButtonDown("Jump"))
+            if (playerControlActions.Player.Jump.triggered)
 			{
 				verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
 				footsteps.Stop();
