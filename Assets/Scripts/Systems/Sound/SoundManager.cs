@@ -39,9 +39,9 @@ public class SoundManager : MonoBehaviour
     private Dictionary<string, AudioSource> audioSources;
     private AudioSource musicSource;
 
-    [Range(0f, 1f)] public float masterVolume = 1f;
-    [Range(0f, 1f)] public float sfxVolume = 1f;
-    [Range(0f, 1f)] public float musicVolume = 1f;
+    [Range(0f, 1f)] public float masterVolume;
+    [Range(0f, 1f)] public float sfxVolume;
+    [Range(0f, 1f)] public float musicVolume;
 
     private void Awake()
     {
@@ -66,6 +66,9 @@ public class SoundManager : MonoBehaviour
         musicSource = gameObject.AddComponent<AudioSource>();
         musicSource.loop = true;
         musicSource.volume = musicVolume * masterVolume;
+        masterVolume = 0.5f;
+        sfxVolume = 0.5f;
+        musicVolume = 0.5f;
     }
 
     private void Start()
