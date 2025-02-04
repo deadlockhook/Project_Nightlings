@@ -45,10 +45,10 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 0.78431374, g: 1, b: 1, a: 1}
-  m_Intensity: 5
+  m_Intensity: 3
   m_Range: 15
-  m_SpotAngle: 70
-  m_InnerSpotAngle: 60
+  m_SpotAngle: 60
+  m_InnerSpotAngle: 50
   m_CookieSize: 10
   m_Shadows:
     m_Type: 0
@@ -272,7 +272,7 @@ MonoBehaviour:
   walkSpeed: 3
   runSpeed: 5
   jumpHeight: 0.75
-  lookSensitivity: 2
+  lookSensitivity: 0.1
   normalFOV: 75
   sprintFOV: 80
   maxStamina: 100
@@ -290,7 +290,6 @@ MonoBehaviour:
   maxLightRange: 15
   minLightRange: 0
   drainRate: 0.1
-  flashlightToggleKey: 102
 --- !u!114 &8345334328223838854
 MonoBehaviour:
   m_ObjectHideFlags: 0
