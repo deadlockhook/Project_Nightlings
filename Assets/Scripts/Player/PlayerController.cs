@@ -78,32 +78,36 @@ public class PlayerController : MonoBehaviour
 	private bool isDead = false;
 
 	private Vector2 movementInput;
-    private Vector2 lookInput;
-    private void Awake()
-    {
-        playerControlActions = new PlayerControlActions();
-    }
+	private Vector2 lookInput;
 
-    private void OnEnable()
-    {
-        playerControlActions.Player.Enable();
-    }
-
-    private void OnDisable()
-    {
-        playerControlActions.Player.Disable();
-    }
-
-    private void Start()
+	private void Awake()
 	{
-        footstepsGameObject = transform.Find("Footsteps").gameObject;
+		playerControlActions = new PlayerControlActions();
+	}
+
+	private void OnEnable()
+	{
+		playerControlActions.Player.Enable();
+	}
+
+	private void OnDisable()
+	{
+		playerControlActions.Player.Disable();
+	}
+
+	private void Start()
+	{
+		int interactableLayer = LayerMask.NameToLayer("Interactable");
+		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Interactable"), true);
+
+		footstepsGameObject = transform.Find("Footsteps").gameObject;
 		footsteps = footstepsGameObject.GetComponent<AudioSource>();
 		characterController = GetComponent<CharacterController>();
-        interactionManager = FindObjectOfType<InteractionManager>();
+		interactionManager = FindObjectOfType<InteractionManager>();
 		currentFOV = normalFOV;
 		currentStamina = maxStamina;
 
-        flashlightShake = flashlightGameObject.GetComponent<Animation>();
+		flashlightShake = flashlightGameObject.GetComponent<Animation>();
 
 		cameraOriginalPosition = playerCamera.transform.localPosition;
 
@@ -120,7 +124,7 @@ public class PlayerController : MonoBehaviour
 
 			if (maxLightIntensity != minLightIntensity)
 			{
-				rangeDrainRate = drainRate * (maxLightRange - minLightRange) / (maxLightIntensity - minLightIntensity);
+				rangeDrainRate = drainRate * (maxLightRange - minLightIntensity) / (maxLightIntensity - minLightIntensity);
 			}
 			else
 			{
@@ -130,9 +134,9 @@ public class PlayerController : MonoBehaviour
 	}
 
 	private void Update()
-    {
+	{
 
-        if (isDead)
+		if (isDead)
 			return;
 
 		if (playerControlActions.Player.FlashlightToggle.triggered && !isRecharging)
@@ -145,8 +149,8 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 
-        RetrieveDataFromInputSystem();
-        HandleMovement();
+		RetrieveDataFromInputSystem();
+		HandleMovement();
 		HandleLook();
 		UpdateFOV();
 		UpdateStaminaUI();
@@ -169,16 +173,16 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 
-        if (interactionManager != null)
+		if (interactionManager != null)
 			interactionManager.OnLocalPlayerUpdate();
 	}
 	private void RetrieveDataFromInputSystem()
 	{
-        movementInput = playerControlActions.Player.Move.ReadValue<Vector2>();
-        lookInput = playerControlActions.Player.Look.ReadValue<Vector2>();
-    }
+		movementInput = playerControlActions.Player.Move.ReadValue<Vector2>();
+		lookInput = playerControlActions.Player.Look.ReadValue<Vector2>();
+	}
 
-    private void HandleMovement()
+	private void HandleMovement()
 	{
 		float moveX = movementInput.x;
 		float moveZ = movementInput.y;
@@ -217,9 +221,9 @@ public class PlayerController : MonoBehaviour
 		moveDirection = inputDirection * currentSpeed;
 
 		if (characterController.isGrounded)
-        {
-            //if (playerControlActions.Player.Jump.triggered) // no bunnyhop
-            if (playerControlActions.Player.Jump.IsPressed()) // bunnyhop
+		{
+			//if (playerControlActions.Player.Jump.triggered) // no bunnyhop
+			if (playerControlActions.Player.Jump.IsPressed()) // bunnyhop
 			{
 				verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
 				footsteps.Stop();
@@ -358,8 +362,4 @@ public class PlayerController : MonoBehaviour
 		footsteps.Stop();
 		Debug.Log("player died");
 	}
-
-	// TODO - Disable all activitys on player death
-	// Swith to lose UI state which will have button to reload scene
-	// If an activity has fully progressed, ex window opened, trigger player death after 10 seconds
 }
