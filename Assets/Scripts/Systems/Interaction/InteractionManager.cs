@@ -21,7 +21,6 @@ public class InteractionManager : MonoBehaviour
 
     private float interactionDistance = 1.6f;
     private float objectLockDistance = 1.2f;
-    private KeyCode interactionKey = KeyCode.Mouse0;
     private float interactableMovementSpeed = 20.0f;
 
     public LayerMask interactableLayer;   
@@ -58,7 +57,7 @@ public class InteractionManager : MonoBehaviour
                 interactableObject = null;
                 interactableObjRigidBody = null;
             }
-            else if (!Input.GetKey(interactionKey))
+            else if (!playerController.playerControlActions.Player.Interact.IsPressed())
             {
                 interactableObject = null;
                 if (interactableObjRigidBody)
@@ -95,7 +94,7 @@ public class InteractionManager : MonoBehaviour
         if (gameObj.tag.Contains("Interactable_"))
         {
             Debug.Log("Interactable Object Found: " + gameObj.name);
-            if (Input.GetKeyDown(interactionKey))
+            if (playerController.playerControlActions.Player.Interact.triggered)
             {
                 interactableObject = gameObj;
                 interactableObjRigidBody = interactableObject.GetComponent<Rigidbody>();
@@ -109,7 +108,7 @@ public class InteractionManager : MonoBehaviour
         if (gameObj.GetComponent<WindowsActivity>() != null)
         {
             Debug.Log("Activity Object Found: " + gameObj.name);
-            if (Input.GetKeyDown(interactionKey))
+            if (playerController.playerControlActions.Player.Interact.triggered)
             {
                 gameObj.GetComponent<WindowsActivity>().ResetActivity();
                 Debug.Log("Activity Reset");
