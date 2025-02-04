@@ -141,7 +141,8 @@ public class ActivityDirector : MonoBehaviour
             windowEventObjects.Add(new activityTrigger(obj, windowsActivityTimeLimit, currentIndex, OnWindowActivityStart, OnWindowActivityFinished, OnWindowActivityUpdate));
         }
 
-        petdoorEventObject = new activityTrigger(GameObject.FindGameObjectWithTag("Activity_PetDoor"), petdoorActivityTimeLimit, 0, OnPetDoorActivityStart, OnPetDoorActivityFinished, OnPetDoorActivityUpdate);
+        if (GameObject.FindObjectOfType<PetDoorActivity>() != null)
+        petdoorEventObject = new activityTrigger(GameObject.FindObjectOfType<PetDoorActivity>().gameObject, petdoorActivityTimeLimit, 0, OnPetDoorActivityStart, OnPetDoorActivityFinished, OnPetDoorActivityUpdate);
 
     }
     private void OnPetDoorActivityStart(int activityIndex)

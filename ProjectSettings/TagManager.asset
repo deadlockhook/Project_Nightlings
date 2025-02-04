@@ -9,6 +9,7 @@ TagManager:
   - Activity_Window
   - Activity_PetDoor
   - Interactable_Toy
+  - ToySpawn
   layers:
   - Default
   - TransparentFX
