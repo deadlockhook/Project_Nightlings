@@ -133,11 +133,11 @@ public class ActivityDirector : MonoBehaviour
             Destroy(toySpawnGameObjects[i]);
         }
 
-        GameObject[] windows = GameObject.FindGameObjectsWithTag("Activity_Window");
+        WindowsActivity[] windows = GameObject.FindObjectsOfType<WindowsActivity>();
 
         for (int currentIndex = 0;currentIndex < windows.Length;currentIndex++)
         {
-            GameObject obj = windows[currentIndex];
+            GameObject obj = windows[currentIndex].gameObject;
             windowEventObjects.Add(new activityTrigger(obj, windowsActivityTimeLimit, currentIndex, OnWindowActivityStart, OnWindowActivityFinished, OnWindowActivityUpdate));
         }
 

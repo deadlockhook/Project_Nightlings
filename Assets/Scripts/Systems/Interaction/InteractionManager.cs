@@ -52,12 +52,16 @@ public class InteractionManager : MonoBehaviour
     }
     public void OnLocalPlayerUpdate()
     {
+  
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, interactionDistance, interactableLayer | obstacleLayer))
-            if (((1 << hit.collider.gameObject.layer) & interactableLayer) != 0)
-                OnInteractableFound(hit.transform.gameObject, hit);
+        if (Physics.Raycast(ray, out hit, interactionDistance))
+        {
+            if (hit.collider != null)
+                 OnObjectTraceCollide(hit.transform.gameObject, hit);
+         //   if (((1 << hit.collider.gameObject.layer) & interactableLayer) != 0)
+        }
 
         if (interactableObject != null)
         {
@@ -98,13 +102,14 @@ public class InteractionManager : MonoBehaviour
         }
     }
 
-    private void OnInteractableFound(GameObject interactable, RaycastHit hit)
+    private void OnObjectTraceCollide(GameObject gameObj, RaycastHit hit)
     {
-        if (interactable.tag.Contains("Interactable_"))
+        if (gameObj.tag.Contains("Interactable_"))
         {
+            Debug.Log("Interactable Object Found: " + gameObj.name);
             if (Input.GetKeyDown(interactionKey))
             {
-                interactableObject = interactable;
+                interactableObject = gameObj;
                 interactableObjRigidBody = interactableObject.GetComponent<Rigidbody>();
                 interactableObjRigidBody.useGravity = false;  
                 interactableObjRigidBody.interpolation = RigidbodyInterpolation.Interpolate;
@@ -113,16 +118,17 @@ public class InteractionManager : MonoBehaviour
             }
         }
 
-        if (interactable.tag.Contains("Activity_Window"))
+        if (gameObj.GetComponent<WindowsActivity>() != null)
         {
+            Debug.Log("Activity Object Found: " + gameObj.name);
             if (Input.GetKeyDown(interactionKey))
             {
-                interactable.GetComponent<WindowsActivity>().ResetActivity();
+                gameObj.GetComponent<WindowsActivity>().ResetActivity();
                 Debug.Log("Activity Reset");
             }
         }
 
-
+        Debug.Log("Object in sight");
     }
 
     void TriggerEvent(Interactions action)
