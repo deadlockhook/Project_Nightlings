@@ -38,7 +38,7 @@ public class PetDoorActivity : MonoBehaviour
         shouldReset = true;
         resetAnimBegin = true;
         resetProgress = 0.0f;
-        rotationXOnResetBegin = transform.eulerAngles.x;
+        rotationXOnResetBegin = transform.localRotation.eulerAngles.x;
     }
     public void ActivityTriggerStart()
     {
@@ -85,7 +85,6 @@ public class PetDoorActivity : MonoBehaviour
 
     public void Update()
     {
-        return;
         if (resetAnimBegin)
         {
             resetProgress += Time.deltaTime;
@@ -97,10 +96,10 @@ public class PetDoorActivity : MonoBehaviour
             }
             else
             {
-                Quaternion target = Quaternion.Euler(rotationXOnResetBegin - (rotationXOnResetBegin * resetProgress), transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
+                Quaternion target = Quaternion.Euler(rotationXOnResetBegin - (rotationXOnResetBegin * resetProgress), transform.localRotation.eulerAngles.y, transform.localRotation.eulerAngles.z);
                 Debug.Log(target.eulerAngles.x);
 
-                transform.rotation = target;
+                transform.localRotation = target;
             }
         }
 

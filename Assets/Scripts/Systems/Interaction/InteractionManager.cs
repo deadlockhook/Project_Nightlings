@@ -7,18 +7,6 @@ using static UnityEngine.GraphicsBuffer;
 
 public class InteractionManager : MonoBehaviour
 {
-
-    private InteractionManager interactionInstance = null;
-    private void Awake()
-    {
-        if (interactionInstance == null)
-        {
-            interactionInstance = this;
-            DontDestroyOnLoad(interactionInstance);
-        }
-        else
-            Destroy(this);
-    }
     public enum Interactions
     {
         PickUpToy = 0,
