@@ -80,11 +80,7 @@ public class UIManager : MonoBehaviour
                 break;
 
             case UIState.Gameplay:
-                if (SoundManager.Instance.currentMusic != "InGame")
-                {
-					SoundManager.Instance.StopMusic();
-                    SoundManager.Instance.PlayMusic("InGame");
-                }
+                SoundManager.Instance.StopMusic();
                 Time.timeScale = 1f;
                 gameplayUI.SetActive(true);
                 Cursor.lockState = CursorLockMode.Locked;
