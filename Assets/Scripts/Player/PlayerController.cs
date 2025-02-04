@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour
 	private GameObject footstepsGameObject;
 	private AudioSource footsteps;
 
-	private PlayerControlActions playerControlActions;
+	public PlayerControlActions playerControlActions;
 
 	private bool isDead = false;
 
@@ -196,7 +196,7 @@ public class PlayerController : MonoBehaviour
 			inputDirection.Normalize();
 		}
 
-		if (Input.GetKey(KeyCode.LeftShift) && currentStamina > 0 && inputDirection.magnitude > 0)
+		if (playerControlActions.Player.Sprint.IsPressed() && currentStamina > 0 && inputDirection.magnitude > 0)
 		{
 			isWalking = false;
 			isRunning = true;
@@ -223,8 +223,9 @@ public class PlayerController : MonoBehaviour
 		moveDirection = inputDirection * currentSpeed;
 
 		if (characterController.isGrounded)
-		{
-            if (playerControlActions.Player.Jump.triggered)
+        {
+            //if (playerControlActions.Player.Jump.triggered) // no bunnyhop
+            if (playerControlActions.Player.Jump.IsPressed()) // bunnyhop
 			{
 				verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
 				footsteps.Stop();
