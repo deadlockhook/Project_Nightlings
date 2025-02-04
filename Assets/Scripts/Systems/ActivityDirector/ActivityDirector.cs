@@ -111,7 +111,6 @@ public class ActivityDirector : MonoBehaviour
 
         toySpawnLocations = new List<Vector3>();
 
-        Debug.Log("count " + toyPrefabs.Count);
         //  if (toyPrefabs == null)
         //       toyPrefabs = new List<GameObject>();
 

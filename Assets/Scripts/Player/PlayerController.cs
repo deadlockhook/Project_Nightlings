@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 // Handles the player movement and interaction
 
@@ -73,18 +74,50 @@ public class PlayerController : MonoBehaviour
 	private GameObject footstepsGameObject;
 	private AudioSource footsteps;
 
+	private PlayerInput playerInput;
+	private PlayerControlActions playerControlActions;
+
 	private bool isDead = false;
 
-	private void Start()
+	private Vector2 movementInput;
+
+    private void Awake()
+    {
+        playerControlActions = new PlayerControlActions();
+    }
+
+    private void OnEnable()
+    {
+        playerControlActions.Player.Enable();
+    //    playerControlActions.Player.Move.performed += OnMoveLeftEnter;
+    }
+
+    private void OnDisable()
+    {
+        playerControlActions.Player.Disable();
+  //      playerControlActions.Player.Move.performed -= OnMoveLeftEnter;
+  //      playerControlActions.Player.Move. -= OnMoveLeftEnter;
+    }
+
+    private void OnMoveLeftEnter(InputAction.CallbackContext context)
+    {
+        movementInput = context.ReadValue<Vector2>();
+        Debug.Log(movementInput.x);
+	}
+
+    private void Start()
 	{
-		footstepsGameObject = transform.Find("Footsteps").gameObject;
+        footstepsGameObject = transform.Find("Footsteps").gameObject;
 		footsteps = footstepsGameObject.GetComponent<AudioSource>();
 		characterController = GetComponent<CharacterController>();
-		interactionManager = FindObjectOfType<InteractionManager>();
+        playerInput = GetComponent<PlayerInput>();
+        interactionManager = FindObjectOfType<InteractionManager>();
 		currentFOV = normalFOV;
 		currentStamina = maxStamina;
 
-		flashlightShake = flashlightGameObject.GetComponent<Animation>();
+        
+
+        flashlightShake = flashlightGameObject.GetComponent<Animation>();
 
 		cameraOriginalPosition = playerCamera.transform.localPosition;
 
@@ -111,8 +144,9 @@ public class PlayerController : MonoBehaviour
 	}
 
 	private void Update()
-	{
-		if (isDead)
+    {
+
+        if (isDead)
 			return;
 
 		if (Input.GetKeyDown(flashlightToggleKey) && !isRecharging)
@@ -125,7 +159,8 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 
-		HandleMovement();
+        RetrieveDataFromInputSystem();
+        HandleMovement();
 		HandleLook();
 		UpdateFOV();
 		UpdateStaminaUI();
@@ -148,14 +183,19 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 
-		if (interactionManager != null)
+        if (interactionManager != null)
 			interactionManager.OnLocalPlayerUpdate();
 	}
-
-	private void HandleMovement()
+	private void RetrieveDataFromInputSystem()
 	{
-		float moveX = Input.GetAxis("Horizontal");
-		float moveZ = Input.GetAxis("Vertical");
+        movementInput = playerControlActions.Player.Move.ReadValue<Vector2>();
+    }
+
+    private void HandleMovement()
+	{
+		float moveX = movementInput.x;
+		float moveZ = movementInput.y;
+
 		Vector3 inputDirection = transform.right * moveX + transform.forward * moveZ;
 
 		if (inputDirection.magnitude > 1f)
