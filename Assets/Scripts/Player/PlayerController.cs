@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 	public float walkSpeed = 4f;
 	public float runSpeed = 6f;
 	public float jumpHeight = 1f;
-	public float lookSensitivity = 2f;
+	public float lookSensitivity = 0.1f;
 
 	[Header("FOV Settings")]
 	public float normalFOV = 75f;
@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
 	private bool isDead = false;
 
 	private Vector2 movementInput;
-
+    private Vector2 lookInput;
     private void Awake()
     {
         playerControlActions = new PlayerControlActions();
@@ -94,12 +94,6 @@ public class PlayerController : MonoBehaviour
     {
         playerControlActions.Player.Disable();
     }
-
-    private void OnMoveLeftEnter(InputAction.CallbackContext context)
-    {
-        movementInput = context.ReadValue<Vector2>();
-        Debug.Log(movementInput.x);
-	}
 
     private void Start()
 	{
@@ -142,7 +136,7 @@ public class PlayerController : MonoBehaviour
         if (isDead)
 			return;
 
-		if (playerControlActions.Player.FlashlightReload.triggered && !isRecharging)
+		if (playerControlActions.Player.FlashlightToggle.triggered && !isRecharging)
 		{
 			SoundManager.Instance.PlaySound("Flashlight");
 			flashlightEnabled = !flashlightEnabled;
@@ -182,6 +176,7 @@ public class PlayerController : MonoBehaviour
 	private void RetrieveDataFromInputSystem()
 	{
         movementInput = playerControlActions.Player.Move.ReadValue<Vector2>();
+        lookInput = playerControlActions.Player.Look.ReadValue<Vector2>();
     }
 
     private void HandleMovement()
@@ -258,8 +253,9 @@ public class PlayerController : MonoBehaviour
 		if (UIManager.Instance != null && UIManager.Instance.IsPaused())
 			return;
 
-		float mouseX = Input.GetAxis("Mouse X") * lookSensitivity;
-		float mouseY = Input.GetAxis("Mouse Y") * lookSensitivity;
+
+		float mouseX = lookInput.x * lookSensitivity;
+		float mouseY = lookInput.y * lookSensitivity;
 
 		transform.Rotate(Vector3.up * mouseX);
 
@@ -314,7 +310,7 @@ public class PlayerController : MonoBehaviour
 			flashlight.range = currentLightRange;
 		}
 
-		if (Input.GetMouseButtonDown(1) && !isRecharging)
+		if (playerControlActions.Player.FlashlightRecharge.triggered && !isRecharging)
 		{
 			StartCoroutine(RechargeFlashlight());
 		}

@@ -197,8 +197,7 @@ public class ActivityDirector : MonoBehaviour
 
         for (int i = 0; i < spawnLocations.Count; i++)
         {
-            GameObject selectedPrefab = toyPrefabs[Random.Range(0, toyPrefabs.Count)];
-            Instantiate(selectedPrefab, spawnLocations[i], Quaternion.identity);
+            Instantiate(toyPrefabs[Random.Range(0, toyPrefabs.Count)], spawnLocations[i], Quaternion.identity);
         }
     }
 

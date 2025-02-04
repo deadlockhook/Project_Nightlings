@@ -71,17 +71,22 @@ public class InteractionManager : MonoBehaviour
             {
                 if (interactableObjRigidBody)
                 {
+
                     Vector3 endPoint = playerCamera.transform.position + (playerCamera.transform.forward * objectLockDistance);
                     Vector3 direction = (endPoint - interactableObjRigidBody.position).normalized;
                     float distance = Vector3.Distance(interactableObjRigidBody.position, endPoint);
 
-                    if (!Physics.Raycast(interactableObjRigidBody.position, direction, distance, obstacleLayer))
+                    if (!Physics.Raycast(playerCamera.transform.position, direction, distance, obstacleLayer))
                     {
+
                         Vector3 targetVelocity = direction * (distance * interactableMovementSpeed);
                         interactableObjRigidBody.velocity = Vector3.Lerp(interactableObjRigidBody.velocity, targetVelocity, Time.deltaTime * interactableMovementSpeed);
                         interactableObjRigidBody.velocity *= 0.95f;
                         interactableObjRigidBody.angularVelocity *= 0.9f; 
                     }
+                    else
+                        Debug.Log("Failed to hold object");
+
                 }
                 else
                     interactableObject.transform.position = playerCamera.transform.position + playerCamera.transform.forward;
@@ -93,9 +98,9 @@ public class InteractionManager : MonoBehaviour
     {
         if (gameObj.tag.Contains("Interactable_"))
         {
-            Debug.Log("Interactable Object Found: " + gameObj.name);
             if (playerController.playerControlActions.Player.Interact.triggered)
             {
+                Debug.Log("Interactable Object Found: " + gameObj.name);
                 interactableObject = gameObj;
                 interactableObjRigidBody = interactableObject.GetComponent<Rigidbody>();
                 interactableObjRigidBody.useGravity = false;  
@@ -107,15 +112,11 @@ public class InteractionManager : MonoBehaviour
 
         if (gameObj.GetComponent<WindowsActivity>() != null)
         {
-            Debug.Log("Activity Object Found: " + gameObj.name);
             if (playerController.playerControlActions.Player.Interact.triggered)
             {
                 gameObj.GetComponent<WindowsActivity>().ResetActivity();
-                Debug.Log("Activity Reset");
             }
         }
-
-        Debug.Log("Object in sight");
     }
 
     void TriggerEvent(Interactions action)

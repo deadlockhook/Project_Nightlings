@@ -73,9 +73,18 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""FlashlightReload"",
+                    ""name"": ""FlashlightRecharge"",
                     ""type"": ""Button"",
                     ""id"": ""184650e1-387e-4a83-bd1e-5caa9cc33fa5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""FlashlightToggle"",
+                    ""type"": ""Button"",
+                    ""id"": ""892c5c23-20dd-4929-a6ae-e4826eb288a8"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -332,7 +341,18 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""FlashlightReload"",
+                    ""action"": ""FlashlightRecharge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""77dc470f-bdca-4db9-96e1-9ac86dcb50a5"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""FlashlightToggle"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -409,7 +429,8 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
-        m_Player_FlashlightReload = m_Player.FindAction("FlashlightReload", throwIfNotFound: true);
+        m_Player_FlashlightRecharge = m_Player.FindAction("FlashlightRecharge", throwIfNotFound: true);
+        m_Player_FlashlightToggle = m_Player.FindAction("FlashlightToggle", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -476,7 +497,8 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Sprint;
-    private readonly InputAction m_Player_FlashlightReload;
+    private readonly InputAction m_Player_FlashlightRecharge;
+    private readonly InputAction m_Player_FlashlightToggle;
     public struct PlayerActions
     {
         private @PlayerControlActions m_Wrapper;
@@ -486,7 +508,8 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
-        public InputAction @FlashlightReload => m_Wrapper.m_Player_FlashlightReload;
+        public InputAction @FlashlightRecharge => m_Wrapper.m_Player_FlashlightRecharge;
+        public InputAction @FlashlightToggle => m_Wrapper.m_Player_FlashlightToggle;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -511,9 +534,12 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
             @Sprint.started += instance.OnSprint;
             @Sprint.performed += instance.OnSprint;
             @Sprint.canceled += instance.OnSprint;
-            @FlashlightReload.started += instance.OnFlashlightReload;
-            @FlashlightReload.performed += instance.OnFlashlightReload;
-            @FlashlightReload.canceled += instance.OnFlashlightReload;
+            @FlashlightRecharge.started += instance.OnFlashlightRecharge;
+            @FlashlightRecharge.performed += instance.OnFlashlightRecharge;
+            @FlashlightRecharge.canceled += instance.OnFlashlightRecharge;
+            @FlashlightToggle.started += instance.OnFlashlightToggle;
+            @FlashlightToggle.performed += instance.OnFlashlightToggle;
+            @FlashlightToggle.canceled += instance.OnFlashlightToggle;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -533,9 +559,12 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
             @Sprint.started -= instance.OnSprint;
             @Sprint.performed -= instance.OnSprint;
             @Sprint.canceled -= instance.OnSprint;
-            @FlashlightReload.started -= instance.OnFlashlightReload;
-            @FlashlightReload.performed -= instance.OnFlashlightReload;
-            @FlashlightReload.canceled -= instance.OnFlashlightReload;
+            @FlashlightRecharge.started -= instance.OnFlashlightRecharge;
+            @FlashlightRecharge.performed -= instance.OnFlashlightRecharge;
+            @FlashlightRecharge.canceled -= instance.OnFlashlightRecharge;
+            @FlashlightToggle.started -= instance.OnFlashlightToggle;
+            @FlashlightToggle.performed -= instance.OnFlashlightToggle;
+            @FlashlightToggle.canceled -= instance.OnFlashlightToggle;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -605,6 +634,7 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
         void OnInteract(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
-        void OnFlashlightReload(InputAction.CallbackContext context);
+        void OnFlashlightRecharge(InputAction.CallbackContext context);
+        void OnFlashlightToggle(InputAction.CallbackContext context);
     }
 }

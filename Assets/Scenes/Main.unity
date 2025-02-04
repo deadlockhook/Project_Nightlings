@@ -1869,7 +1869,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toyPrefabs:
-  - {fileID: 6291772107680015007, guid: ba588eae70e6c5940b98747546d4452b, type: 3}
+  - {fileID: 3169210605319978941, guid: 794507f87b8006745843d9270bfc3211, type: 3}
   - {fileID: 1785070581978917705, guid: 25338b8aefa4d5a4b8c24e75b31449af, type: 3}
   minToySpawnLocations: 12
   maxToySpawnLocations: 20
@@ -3077,6 +3077,11 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 3776
       objectReference: {fileID: 0}
+    - target: {fileID: 3498794078118090697, guid: f2d7c5f5c04993641bcbb98579ea937c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.59
+      objectReference: {fileID: 0}
     - target: {fileID: 3614128499894363254, guid: f2d7c5f5c04993641bcbb98579ea937c,
         type: 3}
       propertyPath: m_Mesh
@@ -3092,6 +3097,11 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 728545532}
+    - target: {fileID: 4183008187179742009, guid: f2d7c5f5c04993641bcbb98579ea937c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.91
+      objectReference: {fileID: 0}
     - target: {fileID: 4405789806067857953, guid: f2d7c5f5c04993641bcbb98579ea937c,
         type: 3}
       propertyPath: m_Mesh
@@ -3211,6 +3221,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: House
+      objectReference: {fileID: 0}
+    - target: {fileID: 6688779075462379711, guid: f2d7c5f5c04993641bcbb98579ea937c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.918
       objectReference: {fileID: 0}
     - target: {fileID: 6776555103492173899, guid: f2d7c5f5c04993641bcbb98579ea937c,
         type: 3}
@@ -4086,6 +4101,11 @@ PrefabInstance:
       propertyPath: staminaBar
       value: 
       objectReference: {fileID: 710593263}
+    - target: {fileID: 2280564821923116648, guid: 9cd28fbef222abc4b81fee8c0d362a2e,
+        type: 3}
+      propertyPath: lookSensitivity
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 4687364523744567515, guid: 9cd28fbef222abc4b81fee8c0d362a2e,
         type: 3}
       propertyPath: m_Name
