@@ -17,11 +17,13 @@ public class WindowsActivity : MonoBehaviour
     private float lastActivityProgress = 0.0f;
 
     private AudioSource triggerAudio;
+    private SoundManager soundManager;
 
     private ActivityDirector.playedSoundAtTrigger[] soundTriggers;
 
     private void Start()
     {
+        soundManager = FindObjectOfType<SoundManager>();
         startYPosition = transform.position.y;
         endYPosition = startYPosition + 0.8972201f;
         triggerAudio = GetComponent<AudioSource>();
@@ -29,6 +31,11 @@ public class WindowsActivity : MonoBehaviour
         soundTriggers[0] = new ActivityDirector.playedSoundAtTrigger(0.25f, triggerAudio);
         soundTriggers[1] = new ActivityDirector.playedSoundAtTrigger(0.50f, triggerAudio);
         soundTriggers[2] = new ActivityDirector.playedSoundAtTrigger(0.75f, triggerAudio);
+    }
+
+    private void PlayTriggerAudio()
+    {
+        soundManager.PlaySound("Creak2", triggerAudio);
     }
     public void ResetActivity()
     {
@@ -49,7 +56,7 @@ public class WindowsActivity : MonoBehaviour
 
         inActivity = true;
         shouldReset = false;
-        triggerAudio.Play();
+        PlayTriggerAudio();
     }
     public bool OnActivityUpdate(float activityProgress)
     {
@@ -63,7 +70,10 @@ public class WindowsActivity : MonoBehaviour
         }
 
         foreach (var trigger in soundTriggers)
-            trigger.Play(activityProgress);
+        {
+           if (trigger.ShouldPlay(activityProgress))
+                PlayTriggerAudio();
+        }
         
         Vector3 target = new Vector3(transform.position.x, startYPosition + (0.8972201f * activityProgress), transform.position.z);
         transform.position = target;
@@ -79,7 +89,7 @@ public class WindowsActivity : MonoBehaviour
 
         inActivity = false;
         activityFinished = true;
-        triggerAudio.Play();
+        PlayTriggerAudio();
     }
 
     public void Update()

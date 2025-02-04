@@ -63,7 +63,9 @@ public class UIManager : MonoBehaviour
 		switch (state)
 		{
 			case UIState.MainMenu:
-				Cursor.lockState = CursorLockMode.None;
+                SoundManager.Instance.StopMusic();
+                SoundManager.Instance.PlayMusic("MainMenu");
+                Cursor.lockState = CursorLockMode.None;
 				Time.timeScale = 0f;
 				mainMenuUI.SetActive(true);
 				break;
@@ -76,7 +78,9 @@ public class UIManager : MonoBehaviour
 				break;
 
 			case UIState.Gameplay:
-				Time.timeScale = 1f;
+                SoundManager.Instance.StopMusic();
+				SoundManager.Instance.PlayMusic("InGame");
+                Time.timeScale = 1f;
 				gameplayUI.SetActive(true);
 				Cursor.lockState = CursorLockMode.Locked;
 				isPaused = false;
@@ -135,8 +139,7 @@ public class UIManager : MonoBehaviour
 	{
 		if (winUI.activeSelf || loseUI.activeSelf)
 			return;
-
-		isPaused = false;
+        isPaused = false;
 		ChangeUIState(UIState.Gameplay);
 	}
 

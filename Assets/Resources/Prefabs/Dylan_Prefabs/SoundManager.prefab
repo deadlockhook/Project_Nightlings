@@ -67,6 +67,12 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: bfd197f971abfaa458cf947b676c9c8f, type: 3}
   - name: FlashlightShake
     clip: {fileID: 8300000, guid: 897ea8374f24d204295cca447091ff9f, type: 3}
+  - name: MainMenu
+    clip: {fileID: 8300000, guid: d04cc374e723a2441bacf523f7e1ef47, type: 3}
+  - name: InGame
+    clip: {fileID: 8300000, guid: 5559dfd61b6da7f4e9dc768e9637f89f, type: 3}
+  - name: DoorBell
+    clip: {fileID: 8300000, guid: 7e74c901c41faee48a5373a2eafbb5b1, type: 3}
   masterVolume: 1
   sfxVolume: 1
   musicVolume: 1

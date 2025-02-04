@@ -14,17 +14,19 @@ public class ActivityDirector : MonoBehaviour
             source = _source;
         }
 
-        public void Play(float _percentage)
+        public bool ShouldPlay(float _percentage)
         {
             if (played)
-                return;
+                return false;
 
             if (_percentage >= percentage)
             {
                 Debug.Log(_percentage);
-                source.Play();
                 played = true;
+                return true;
             }
+
+            return false;
         }
 
         private AudioSource source;
@@ -125,9 +127,13 @@ public class ActivityDirector : MonoBehaviour
     private float triggerWindowsActivityLogicRangeEnd = 45000.0f;
     private float windowsActivityTimeLimit = 25000.0f;
 
-    private float triggerPetdoorActivityLogicRangeStart = 45000.0f;
-    private float triggerPetdoorActivityLogicRangeEnd = 55000.0f;
-    private float petdoorActivityTimeLimit = 20000.0f;
+    //  private float triggerPetdoorActivityLogicRangeStart = 45000.0f;
+    //  private float triggerPetdoorActivityLogicRangeEnd = 55000.0f;
+    // private float petdoorActivityTimeLimit = 20000.0f;
+     
+    private float triggerPetdoorActivityLogicRangeStart = 6000.0f;
+     private float triggerPetdoorActivityLogicRangeEnd = 6000.0f;
+    private float petdoorActivityTimeLimit = 5000.0f;
 
     private List<activityTrigger> windowEventObjects;
     private activityTrigger petdoorEventObject;

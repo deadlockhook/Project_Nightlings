@@ -184,4 +184,12 @@ public class SoundManager : MonoBehaviour
             source.volume = sfxVolume * masterVolume;
         }
     }
+
+    public void StopMusic()
+    {
+        if (musicSource.isPlaying)
+        {
+            musicSource.Stop();
+        }
+    }
 }
