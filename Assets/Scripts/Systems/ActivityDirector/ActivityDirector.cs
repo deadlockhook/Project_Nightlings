@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class ActivityDirector : MonoBehaviour
 {
-    public static ActivityDirector directorInstance { get; private set; }
+    //public static ActivityDirector directorInstance { get; private set; }
     private void Awake()
     {
-        if (directorInstance == null)
-        {
-            directorInstance = this;
-            DontDestroyOnLoad(directorInstance);
-        }
-        else
-            Destroy(this);
+        //if (directorInstance == null)
+        //{
+        // directorInstance = this;
+        // DontDestroyOnLoad(directorInstance);
+        // }
+        // else
+        //   Destroy(this);
     }
 
     public delegate void timedActivityTrigger(int val);
@@ -35,7 +35,7 @@ public class ActivityDirector : MonoBehaviour
         {
             if (!active)
                 return;
-            
+
 
             currentTime += (Time.deltaTime * 1000f);
             actionOnUpdate(triggerIndex);
@@ -46,12 +46,14 @@ public class ActivityDirector : MonoBehaviour
                 Reset();
             }
         }
-        public void Activate(List<timedActivity> activites) {
+        public void Activate(List<timedActivity> activites)
+        {
             activites.Add(this);
             active = true;
             actionStart(triggerIndex);
         }
-        public void Deactivate(List<timedActivity> activites) { 
+        public void Deactivate(List<timedActivity> activites)
+        {
             active = false;
             activites.Remove(this);
         }
@@ -93,9 +95,8 @@ public class ActivityDirector : MonoBehaviour
 
     private List<timedActivity> activeActivites;
 
-    [SerializeField] private List<GameObject> toySpawnGameObjects;
-    [SerializeField] private List<GameObject> toyPrefabs;
-    [SerializeField] private int minToySpawnLocations = 12; 
+    public List<GameObject> toyPrefabs;
+    [SerializeField] private int minToySpawnLocations = 12;
     [SerializeField] private int maxToySpawnLocations = 20;
 
     private float triggerWindowsActivityLogic = 4000.0f;
@@ -121,29 +122,31 @@ public class ActivityDirector : MonoBehaviour
 
         toySpawnLocations = new List<Vector3>();
 
-        if (toySpawnGameObjects == null)
-            toySpawnGameObjects = new List<GameObject>();
-       
-        if (toyPrefabs == null)
-            toyPrefabs = new List<GameObject>();
+        Debug.Log("count " + toyPrefabs.Count);
+        //  if (toyPrefabs == null)
+        //       toyPrefabs = new List<GameObject>();
 
-        for (int i = 0; i < toySpawnGameObjects.Count; i++)
+        GameObject[] toySpawns = GameObject.FindGameObjectsWithTag("ToySpawn");
+
+        for (int i = 0; i < toySpawns.Length; i++)
         {
-            toySpawnLocations.Add(toySpawnGameObjects[i].transform.position);
-            Destroy(toySpawnGameObjects[i]);
+            toySpawnLocations.Add(toySpawns[i].transform.position);
+            Destroy(toySpawns[i]);
         }
 
         WindowsActivity[] windows = GameObject.FindObjectsOfType<WindowsActivity>();
 
-        for (int currentIndex = 0;currentIndex < windows.Length;currentIndex++)
+        for (int currentIndex = 0; currentIndex < windows.Length; currentIndex++)
         {
             GameObject obj = windows[currentIndex].gameObject;
             windowEventObjects.Add(new activityTrigger(obj, windowsActivityTimeLimit, currentIndex, OnWindowActivityStart, OnWindowActivityFinished, OnWindowActivityUpdate));
         }
 
         if (GameObject.FindObjectOfType<PetDoorActivity>() != null)
-        petdoorEventObject = new activityTrigger(GameObject.FindObjectOfType<PetDoorActivity>().gameObject, petdoorActivityTimeLimit, 0, OnPetDoorActivityStart, OnPetDoorActivityFinished, OnPetDoorActivityUpdate);
+            petdoorEventObject = new activityTrigger(GameObject.FindObjectOfType<PetDoorActivity>().gameObject, petdoorActivityTimeLimit, 0, OnPetDoorActivityStart, OnPetDoorActivityFinished, OnPetDoorActivityUpdate);
 
+        //test
+        SpawnToys();
     }
     private void OnPetDoorActivityStart(int activityIndex)
     {
@@ -180,7 +183,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnWindowActivityFinished(int activityIndex)
     {
         activityTrigger activityObject = windowEventObjects[activityIndex];
-        activityObject.eventTime.Deactivate( activeActivites);
+        activityObject.eventTime.Deactivate(activeActivites);
         activityObject.gameObj.GetComponent<WindowsActivity>().ActivityTriggerEnd();
     }
     public void SpawnToys()
@@ -191,7 +194,7 @@ public class ActivityDirector : MonoBehaviour
 
         for (int i = shuffledLocations.Count - 1; i > 0; i--)
         {
-            int randomIndex = Random.Range(0, i + 1); 
+            int randomIndex = Random.Range(0, i + 1);
             Vector3 temp = shuffledLocations[i];
             shuffledLocations[i] = shuffledLocations[randomIndex];
             shuffledLocations[randomIndex] = temp;
@@ -208,12 +211,12 @@ public class ActivityDirector : MonoBehaviour
 
     void DispatchWindowEvents()
     {
-        if (currentDeltaTime - lastDeltaTimeForWindowEvents >= triggerWindowsActivityLogic && windowEventObjects.Count > 0 )
+        if (currentDeltaTime - lastDeltaTimeForWindowEvents >= triggerWindowsActivityLogic && windowEventObjects.Count > 0)
         {
             activityTrigger activity = windowEventObjects[Mathf.Clamp(Random.Range(0, windowEventObjects.Count), 0, windowEventObjects.Count)];
 
             if (!activity.eventTime.IsActive())
-                 activity.eventTime.Activate(activeActivites);
+                activity.eventTime.Activate(activeActivites);
 
             lastDeltaTimeForWindowEvents = currentDeltaTime;
         }
@@ -234,7 +237,7 @@ public class ActivityDirector : MonoBehaviour
         DispatchWindowEvents();
         DispatchPetdoorEvent();
 
-        for (int currentIndex = 0;currentIndex  < activeActivites.Count;currentIndex++)
+        for (int currentIndex = 0; currentIndex < activeActivites.Count; currentIndex++)
             activeActivites[currentIndex].OnUpdate();
     }
 }
