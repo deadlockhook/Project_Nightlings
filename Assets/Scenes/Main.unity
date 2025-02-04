@@ -2547,6 +2547,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3874261771021933122, guid: 6769968cd7103954bae9d9072bab020f,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: RestartScene
+      objectReference: {fileID: 0}
     - target: {fileID: 4063720441151048469, guid: 6769968cd7103954bae9d9072bab020f,
         type: 3}
       propertyPath: m_Name

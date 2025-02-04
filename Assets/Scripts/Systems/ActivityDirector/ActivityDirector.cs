@@ -137,6 +137,7 @@ public class ActivityDirector : MonoBehaviour
     private float lastDeltaTimeForPetDoorEvents = 0;
 
     private timedActivity nightActivity;
+    private timedActivity deathTrigger;
     void Start()
     {
    
@@ -148,7 +149,8 @@ public class ActivityDirector : MonoBehaviour
         lastDeltaTimeForWindowEvents = Time.deltaTime * 1000.0f;
         lastDeltaTimeForPetDoorEvents = lastDeltaTimeForWindowEvents;
 
-        nightActivity = new timedActivity(7000, 0, OnNightEnd, null, null);
+        nightActivity = new timedActivity(2000, 0, null, OnWin, null);
+        deathTrigger = new timedActivity(10000, 0, null, OnDeath, null);
 
         toySpawnLocations = new List<Vector3>();
 
@@ -176,15 +178,7 @@ public class ActivityDirector : MonoBehaviour
 
         //test
         SpawnToys();
-    }
-    private void OnNightEnd(int activityIndex)
-    {
-    
-
-       // if (uiManager)
-        //    uiManager.win
-
-
+        nightActivity.Activate(activeActivites);
     }
 
     private bool petdoorActivityFinished = false;
@@ -209,6 +203,7 @@ public class ActivityDirector : MonoBehaviour
         petdoorEventObject.eventTime.Deactivate(activeActivites);
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerEnd();
         petdoorActivityFinished = true;
+        deathTrigger.Activate(activeActivites);
     }
     private void OnWindowActivityStart(int activityIndex)
     {
@@ -232,6 +227,7 @@ public class ActivityDirector : MonoBehaviour
         activityObject.eventTime.Deactivate(activeActivites);
         activityObject.gameObj.GetComponent<WindowsActivity>().ActivityTriggerEnd();
         windowActivityFinished = true;
+        deathTrigger.Activate(activeActivites);
     }
     public void SpawnToys()
     {
@@ -276,14 +272,32 @@ public class ActivityDirector : MonoBehaviour
         if (petdoorActivityFinished)
             return;
 
+        Debug.Log("Petdoor active " + (currentDeltaTime - lastDeltaTimeForPetDoorEvents));
+
         if (petdoorEventObject.gameObj && currentDeltaTime - lastDeltaTimeForPetDoorEvents >= triggerPetdoorActivityLogic && !petdoorEventObject.eventTime.IsActive())
         {
             petdoorEventObject.eventTime.Activate(activeActivites);
             lastDeltaTimeForPetDoorEvents = currentDeltaTime;
         }
     }
+
+    private bool stopActivityDirector = false;
+    private void OnWin(int activityIndex)
+    {
+       uiManager.WinGame();
+       stopActivityDirector = true;
+    }
+    void OnDeath(int activityIndex)
+    {
+        playerController.Die();
+        uiManager.LoseGame();
+        stopActivityDirector = true;
+    }
     void Update()
     {
+        if (stopActivityDirector)
+            return;
+
         currentDeltaTime += Time.deltaTime * 1000f;
 
         DispatchWindowEvents();
