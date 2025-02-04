@@ -25,6 +25,8 @@ public class SoundManager : MonoBehaviour
     private Slider sfxVolumeSlider;
     private Slider musicVolumeSlider;
 
+    [HideInInspector] public string currentMusic;
+
     [System.Serializable]
     public class Sound
     {
@@ -124,22 +126,22 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-	private void Play2DSound(AudioClip clip)
-	{
-		AudioSource source2D;
+    private void Play2DSound(AudioClip clip)
+    {
+        AudioSource source2D;
 
-		if (!audioSources.TryGetValue("2D", out source2D))
-		{
-			GameObject obj = new GameObject("2DAudioSource");
-			source2D = obj.AddComponent<AudioSource>();
-			source2D.spatialBlend = 0;
-			DontDestroyOnLoad(obj);
-			audioSources["2D"] = source2D;
-		}
+        if (!audioSources.TryGetValue("2D", out source2D))
+        {
+            GameObject obj = new GameObject("2DAudioSource");
+            source2D = obj.AddComponent<AudioSource>();
+            source2D.spatialBlend = 0;
+            DontDestroyOnLoad(obj);
+            audioSources["2D"] = source2D;
+        }
 
-		source2D.volume = sfxVolume * masterVolume;
-		source2D.PlayOneShot(clip);
-	}
+        source2D.volume = sfxVolume * masterVolume;
+        source2D.PlayOneShot(clip);
+    }
 
     public void PlayMusic(string musicName)
     {
@@ -152,6 +154,7 @@ public class SoundManager : MonoBehaviour
         if (musicSource.clip == clip && musicSource.isPlaying)
             return;
 
+        currentMusic = musicName;
         musicSource.clip = clip;
         UpdateVolumes();
         musicSource.Play();
@@ -184,12 +187,13 @@ public class SoundManager : MonoBehaviour
             source.volume = sfxVolume * masterVolume;
         }
     }
-
     public void StopMusic()
     {
         if (musicSource.isPlaying)
         {
             musicSource.Stop();
+            currentMusic = null;
         }
     }
+
 }

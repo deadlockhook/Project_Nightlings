@@ -60,53 +60,56 @@ public class UIManager : MonoBehaviour
 		winUI.SetActive(false);
 		loseUI.SetActive(false);
 
-		switch (state)
-		{
-			case UIState.MainMenu:
-                SoundManager.Instance.StopMusic();
-                SoundManager.Instance.PlayMusic("MainMenu");
+        switch (state)
+        {
+            case UIState.MainMenu:
+                if (SoundManager.Instance.currentMusic != "MainMenu")
+                {
+                    SoundManager.Instance.StopMusic();
+                    SoundManager.Instance.PlayMusic("MainMenu");
+                }
                 Cursor.lockState = CursorLockMode.None;
-				Time.timeScale = 0f;
-				mainMenuUI.SetActive(true);
-				break;
+                Time.timeScale = 0f;
+                mainMenuUI.SetActive(true);
+                break;
+            case UIState.PauseMenu:
+                Cursor.lockState = CursorLockMode.None;
+                Time.timeScale = 0f;
+                pauseMenuUI.SetActive(true);
+                isPaused = true;
+                break;
 
-			case UIState.PauseMenu:
-				Cursor.lockState = CursorLockMode.None;
-				Time.timeScale = 0f;
-				pauseMenuUI.SetActive(true);
-				isPaused = true;
-				break;
-
-			case UIState.Gameplay:
-                SoundManager.Instance.StopMusic();
-				SoundManager.Instance.PlayMusic("InGame");
+            case UIState.Gameplay:
+                if (SoundManager.Instance.currentMusic != "InGame")
+                {
+					SoundManager.Instance.StopMusic();
+                    SoundManager.Instance.PlayMusic("InGame");
+                }
                 Time.timeScale = 1f;
-				gameplayUI.SetActive(true);
-				Cursor.lockState = CursorLockMode.Locked;
-				isPaused = false;
-				break;
+                gameplayUI.SetActive(true);
+                Cursor.lockState = CursorLockMode.Locked;
+                isPaused = false;
+                break;
+            case UIState.Options:
+                Time.timeScale = 0f;
+                optionsUI.SetActive(true);
+                Cursor.lockState = CursorLockMode.None;
+                break;
+            case UIState.Win:
+                Cursor.lockState = CursorLockMode.None;
+                Time.timeScale = 0f;
+                winUI.SetActive(true);
+                break;
+            case UIState.Lose:
+                Cursor.lockState = CursorLockMode.None;
+                Time.timeScale = 0f;
+                loseUI.SetActive(true);
+                break;
+        }
 
-			case UIState.Options:
-				Time.timeScale = 0f;
-				optionsUI.SetActive(true);
-				Cursor.lockState = CursorLockMode.None;
-				break;
+    }
 
-			case UIState.Win:
-				Cursor.lockState = CursorLockMode.None;
-				Time.timeScale = 0f;
-				winUI.SetActive(true);
-				break;
-
-			case UIState.Lose:
-				Cursor.lockState = CursorLockMode.None;
-				Time.timeScale = 0f;
-				loseUI.SetActive(true);
-				break;
-		}
-	}
-
-	private void Update()
+    private void Update()
 	{
 		if (winUI.activeSelf || loseUI.activeSelf)
 		{
