@@ -127,13 +127,13 @@ public class ActivityDirector : MonoBehaviour
     private float triggerWindowsActivityLogicRangeEnd = 45000.0f;
     private float windowsActivityTimeLimit = 25000.0f;
 
-    //  private float triggerPetdoorActivityLogicRangeStart = 45000.0f;
-    //  private float triggerPetdoorActivityLogicRangeEnd = 55000.0f;
-    // private float petdoorActivityTimeLimit = 20000.0f;
+    private float triggerPetdoorActivityLogicRangeStart = 45000.0f;
+    private float triggerPetdoorActivityLogicRangeEnd = 55000.0f;
+    private float petdoorActivityTimeLimit = 20000.0f;
      
-    private float triggerPetdoorActivityLogicRangeStart = 6000.0f;
-     private float triggerPetdoorActivityLogicRangeEnd = 6000.0f;
-    private float petdoorActivityTimeLimit = 5000.0f;
+   // private float triggerPetdoorActivityLogicRangeStart = 6000.0f;
+   //  private float triggerPetdoorActivityLogicRangeEnd = 6000.0f;
+    //private float petdoorActivityTimeLimit = 5000.0f;
 
     private List<activityTrigger> windowEventObjects;
     private activityTrigger petdoorEventObject;
