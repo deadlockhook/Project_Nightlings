@@ -4,20 +4,7 @@ using UnityEngine;
 
 public class ActivityDirector : MonoBehaviour
 {
-    //public static ActivityDirector directorInstance { get; private set; }
-    private void Awake()
-    {
-        //if (directorInstance == null)
-        //{
-        // directorInstance = this;
-        // DontDestroyOnLoad(directorInstance);
-        // }
-        // else
-        //   Destroy(this);
-    }
-
     public delegate void timedActivityTrigger(int val);
-
     public class timedActivity
     {
         public timedActivity(float _triggerTimeMilliSeconds, int _triggerIndex, timedActivityTrigger _actionStart, timedActivityTrigger _actionEnd, timedActivityTrigger _actionOnUpdate)
@@ -93,6 +80,7 @@ public class ActivityDirector : MonoBehaviour
         public timedActivity eventTime;
     }
 
+    private SoundManager soundManager;
     private List<timedActivity> activeActivites;
 
     public List<GameObject> toyPrefabs;
@@ -115,6 +103,7 @@ public class ActivityDirector : MonoBehaviour
     private float lastDeltaTimeForPetDoorEvents = 0;
     void Start()
     {
+        soundManager = FindObjectOfType<SoundManager>();
         activeActivites = new List<timedActivity>();
         windowEventObjects = new List<activityTrigger>();
         lastDeltaTimeForWindowEvents = Time.deltaTime * 1000.0f;
@@ -148,9 +137,13 @@ public class ActivityDirector : MonoBehaviour
         //test
         SpawnToys();
     }
+        
+    private bool petdoorActivityFinished = false;
+    private bool windowActivityFinished = false;
     private void OnPetDoorActivityStart(int activityIndex)
     {
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerStart();
+        soundManager.PlaySound("WindowTap2");
     }
 
     private void OnPetDoorActivityUpdate(int activityIndex)
@@ -165,10 +158,12 @@ public class ActivityDirector : MonoBehaviour
     {
         petdoorEventObject.eventTime.Deactivate(activeActivites);
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerEnd();
+        petdoorActivityFinished = true;
     }
     private void OnWindowActivityStart(int activityIndex)
     {
         windowEventObjects[activityIndex].gameObj.GetComponent<WindowsActivity>().ActivityTriggerStart();
+        soundManager.PlaySound("Creak1");
     }
 
     private void OnWindowActivityUpdate(int activityIndex)
@@ -185,6 +180,7 @@ public class ActivityDirector : MonoBehaviour
         activityTrigger activityObject = windowEventObjects[activityIndex];
         activityObject.eventTime.Deactivate(activeActivites);
         activityObject.gameObj.GetComponent<WindowsActivity>().ActivityTriggerEnd();
+        windowActivityFinished = true;
     }
     public void SpawnToys()
     {
@@ -211,6 +207,9 @@ public class ActivityDirector : MonoBehaviour
 
     void DispatchWindowEvents()
     {
+       // if (windowActivityFinished)
+          //  return;
+
         if (currentDeltaTime - lastDeltaTimeForWindowEvents >= triggerWindowsActivityLogic && windowEventObjects.Count > 0)
         {
             activityTrigger activity = windowEventObjects[Mathf.Clamp(Random.Range(0, windowEventObjects.Count), 0, windowEventObjects.Count)];
@@ -224,6 +223,9 @@ public class ActivityDirector : MonoBehaviour
 
     void DispatchPetdoorEvent()
     {
+        if (petdoorActivityFinished)
+            return;
+
         if (petdoorEventObject.gameObj && currentDeltaTime - lastDeltaTimeForPetDoorEvents >= triggerPetdoorActivityLogic && !petdoorEventObject.eventTime.IsActive())
         {
             petdoorEventObject.eventTime.Activate(activeActivites);

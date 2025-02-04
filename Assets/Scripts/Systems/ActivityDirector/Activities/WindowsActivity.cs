@@ -50,9 +50,6 @@ public class WindowsActivity : MonoBehaviour
             shouldReset = false;
             return true;
         }
-
-        Debug.Log(0.8972201f * activityProgress);
-
         Vector3 target = new Vector3(transform.position.x, startYPosition + (0.8972201f * activityProgress), transform.position.z);
         transform.position = target;
 
@@ -74,8 +71,6 @@ public class WindowsActivity : MonoBehaviour
         if (resetAnimBegin)
         {
             resetProgress += Time.deltaTime;
-
-            Debug.Log(resetProgress);
 
             resetProgress = Mathf.Clamp(resetProgress, 0.0f, 1.0f);
 
