@@ -1,133 +1,173 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
-    public static UIManager Instance { get; private set; }
+	public static UIManager Instance { get; private set; }
 
-    public enum UIState
-    {
-        MainMenu,
-        PauseMenu,
-        Gameplay,
-        Options
-    }
+	public enum UIState
+	{
+		MainMenu,
+		PauseMenu,
+		Gameplay,
+		Options,
+		Win,
+		Lose
+	}
 
-    [Header("UI Screens")]
-    private GameObject mainMenuUI;
-    private GameObject pauseMenuUI;
-    private GameObject gameplayUI;
-    private GameObject optionsUI;
+	[Header("UI Screens")]
+	private GameObject mainMenuUI;
+	private GameObject pauseMenuUI;
+	private GameObject gameplayUI;
+	private GameObject optionsUI;
+	private GameObject winUI;
+	private GameObject loseUI;
 
-    private bool isPaused = false;
+	private bool isPaused = false;
 
-    //Singleton
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
+	//Singleton
+	private void Awake()
+	{
+		if (Instance != null && Instance != this)
+		{
+			Destroy(gameObject);
+			return;
+		}
+		Instance = this;
+		DontDestroyOnLoad(gameObject);
+	}
 
-    private void Start()
-    {
-        mainMenuUI = transform.Find("MainMenu").gameObject;
-        pauseMenuUI = transform.Find("Pause").gameObject;
-        gameplayUI = transform.Find("Gameplay").gameObject;
-        optionsUI = transform.Find("Options").gameObject;
-        ChangeUIState(UIState.MainMenu);
-    }
+	private void Start()
+	{
+		mainMenuUI = transform.Find("MainMenu").gameObject;
+		pauseMenuUI = transform.Find("Pause").gameObject;
+		gameplayUI = transform.Find("Gameplay").gameObject;
+		optionsUI = transform.Find("Options").gameObject;
+		winUI = transform.Find("Win").gameObject;
+		loseUI = transform.Find("Lose").gameObject;
 
-    public void ChangeUIState(UIState state)
-    {
-        mainMenuUI.SetActive(false);
-        pauseMenuUI.SetActive(false);
-        gameplayUI.SetActive(false);
-        optionsUI.SetActive(false);
+		ChangeUIState(UIState.MainMenu);
+	}
 
-        switch (state)
-        {
-            case UIState.MainMenu:
-                Cursor.lockState = CursorLockMode.None;
-                Time.timeScale = 0f;
-                mainMenuUI.SetActive(true);
-                break;
+	public void ChangeUIState(UIState state)
+	{
+		mainMenuUI.SetActive(false);
+		pauseMenuUI.SetActive(false);
+		gameplayUI.SetActive(false);
+		optionsUI.SetActive(false);
+		winUI.SetActive(false);
+		loseUI.SetActive(false);
 
-            case UIState.PauseMenu:
-                Cursor.lockState = CursorLockMode.None;
-                Time.timeScale = 0f;
-                pauseMenuUI.SetActive(true);
-                break;
+		switch (state)
+		{
+			case UIState.MainMenu:
+				Cursor.lockState = CursorLockMode.None;
+				Time.timeScale = 0f;
+				mainMenuUI.SetActive(true);
+				break;
 
-            case UIState.Gameplay:
-                Time.timeScale = 1f;
-                gameplayUI.SetActive(true);
-                Cursor.lockState = CursorLockMode.Locked;
-                break;
+			case UIState.PauseMenu:
+				Cursor.lockState = CursorLockMode.None;
+				Time.timeScale = 0f;
+				pauseMenuUI.SetActive(true);
+				break;
 
-            case UIState.Options:
-                Time.timeScale = 0f;
-                optionsUI.SetActive(true);
-                Cursor.lockState = CursorLockMode.None;
-                break;
-        }
-    }
+			case UIState.Gameplay:
+				Time.timeScale = 1f;
+				gameplayUI.SetActive(true);
+				Cursor.lockState = CursorLockMode.Locked;
+				break;
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape) && !mainMenuUI.activeSelf)
-        {
-            if (isPaused)
-            {
-                ResumeGame();
-            }
-            else
-            {
-                PauseGame();
-            }
-        }
-    }
+			case UIState.Options:
+				Time.timeScale = 0f;
+				optionsUI.SetActive(true);
+				Cursor.lockState = CursorLockMode.None;
+				break;
 
-    public void PauseGame()
-    {
-        isPaused = true;
-        ChangeUIState(UIState.PauseMenu);
-    }
+			case UIState.Win:
+				Cursor.lockState = CursorLockMode.None;
+				Time.timeScale = 0f;
+				winUI.SetActive(true);
+				break;
 
-    public void ResumeGame()
-    {
-        isPaused = false;
-        ChangeUIState(UIState.Gameplay);
-    }
+			case UIState.Lose:
+				Cursor.lockState = CursorLockMode.None;
+				Time.timeScale = 0f;
+				loseUI.SetActive(true);
+				break;
+		}
+	}
 
-    public void GoToMainMenu()
-    {
-        ChangeUIState(UIState.MainMenu);
-    }
+	private void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.Escape) && !mainMenuUI.activeSelf)
+		{
+			if (isPaused)
+			{
+				ResumeGame();
+			}
+			else
+			{
+				PauseGame();
+			}
+		}
+	}
 
-    public void GoToOptions()
-    {
-        ChangeUIState(UIState.Options);
-    }
+	public void PauseGame()
+	{
+		isPaused = true;
+		ChangeUIState(UIState.PauseMenu);
+	}
 
-    public void QuitGame()
-    {
-        Debug.Log("Quitting game");
-        Application.Quit();
-    }
+	public void ResumeGame()
+	{
+		isPaused = false;
+		ChangeUIState(UIState.Gameplay);
+	}
 
-    public bool IsPaused()
-    {
-        return isPaused;
-    }
+	public void GoToMainMenu()
+	{
+		ChangeUIState(UIState.MainMenu);
+	}
 
-    public bool IsInGame()
-    {
-        return !isPaused && gameplayUI.activeSelf;
-    }
+	public void GoToOptions()
+	{
+		ChangeUIState(UIState.Options);
+	}
+
+	public void QuitGame()
+	{
+		Debug.Log("Quitting game");
+		Application.Quit();
+	}
+
+	public void WinGame()
+	{
+		isPaused = true;
+		ChangeUIState(UIState.Win);
+	}
+
+	public void LoseGame()
+	{
+		isPaused = true;
+		ChangeUIState(UIState.Lose);
+	}
+
+	public bool IsPaused()
+	{
+		return isPaused;
+	}
+
+	public bool IsInGame()
+	{
+		return !isPaused && gameplayUI.activeSelf;
+	}
+
+	public void RestartScene()
+	{
+		Time.timeScale = 1f;
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+	}
 }
