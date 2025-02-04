@@ -29,11 +29,7 @@ public class PlayerController : MonoBehaviour
 	public float staminaRechargeRate = 8f;
 	public float staminaCoolDown = 1f;
 	private float staminaCoolDownTimer = 0f;
-	public Slider staminaBar;
 	private float currentStamina;
-
-	[Header("UI Settings")]
-	public TextMeshProUGUI staminaText;
 
 	[Header("Head Bob Settings")]
 	public float headBobPower = 0.05f;
@@ -124,7 +120,7 @@ public class PlayerController : MonoBehaviour
 
 			if (maxLightIntensity != minLightIntensity)
 			{
-				rangeDrainRate = drainRate * (maxLightRange - minLightIntensity) / (maxLightIntensity - minLightIntensity);
+				rangeDrainRate = drainRate * (maxLightRange - minLightRange) / (maxLightIntensity - minLightIntensity);
 			}
 			else
 			{
@@ -135,7 +131,6 @@ public class PlayerController : MonoBehaviour
 
 	private void Update()
 	{
-
 		if (isDead)
 			return;
 
@@ -153,10 +148,10 @@ public class PlayerController : MonoBehaviour
 		HandleMovement();
 		HandleLook();
 		UpdateFOV();
-		UpdateStaminaUI();
 		HandleHeadBob();
 		HandleFlashlight();
 
+		// Stamina recharge logic (UI updates removed)
 		if (isRunning)
 		{
 			staminaCoolDownTimer = 0f;
@@ -168,14 +163,13 @@ public class PlayerController : MonoBehaviour
 			{
 				currentStamina += staminaRechargeRate * Time.deltaTime;
 				currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
-				if (staminaBar)
-					staminaBar.value = currentStamina;
 			}
 		}
 
 		if (interactionManager != null)
 			interactionManager.OnLocalPlayerUpdate();
 	}
+
 	private void RetrieveDataFromInputSystem()
 	{
 		movementInput = playerControlActions.Player.Move.ReadValue<Vector2>();
@@ -199,10 +193,6 @@ public class PlayerController : MonoBehaviour
 			isWalking = false;
 			isRunning = true;
 			currentStamina -= staminaDrainRate * Time.deltaTime;
-
-			if (staminaBar)
-				staminaBar.value = currentStamina;
-
 			if (currentStamina < 0)
 				currentStamina = 0;
 		}
@@ -256,7 +246,6 @@ public class PlayerController : MonoBehaviour
 		if (UIManager.Instance != null && UIManager.Instance.IsPaused())
 			return;
 
-
 		float mouseX = lookInput.x * lookSensitivity;
 		float mouseY = lookInput.y * lookSensitivity;
 
@@ -273,12 +262,6 @@ public class PlayerController : MonoBehaviour
 		float targetFOV = isRunning ? sprintFOV : normalFOV;
 		currentFOV = Mathf.Lerp(currentFOV, targetFOV, Time.deltaTime * 5f);
 		playerCamera.fieldOfView = currentFOV;
-	}
-
-	private void UpdateStaminaUI()
-	{
-		if (staminaText)
-			staminaText.text = $"Stamina: {Mathf.CeilToInt(currentStamina)}";
 	}
 
 	private void HandleHeadBob()
