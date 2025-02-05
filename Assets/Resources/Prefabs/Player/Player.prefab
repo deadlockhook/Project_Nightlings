@@ -280,7 +280,7 @@ MonoBehaviour:
   staminaRechargeRate: 8
   staminaCoolDown: 1
   staminaBar: {fileID: 0}
-  staminaFadeSpeed: 2
+  staminaFadeSpeed: 5
   headBobPower: 0.075
   headBobSpeed: 10
   flashlightGameObject: {fileID: 8916961133800133634}
