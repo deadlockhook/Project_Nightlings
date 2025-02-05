@@ -83,6 +83,12 @@ public class PlayerController : MonoBehaviour
 	private void Awake()
 	{
 		playerControlActions = new PlayerControlActions();
+
+		staminaBar = GameObject.Find("StaminaBar")?.GetComponent<Image>();
+		if (staminaBar == null)
+		{
+			Debug.LogError("No Stamina Bar");
+		}
 	}
 
 	private void OnEnable()
