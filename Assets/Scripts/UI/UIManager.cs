@@ -182,6 +182,11 @@ public class UIManager : MonoBehaviour
 		return !isPaused && gameplayUI.activeSelf;
 	}
 
+	public bool IsMainMenuActive()
+	{
+		return mainMenuUI.activeSelf;
+	}
+
 	public void RestartScene()
 	{
 		Time.timeScale = 1f;

@@ -271,7 +271,7 @@ public class PlayerController : MonoBehaviour
 
 	private void HandleLook()
 	{
-		if (UIManager.Instance != null && UIManager.Instance.IsPaused())
+		if (UIManager.Instance != null && (UIManager.Instance.IsPaused() || UIManager.Instance.IsMainMenuActive()))
 			return;
 
 		float mouseX = lookInput.x * lookSensitivity;
