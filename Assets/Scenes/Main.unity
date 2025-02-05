@@ -3996,10 +3996,19 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8790709780570191409, guid: 6769968cd7103954bae9d9072bab020f,
+        type: 3}
+      propertyPath: loadingScreen
+      value: 
+      objectReference: {fileID: 2136678083}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5636748318794963977, guid: 6769968cd7103954bae9d9072bab020f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2136678084}
   m_SourcePrefab: {fileID: 100100000, guid: 6769968cd7103954bae9d9072bab020f, type: 3}
 --- !u!1001 &715461632
 PrefabInstance:
@@ -56432,6 +56441,24 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2ba5ac2de7ff0764e8874d18fcb4484c, type: 3}
+--- !u!1 &2136678083 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5636748318794963977, guid: 6769968cd7103954bae9d9072bab020f,
+    type: 3}
+  m_PrefabInstance: {fileID: 710593262}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &2136678084
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2136678083}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &2140229953
 PrefabInstance:
   m_ObjectHideFlags: 0
