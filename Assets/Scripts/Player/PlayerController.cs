@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using System.Linq;
 
 // Handles the player movement and interaction
 
@@ -84,8 +85,15 @@ public class PlayerController : MonoBehaviour
 	{
 		playerControlActions = new PlayerControlActions();
 
-		staminaBar = GameObject.Find("StaminaBar")?.GetComponent<Image>();
-		if (staminaBar == null)
+        staminaBar = GameObject.Find("StaminaBar")?.GetComponent<Image>();
+
+        if (staminaBar == null)
+        {
+            staminaBar = FindObjectsOfType<Image>(true)
+                .FirstOrDefault(img => img.gameObject.name == "StaminaBar");
+        }
+
+        if (staminaBar == null)
 		{
 			Debug.LogError("No Stamina Bar");
 		}
