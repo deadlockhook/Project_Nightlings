@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
 
 	[Header("Stamina UI")]
 	public Image staminaBar;
+	public float staminaFadeSpeed = 1f;
 
 	[Header("Head Bob Settings")]
 	public float headBobPower = 0.05f;
@@ -173,18 +174,24 @@ public class PlayerController : MonoBehaviour
 			float staminaRatio = currentStamina / maxStamina;
 			staminaBar.fillAmount = staminaRatio;
 
+			Color baseColor;
 			if (staminaRatio < 0.25f)
 			{
-				staminaBar.color = Color.red;
+				baseColor = Color.red;
 			}
 			else if (staminaRatio < 0.5f)
 			{
-				staminaBar.color = Color.yellow;
+				baseColor = Color.yellow;
 			}
 			else
 			{
-				staminaBar.color = Color.white;
+				baseColor = Color.white;
 			}
+
+			float targetAlpha = (currentStamina >= maxStamina) ? 0f : 1f;
+			Color currentColor = staminaBar.color;
+			baseColor.a = Mathf.Lerp(currentColor.a, targetAlpha, Time.deltaTime * staminaFadeSpeed);
+			staminaBar.color = baseColor;
 		}
 
 		if (interactionManager != null)
