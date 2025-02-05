@@ -6,8 +6,10 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
 	public static UIManager Instance { get; private set; }
-
-	public enum UIState
+    public GameObject bellIconPrefab;
+    //public Transform worldSpaceCanvas;
+    private Dictionary<int, GameObject> activeIcons = new Dictionary<int, GameObject>();
+    public enum UIState
 	{
 		MainMenu,
 		PauseMenu,
@@ -186,4 +188,20 @@ public class UIManager : MonoBehaviour
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		ChangeUIState(UIState.Gameplay);
 	}
+    public void ShowIcon(GameObject iconPrefab, Vector3 position, int eventIndex)
+    {
+        if (!activeIcons.ContainsKey(eventIndex))
+        {
+            GameObject icon = Instantiate(iconPrefab, position, Quaternion.identity);
+            activeIcons.Add(eventIndex, icon);
+        }
+    }
+    public void HideIcon(int eventIndex)
+    {
+        if (activeIcons.ContainsKey(eventIndex))
+        {
+            Destroy(activeIcons[eventIndex]);
+            activeIcons.Remove(eventIndex);
+        }
+    }
 }

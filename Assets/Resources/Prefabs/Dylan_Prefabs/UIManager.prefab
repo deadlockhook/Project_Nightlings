@@ -2535,6 +2535,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5848dedaf8ad0c542a98c6f6de124677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bellIconPrefab: {fileID: 2531136830291740803, guid: 929d26b19b4cc01479717fe080c42539,
+    type: 3}
+  worldSpaceCanvas: {fileID: 8493386305697063093, guid: 929d26b19b4cc01479717fe080c42539,
+    type: 3}
 --- !u!223 &7618648492901496417
 Canvas:
   m_ObjectHideFlags: 0

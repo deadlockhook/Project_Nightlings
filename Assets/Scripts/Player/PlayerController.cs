@@ -31,6 +31,9 @@ public class PlayerController : MonoBehaviour
 	private float staminaCoolDownTimer = 0f;
 	private float currentStamina;
 
+	[Header("Stamina UI")]
+	public Image staminaBar;
+
 	[Header("Head Bob Settings")]
 	public float headBobPower = 0.05f;
 	public float headBobSpeed = 5f;
@@ -151,7 +154,6 @@ public class PlayerController : MonoBehaviour
 		HandleHeadBob();
 		HandleFlashlight();
 
-		// Stamina recharge logic (UI updates removed)
 		if (isRunning)
 		{
 			staminaCoolDownTimer = 0f;
@@ -164,6 +166,11 @@ public class PlayerController : MonoBehaviour
 				currentStamina += staminaRechargeRate * Time.deltaTime;
 				currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
 			}
+		}
+
+		if (staminaBar != null)
+		{
+			staminaBar.fillAmount = currentStamina / maxStamina;
 		}
 
 		if (interactionManager != null)
