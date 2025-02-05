@@ -8,7 +8,7 @@ public class UIManager : MonoBehaviour
 	public static UIManager Instance { get; private set; }
     public GameObject bellIconPrefab;
     //public Transform worldSpaceCanvas;
-    private Dictionary<Vector3, GameObject> activeIcons = new Dictionary<Vector3, GameObject>();
+    private Dictionary<int, GameObject> activeIcons = new Dictionary<int, GameObject>();
     public enum UIState
 	{
 		MainMenu,
@@ -188,21 +188,20 @@ public class UIManager : MonoBehaviour
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		ChangeUIState(UIState.Gameplay);
 	}
-    public void ShowIcon(GameObject iconPrefab, Vector3 position)
+    public void ShowIcon(GameObject iconPrefab, Vector3 position, int eventIndex)
     {
-        if (!activeIcons.ContainsKey(position))
+        if (!activeIcons.ContainsKey(eventIndex))
         {
             GameObject icon = Instantiate(iconPrefab, position, Quaternion.identity);
-
-            activeIcons.Add(position, icon);
+            activeIcons.Add(eventIndex, icon);
         }
     }
-    public void HideIcon(Vector3 position)
+    public void HideIcon(int eventIndex)
     {
-        if (activeIcons.ContainsKey(position))
+        if (activeIcons.ContainsKey(eventIndex))
         {
-            Destroy(activeIcons[position]);
-            activeIcons.Remove(position);
+            Destroy(activeIcons[eventIndex]);
+            activeIcons.Remove(eventIndex);
         }
     }
 }

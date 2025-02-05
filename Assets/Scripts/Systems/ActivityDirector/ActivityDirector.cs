@@ -188,7 +188,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnPetDoorActivityStart(int activityIndex)
     {
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerStart();
-        uiManager.ShowIcon(iconPrefab, petdoorEventObject.gameObj.transform.position);
+        uiManager.ShowIcon(iconPrefab, petdoorEventObject.gameObj.transform.position, 0);
     }
 
     private void OnPetDoorActivityUpdate(int activityIndex)
@@ -199,6 +199,7 @@ public class ActivityDirector : MonoBehaviour
         {
             petdoorEventObject.eventTime.Deactivate(activeActivites);
             petdoorEventObject.eventTime.Reset();
+            uiManager.HideIcon(0);
         }
     }
 
@@ -208,13 +209,12 @@ public class ActivityDirector : MonoBehaviour
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerEnd();
         petdoorActivityFinished = true;
         deathTrigger.Activate(activeActivites);
-        uiManager.HideIcon(petdoorEventObject.gameObj.transform.position);
     }
 
     private void OnWindowActivityStart(int activityIndex)
     {
         windowEventObjects[activityIndex].gameObj.GetComponent<WindowsActivity>().ActivityTriggerStart();
-        uiManager.ShowIcon(iconPrefab, windowEventObjects[activityIndex].gameObj.transform.position);
+        uiManager.ShowIcon(iconPrefab, windowEventObjects[activityIndex].gameObj.transform.position, activityIndex);
     }
 
     private void OnWindowActivityUpdate(int activityIndex)
@@ -226,8 +226,10 @@ public class ActivityDirector : MonoBehaviour
         {
             activityObject.eventTime.Deactivate(activeActivites);
             activityObject.eventTime.Reset();
+            uiManager.HideIcon(activityIndex);
         }
     }
+
 
     private void OnWindowActivityFinished(int activityIndex)
     {
@@ -235,8 +237,7 @@ public class ActivityDirector : MonoBehaviour
         activityObject.eventTime.Deactivate(activeActivites);
         activityObject.gameObj.GetComponent<WindowsActivity>().ActivityTriggerEnd();
         windowActivityFinished = true;
-        deathTrigger.Activate(activeActivites);
-        uiManager.HideIcon(activityObject.gameObj.transform.position);
+        deathTrigger.Activate(activeActivites);  
     }
 
     public void SpawnToys()
