@@ -130,12 +130,6 @@ public class PlayerController : MonoBehaviour
 				rangeDrainRate = 0f;
 			}
 		}
-
-		staminaBar = GameObject.Find("staminaBar")?.GetComponent<Image>();
-		if (staminaBar == null)
-		{
-			Debug.LogError("no stamina bar found");
-		}
 	}
 
 	private void Update()
