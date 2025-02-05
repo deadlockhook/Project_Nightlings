@@ -10,6 +10,8 @@ public class UIManager : MonoBehaviour
     public GameObject bellIconPrefab;
     //public Transform worldSpaceCanvas;
     private Dictionary<int, GameObject> activeIcons = new Dictionary<int, GameObject>();
+    private Stack<UIState> uiStateHistory = new Stack<UIState>();
+
     public enum UIState
 	{
 		MainMenu,
@@ -30,9 +32,10 @@ public class UIManager : MonoBehaviour
 
 	private bool isPaused = false;
 	private Toggle audioVisualToggle;
+    private Color previousSceneColor;
 
-	//Singleton
-	private void Awake()
+    //Singleton
+    private void Awake()
 	{
 		if (Instance != null && Instance != this)
 		{
@@ -55,10 +58,27 @@ public class UIManager : MonoBehaviour
 
         ChangeUIState(UIState.MainMenu);
 	}
+    private void CapturePreviousUIImage(Image uiImage)
+    {
+        if (uiImage != null)
+        {
+            previousSceneColor = uiImage.color;
+        }
+    }
 
-	public void ChangeUIState(UIState state)
+
+    public void ChangeUIState(UIState state)
 	{
-		mainMenuUI.SetActive(false);
+        if (state == UIState.Options)
+        {
+            GameObject activeUI = GetActiveUIPanel();
+            if (activeUI != null)
+            {
+                CapturePreviousUIImage(activeUI.GetComponent<Image>());
+            }
+        }
+
+        mainMenuUI.SetActive(false);
 		pauseMenuUI.SetActive(false);
 		gameplayUI.SetActive(false);
 		optionsUI.SetActive(false);
@@ -95,6 +115,7 @@ public class UIManager : MonoBehaviour
                 Time.timeScale = 0f;
                 optionsUI.SetActive(true);
                 Cursor.lockState = CursorLockMode.None;
+                ApplyPreviousSceneColor();
                 break;
             case UIState.Win:
                 Cursor.lockState = CursorLockMode.None;
@@ -107,9 +128,25 @@ public class UIManager : MonoBehaviour
                 loseUI.SetActive(true);
                 break;
         }
-
+        uiStateHistory.Push(state);
     }
-
+    private GameObject GetActiveUIPanel()
+    {
+        if (mainMenuUI.activeSelf) return mainMenuUI;
+        if (pauseMenuUI.activeSelf) return pauseMenuUI;
+        if (gameplayUI.activeSelf) return gameplayUI;
+        if (winUI.activeSelf) return winUI;
+        if (loseUI.activeSelf) return loseUI;
+        return null;
+    }
+    private void ApplyPreviousSceneColor()
+    {
+        Image optionsImage = optionsUI.GetComponent<Image>();
+        if (optionsImage != null)
+        {
+            optionsImage.color = previousSceneColor;
+        }
+    }
     private void Update()
 	{
 		if (winUI.activeSelf || loseUI.activeSelf)
@@ -129,8 +166,20 @@ public class UIManager : MonoBehaviour
 			}
 		}
 	}
+    public void Back()
+    {
+        if (uiStateHistory.Count > 1)
+        {
+            uiStateHistory.Pop();
+            ChangeUIState(uiStateHistory.Peek());
+        }
+        else
+        {
+            ChangeUIState(UIState.MainMenu);
+        }
+    }
 
-	public void PauseGame()
+    public void PauseGame()
 	{
 		if (winUI.activeSelf || loseUI.activeSelf)
 			return;
