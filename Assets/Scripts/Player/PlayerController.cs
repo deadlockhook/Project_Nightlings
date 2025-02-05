@@ -170,7 +170,21 @@ public class PlayerController : MonoBehaviour
 
 		if (staminaBar != null)
 		{
-			staminaBar.fillAmount = currentStamina / maxStamina;
+			float staminaRatio = currentStamina / maxStamina;
+			staminaBar.fillAmount = staminaRatio;
+
+			if (staminaRatio < 0.25f)
+			{
+				staminaBar.color = Color.red;
+			}
+			else if (staminaRatio < 0.5f)
+			{
+				staminaBar.color = Color.yellow;
+			}
+			else
+			{
+				staminaBar.color = Color.white;
+			}
 		}
 
 		if (interactionManager != null)
