@@ -51,16 +51,15 @@ public class ActivityDirector : MonoBehaviour
             if (!active)
                 return;
 
-
             currentTime += (Time.deltaTime * 1000f);
-     
+
             if (actionOnUpdate != null)
                 actionOnUpdate(triggerIndex);
 
             if (currentTime >= triggerTime)
             {
                 if (actionEnd != null)
-                   actionEnd(triggerIndex);
+                    actionEnd(triggerIndex);
 
                 Reset();
             }
@@ -69,7 +68,7 @@ public class ActivityDirector : MonoBehaviour
         {
             activites.Add(this);
             active = true;
-           
+
             if (actionStart != null)
                 actionStart(triggerIndex);
         }
@@ -130,10 +129,6 @@ public class ActivityDirector : MonoBehaviour
     private float triggerPetdoorActivityLogicRangeStart = 45000.0f;
     private float triggerPetdoorActivityLogicRangeEnd = 55000.0f;
     private float petdoorActivityTimeLimit = 20000.0f;
-     
-   // private float triggerPetdoorActivityLogicRangeStart = 6000.0f;
-   //  private float triggerPetdoorActivityLogicRangeEnd = 6000.0f;
-    //private float petdoorActivityTimeLimit = 5000.0f;
 
     private List<activityTrigger> windowEventObjects;
     private activityTrigger petdoorEventObject;
@@ -146,9 +141,11 @@ public class ActivityDirector : MonoBehaviour
 
     private timedActivity nightActivity;
     private timedActivity deathTrigger;
+
+    public GameObject iconPrefab;
+
     void Start()
     {
-   
         uiManager = FindObjectOfType<UIManager>();
         playerController = FindObjectOfType<PlayerController>();
         soundManager = FindObjectOfType<SoundManager>();
@@ -161,9 +158,6 @@ public class ActivityDirector : MonoBehaviour
         deathTrigger = new timedActivity(10000, 0, null, OnDeath, null);
 
         toySpawnLocations = new List<Vector3>();
-
-        //  if (toyPrefabs == null)
-        //       toyPrefabs = new List<GameObject>();
 
         GameObject[] toySpawns = GameObject.FindGameObjectsWithTag("ToySpawn");
 
@@ -184,16 +178,17 @@ public class ActivityDirector : MonoBehaviour
         if (GameObject.FindObjectOfType<PetDoorActivity>() != null)
             petdoorEventObject = new activityTrigger(GameObject.FindObjectOfType<PetDoorActivity>().gameObject, petdoorActivityTimeLimit, 0, OnPetDoorActivityStart, OnPetDoorActivityFinished, OnPetDoorActivityUpdate);
 
-        //test
         SpawnToys();
         nightActivity.Activate(activeActivites);
     }
 
     private bool petdoorActivityFinished = false;
     private bool windowActivityFinished = false;
+
     private void OnPetDoorActivityStart(int activityIndex)
     {
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerStart();
+        uiManager.ShowIcon(iconPrefab, petdoorEventObject.gameObj.transform.position);
     }
 
     private void OnPetDoorActivityUpdate(int activityIndex)
@@ -206,16 +201,20 @@ public class ActivityDirector : MonoBehaviour
             petdoorEventObject.eventTime.Reset();
         }
     }
+
     private void OnPetDoorActivityFinished(int activityIndex)
     {
         petdoorEventObject.eventTime.Deactivate(activeActivites);
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerEnd();
         petdoorActivityFinished = true;
         deathTrigger.Activate(activeActivites);
+        uiManager.HideIcon(petdoorEventObject.gameObj.transform.position);
     }
+
     private void OnWindowActivityStart(int activityIndex)
     {
         windowEventObjects[activityIndex].gameObj.GetComponent<WindowsActivity>().ActivityTriggerStart();
+        uiManager.ShowIcon(iconPrefab, windowEventObjects[activityIndex].gameObj.transform.position);
     }
 
     private void OnWindowActivityUpdate(int activityIndex)
@@ -229,6 +228,7 @@ public class ActivityDirector : MonoBehaviour
             activityObject.eventTime.Reset();
         }
     }
+
     private void OnWindowActivityFinished(int activityIndex)
     {
         activityTrigger activityObject = windowEventObjects[activityIndex];
@@ -236,7 +236,9 @@ public class ActivityDirector : MonoBehaviour
         activityObject.gameObj.GetComponent<WindowsActivity>().ActivityTriggerEnd();
         windowActivityFinished = true;
         deathTrigger.Activate(activeActivites);
+        uiManager.HideIcon(activityObject.gameObj.transform.position);
     }
+
     public void SpawnToys()
     {
         int countToSelect = Mathf.Clamp(Random.Range(minToySpawnLocations, maxToySpawnLocations + 1), 0, toySpawnLocations.Count);
@@ -255,7 +257,7 @@ public class ActivityDirector : MonoBehaviour
 
         for (int i = 0; i < spawnLocations.Count; i++)
         {
-            Instantiate(toyPrefabs[Random.Range(0, toyPrefabs.Count)], spawnLocations[i], Quaternion.Euler(Random.Range(90.0f, 90.0f), Random.Range(180,-180), Random.Range(180, -180)));
+            Instantiate(toyPrefabs[Random.Range(0, toyPrefabs.Count)], spawnLocations[i], Quaternion.Euler(Random.Range(90.0f, 90.0f), Random.Range(180, -180), Random.Range(180, -180)));
         }
     }
 
@@ -292,15 +294,17 @@ public class ActivityDirector : MonoBehaviour
     private bool stopActivityDirector = false;
     private void OnWin(int activityIndex)
     {
-       uiManager.WinGame();
-       stopActivityDirector = true;
+        uiManager.WinGame();
+        stopActivityDirector = true;
     }
+
     void OnDeath(int activityIndex)
     {
         playerController.Die();
         uiManager.LoseGame();
         stopActivityDirector = true;
     }
+
     void Update()
     {
         if (stopActivityDirector)
