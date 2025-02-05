@@ -188,7 +188,11 @@ public class ActivityDirector : MonoBehaviour
     private void OnPetDoorActivityStart(int activityIndex)
     {
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerStart();
-        uiManager.ShowIcon(iconPrefab, petdoorEventObject.gameObj.transform.position, 0);
+        if (uiManager.iconsEnabled)
+        {
+            uiManager.ShowIcon(iconPrefab, petdoorEventObject.gameObj.transform.position, 0);
+        }
+        else return;
     }
 
     private void OnPetDoorActivityUpdate(int activityIndex)
@@ -214,7 +218,11 @@ public class ActivityDirector : MonoBehaviour
     private void OnWindowActivityStart(int activityIndex)
     {
         windowEventObjects[activityIndex].gameObj.GetComponent<WindowsActivity>().ActivityTriggerStart();
-        uiManager.ShowIcon(iconPrefab, windowEventObjects[activityIndex].gameObj.transform.position, activityIndex);
+        if (uiManager.iconsEnabled)
+        {
+            uiManager.ShowIcon(iconPrefab, windowEventObjects[activityIndex].gameObj.transform.position, activityIndex);
+        }
+        else return;
     }
 
     private void OnWindowActivityUpdate(int activityIndex)

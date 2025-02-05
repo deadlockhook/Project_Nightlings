@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -28,6 +29,7 @@ public class UIManager : MonoBehaviour
 	private GameObject loseUI;
 
 	private bool isPaused = false;
+	private Toggle audioVisualToggle;
 
 	//Singleton
 	private void Awake()
@@ -49,8 +51,9 @@ public class UIManager : MonoBehaviour
 		optionsUI = transform.Find("Options").gameObject;
 		winUI = transform.Find("Win").gameObject;
 		loseUI = transform.Find("Lose").gameObject;
+		audioVisualToggle = optionsUI.transform.Find("AudioVisualToggle").GetComponent<Toggle>();
 
-		ChangeUIState(UIState.MainMenu);
+        ChangeUIState(UIState.MainMenu);
 	}
 
 	public void ChangeUIState(UIState state)
@@ -193,20 +196,40 @@ public class UIManager : MonoBehaviour
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		ChangeUIState(UIState.Gameplay);
 	}
+    
+	[HideInInspector] public bool iconsEnabled = false;
+
+    public void ToggleIconsEnabled(bool enabled)
+    {
+		enabled = audioVisualToggle.isOn;
+        iconsEnabled = enabled;
+
+        if (!iconsEnabled)
+        {
+            foreach (var icon in activeIcons.Values)
+            {
+                Destroy(icon);
+            }
+            activeIcons.Clear();
+        }
+    }
+
     public void ShowIcon(GameObject iconPrefab, Vector3 position, int eventIndex)
     {
-        if (!activeIcons.ContainsKey(eventIndex))
-        {
-            GameObject icon = Instantiate(iconPrefab, position, Quaternion.identity);
-            activeIcons.Add(eventIndex, icon);
-        }
+        if (!iconsEnabled || activeIcons.ContainsKey(eventIndex))
+            return;
+
+        GameObject icon = Instantiate(iconPrefab, position, Quaternion.identity);
+        activeIcons.Add(eventIndex, icon);
     }
+
     public void HideIcon(int eventIndex)
     {
-        if (activeIcons.ContainsKey(eventIndex))
-        {
-            Destroy(activeIcons[eventIndex]);
-            activeIcons.Remove(eventIndex);
-        }
+        if (!iconsEnabled || !activeIcons.ContainsKey(eventIndex))
+            return;
+
+        Destroy(activeIcons[eventIndex]);
+        activeIcons.Remove(eventIndex);
     }
+
 }
