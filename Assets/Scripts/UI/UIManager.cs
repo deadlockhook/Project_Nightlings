@@ -72,7 +72,6 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-
 	public void ChangeUIState(UIState state)
 	{
 		if (state == UIState.Options)
@@ -136,6 +135,7 @@ public class UIManager : MonoBehaviour
 		}
 		uiStateHistory.Push(state);
 	}
+
 	private GameObject GetActiveUIPanel()
 	{
 		if (mainMenuUI.activeSelf) return mainMenuUI;
@@ -145,6 +145,7 @@ public class UIManager : MonoBehaviour
 		if (loseUI.activeSelf) return loseUI;
 		return null;
 	}
+
 	private void ApplyPreviousSceneColor()
 	{
 		Image optionsImage = optionsUI.GetComponent<Image>();
@@ -153,6 +154,7 @@ public class UIManager : MonoBehaviour
 			optionsImage.color = previousSceneColor;
 		}
 	}
+
 	private void Update()
 	{
 		if (winUI.activeSelf || loseUI.activeSelf)
@@ -160,18 +162,26 @@ public class UIManager : MonoBehaviour
 			return;
 		}
 
-		if (Input.GetKeyDown(KeyCode.Escape) && !mainMenuUI.activeSelf)
+		if (Input.GetKeyDown(KeyCode.Escape))
 		{
-			if (isPaused)
+			if (optionsUI.activeSelf)
 			{
-				ResumeGame();
+				Back();
 			}
-			else
+			else if (!mainMenuUI.activeSelf)
 			{
-				PauseGame();
+				if (isPaused)
+				{
+					ResumeGame();
+				}
+				else
+				{
+					PauseGame();
+				}
 			}
 		}
 	}
+
 	public void Back()
 	{
 		if (uiStateHistory.Count > 1)
