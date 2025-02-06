@@ -224,7 +224,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnBasementHatchActivityStart(int activityIndex)
     {
         basementHatchEventObject.gameObj.GetComponent<BasementHatch>().ActivityTriggerStart();
-        uiManager.ShowIcon(iconPrefab, basementHatchEventObject.gameObj.transform.position, 0);
+        uiManager.ShowIcon(iconPrefab, basementHatchEventObject.gameObj.transform.position, 1);
     }
 
     private void OnBasementHatchActivityUpdate(int activityIndex)
@@ -235,7 +235,7 @@ public class ActivityDirector : MonoBehaviour
         {
             basementHatchEventObject.eventTime.Deactivate(activeActivites);
             basementHatchEventObject.eventTime.Reset();
-            uiManager.HideIcon(0);
+            uiManager.HideIcon(1);
         }
     }
 

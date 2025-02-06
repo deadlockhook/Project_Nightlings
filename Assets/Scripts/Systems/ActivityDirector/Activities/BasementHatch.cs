@@ -34,18 +34,6 @@ public class BasementHatch : MonoBehaviour
     {
         soundManager.PlaySound("DoorBell", triggerAudio);
     }
-    private void OnTriggerEnter(Collider collision)
-    {
-        if (activityFinished || !inActivity)
-            return;
-
-        if (collision.gameObject.tag == "Interactable_Toy")
-        {
-            ResetActivity();
-            Destroy(collision.gameObject);
-        }
-    }
-
     public void ResetActivity()
     {
         if (activityFinished)
@@ -55,7 +43,7 @@ public class BasementHatch : MonoBehaviour
         shouldReset = true;
         resetAnimBegin = true;
         resetProgress = 0.0f;
-        rotationZOnResetBeginForLeftDoor = leftDoor.localRotation.eulerAngles.z;
+        rotationZOnResetBeginForLeftDoor = leftDoor.localRotation.eulerAngles.z * -1.0f;
         rotationZOnResetBeginForRightDoor = rightDoor.localRotation.eulerAngles.z;
     }
     public void ActivityTriggerStart()
@@ -108,11 +96,14 @@ public class BasementHatch : MonoBehaviour
             {
                 resetProgress = 0.0f;
                 resetAnimBegin = false;
+                leftDoor.localRotation = Quaternion.Euler(leftDoor.localRotation.eulerAngles.x, leftDoor.localRotation.eulerAngles.y, 0);
+                rightDoor.localRotation = Quaternion.Euler(rightDoor.localRotation.eulerAngles.x, rightDoor.localRotation.eulerAngles.y, 0);
             }
             else
             {
-                leftDoor.localRotation = Quaternion.Euler(leftDoor.localRotation.eulerAngles.x, leftDoor.localRotation.eulerAngles.y, rotationZOnResetBeginForLeftDoor - (rotationZOnResetBeginForLeftDoor * resetProgress));
-                rightDoor.localRotation = Quaternion.Euler(rightDoor.localRotation.eulerAngles.x, rightDoor.localRotation.eulerAngles.y, rotationZOnResetBeginForRightDoor + (rotationZOnResetBeginForRightDoor * resetProgress));
+                rightDoor.localRotation = Quaternion.Euler(rightDoor.localRotation.eulerAngles.x, rightDoor.localRotation.eulerAngles.y, rotationZOnResetBeginForRightDoor - (rotationZOnResetBeginForRightDoor * resetProgress));
+                leftDoor.localRotation = Quaternion.Euler(leftDoor.localRotation.eulerAngles.x, leftDoor.localRotation.eulerAngles.y, (rotationZOnResetBeginForRightDoor - (rotationZOnResetBeginForRightDoor * resetProgress)) * -1.0f);
+
             }
         }
 

@@ -117,6 +117,14 @@ public class InteractionManager : MonoBehaviour
                 gameObj.GetComponent<WindowsActivity>().ResetActivity();
             }
         }
+
+        if (gameObj.tag.Contains("BasementHatch_Door"))
+        {
+            if (playerController.playerControlActions.Player.Interact.triggered)
+            {
+                FindObjectOfType<BasementHatch>().ResetActivity();
+            }
+        }
     }
 
     void TriggerEvent(Interactions action)
