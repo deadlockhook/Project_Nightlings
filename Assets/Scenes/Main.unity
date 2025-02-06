@@ -10401,7 +10401,12 @@ PrefabInstance:
     - target: {fileID: 8468767872854852697, guid: 796e32cd1010d3b4a934bd873c9246c7,
         type: 3}
       propertyPath: m_Name
-      value: Closet
+      value: Toilet
+      objectReference: {fileID: 0}
+    - target: {fileID: 8468767872854852697, guid: 796e32cd1010d3b4a934bd873c9246c7,
+        type: 3}
+      propertyPath: m_TagString
+      value: Toilet_Flush
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10411,6 +10416,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1588375202}
+    - targetCorrespondingSourceObject: {fileID: 8468767872854852697, guid: 796e32cd1010d3b4a934bd873c9246c7,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1588375208}
   m_SourcePrefab: {fileID: 100100000, guid: 796e32cd1010d3b4a934bd873c9246c7, type: 3}
 --- !u!1 &1588375201 stripped
 GameObject:
@@ -10437,7 +10446,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -2701822534097121315, guid: 02ad78cca7f19f843b49a2e580791919, type: 3}
 --- !u!4 &1588375205 stripped
@@ -10446,6 +10455,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1588375200}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1588375208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1588375201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70b73bca8b6509c4ebafee5173a1264f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1593387445
 PrefabInstance:
   m_ObjectHideFlags: 0

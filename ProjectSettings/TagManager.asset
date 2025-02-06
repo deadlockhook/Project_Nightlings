@@ -14,6 +14,7 @@ TagManager:
   - Clock
   - Interactable_Plank
   - Skylight_Remote
+  - Toilet_Flush
   layers:
   - Default
   - TransparentFX

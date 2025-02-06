@@ -21,7 +21,6 @@ public class ActivityDirector : MonoBehaviour
 
             if (_percentage >= percentage)
             {
-                Debug.Log(_percentage);
                 played = true;
                 return true;
             }
@@ -131,30 +130,34 @@ public class ActivityDirector : MonoBehaviour
 
     private float triggerWindowsActivityLogicRangeStart = 35000.0f;
     private float triggerWindowsActivityLogicRangeEnd = 45000.0f;
-    private float windowsActivityTimeLimit = 25000.0f;
+    private float windowsActivityTimeLimit = 30000.0f;
 
     private float triggerPetdoorActivityLogicRangeStart = 45000.0f;
     private float triggerPetdoorActivityLogicRangeEnd = 55000.0f;
-    private float petdoorActivityTimeLimit = 20000.0f;
+    private float petdoorActivityTimeLimit = 28000.0f;
 
     private float triggerBasementActivityLogicRangeStart = 25000.0f;
     private float triggerBasementActivityLogicRangeEnd = 33000.0f;
-    private float basementHatchActivityTimeLimit = 24000.0f;
+    private float basementHatchActivityTimeLimit = 35000.0f;
 
     private float triggerFireplaceActivityLogicRangeStart = 0.0f;
     private float triggerFireplaceActivityLogicRangeEnd = 0.0f;
     private float fireplaceActivityTimeLimit = 60000.0f;
 
-    private float triggerSkylightActivityLogicRangeStart = 1000.0f;
-    private float triggerSkylightActivityLogicRangeEnd = 2000.0f;
-    private float skylightActivityTimeLimit = 6000.0f;
+    private float triggerSkylightActivityLogicRangeStart = 70000.0f;
+    private float triggerSkylightActivityLogicRangeEnd = 80000.0f;
+    private float skylightActivityTimeLimit = 20000.0f;
+
+    private float toiletActivityLogicRangeStart = 50000.0f;
+    private float toiletActivityLogicRangeEnd = 60000.0f;
+    private float toiletActivityTimeLimit = 25000.0f;
 
     private List<activityTrigger> windowEventObjects;
     private activityTrigger petdoorEventObject;
     private activityTrigger basementHatchEventObject;
     private activityTrigger fireplaceEventObject;
     private activityTrigger skylightEventObject;
-
+    private activityTrigger toiletEventObject;
 
     private List<Vector3> toySpawnLocations;
 
@@ -164,6 +167,8 @@ public class ActivityDirector : MonoBehaviour
     private float lastDeltaTimeForBasementHatchEvent = 0;
     private float lastDeltaTimeForFireplaceEvent = 0;
     private float lastDeltaTimeForSkylightEvent = 0;
+    private float lastDeltaTimeForToiletEvent = 0;
+
 
     private timedActivity[] nightActivity;
     private int activeNight = 0;
@@ -184,8 +189,8 @@ public class ActivityDirector : MonoBehaviour
 
         nightActivity = new timedActivity[3];
         //  420000
-        nightActivity[0] = new timedActivity(10, 0, OnNightStart, OnProgressToNextNight, null);
-        nightActivity[1] = new timedActivity(10, 1, OnNightStart, OnProgressToNextNight, null);
+        nightActivity[0] = new timedActivity(1000, 0, OnNightStart, OnProgressToNextNight, null);
+        nightActivity[1] = new timedActivity(1000, 1, OnNightStart, OnProgressToNextNight, null);
         nightActivity[2] = new timedActivity(420000, 2, OnNightStart, OnWin, null);
 
         deathTrigger = new timedActivity(10000, 0, null, OnDeath, null);
@@ -219,6 +224,9 @@ public class ActivityDirector : MonoBehaviour
 
         if (GameObject.FindObjectOfType<SkylightActivity>() != null)
             skylightEventObject = new activityTrigger(GameObject.FindObjectOfType<SkylightActivity>().gameObject, skylightActivityTimeLimit, 0, OnSkylightActivityStart, OnSkylightActivityFinished, OnSkylightActivityUpdate);
+       
+        if (GameObject.FindObjectOfType<ToiletActivity>() != null)
+            toiletEventObject = new activityTrigger(GameObject.FindObjectOfType<ToiletActivity>().gameObject, toiletActivityTimeLimit, 0, OnToiletActivityStart, OnToiletActivityFinished, OnToiletActivityUpdate);
 
         nightActivity[0].Activate(activeActivites);
     }
@@ -228,6 +236,7 @@ public class ActivityDirector : MonoBehaviour
     private bool basementHatchActivityFinished = false;
     private bool fireplaceActivityFinished = false;
     private bool skylightActivityFinished = false;
+    private bool toiletActivityFinished = false;
 
     private void OnPetDoorActivityStart(int activityIndex)
     {
@@ -357,6 +366,29 @@ public class ActivityDirector : MonoBehaviour
         deathTrigger.Activate(activeActivites);
     }
 
+    private void OnToiletActivityStart(int activityIndex)
+    {
+        toiletEventObject.gameObj.GetComponent<ToiletActivity>().ActivityTriggerStart();
+        uiManager.ShowIcon(iconPrefab, toiletEventObject.gameObj.transform.position, 4);
+    }
+
+    private void OnToiletActivityUpdate(int activityIndex)
+    {
+        lastDeltaTimeForToiletEvent = currentDeltaTime;
+        if (toiletEventObject.gameObj.GetComponent<ToiletActivity>().OnActivityUpdate(toiletEventObject.eventTime.GetProgress()))
+        {
+            toiletEventObject.eventTime.Deactivate(activeActivites);
+            toiletEventObject.eventTime.Reset();
+            uiManager.HideIcon(4);
+        }
+    }
+    private void OnToiletActivityFinished(int activityIndex)
+    {
+        toiletEventObject.eventTime.Deactivate(activeActivites);
+        toiletEventObject.gameObj.GetComponent<ToiletActivity>().ActivityTriggerEnd();
+        deathTrigger.Activate(activeActivites);
+    }
+
     public void SpawnToys()
     {
         int countToSelect = Mathf.Clamp(Random.Range(minToySpawnLocations, maxToySpawnLocations + 1), 0, toySpawnLocations.Count);
@@ -442,6 +474,18 @@ public class ActivityDirector : MonoBehaviour
             lastDeltaTimeForSkylightEvent = currentDeltaTime;
         }
     }
+
+    private void DispatchToiletEvent()
+    {
+        if (toiletActivityFinished)
+            return;
+
+        if (toiletEventObject != null && toiletEventObject.gameObj && currentDeltaTime - lastDeltaTimeForToiletEvent >= Random.Range(toiletActivityLogicRangeStart, toiletActivityLogicRangeEnd) && !toiletEventObject.eventTime.IsActive())
+        {
+            toiletEventObject.eventTime.Activate(activeActivites);
+            lastDeltaTimeForToiletEvent = currentDeltaTime;
+        }
+    }
     private void OnNightStart(int activityIndex)
     {
         SpawnToys();
@@ -449,7 +493,6 @@ public class ActivityDirector : MonoBehaviour
     }
     private void OnProgressToNextNight(int activityIndex)
     {
-
         nightActivity[activityIndex].Deactivate(activeActivites);
         nightActivity[activityIndex + 1].Activate(activeActivites);
         playerController.Respawn();
@@ -476,19 +519,19 @@ public class ActivityDirector : MonoBehaviour
 
         currentDeltaTime += Time.deltaTime * 1000f;
 
-        //  DispatchWindowEvents();
-        //   DispatchPetdoorEvent();
+        DispatchWindowEvents();
+        DispatchPetdoorEvent();
 
         if (activeNight > 0)
         {
-            //  DispatchBasementHatchEvent();
-            //   DispatchFireplaceEvent();
+              DispatchBasementHatchEvent();
+               DispatchFireplaceEvent();
         }
 
         if (activeNight > 1)
         {
             DispatchSkylightEvent();
-            //Night 3 activities
+            DispatchToiletEvent();
         }
 
         for (int currentIndex = 0; currentIndex < activeActivites.Count; currentIndex++)

@@ -133,60 +133,13 @@ public class InteractionManager : MonoBehaviour
                 FindObjectOfType<SkylightActivity>().ResetActivity();
             }
         }
-    }
 
-    void TriggerEvent(Interactions action)
-    {
-        switch (action)
+        if (gameObj.tag.Contains("Toilet_Flush"))
         {
-            case Interactions.PickUpToy:
-                {
-                    break;
-                }
-            case Interactions.PickUpFirewood:
-                {
-                    break;
-                }
-            case Interactions.ThrowToy:
-            case Interactions.ThrowFirewood:
-                {
-                    break;
-                }
-            case Interactions.CloseWindows:
-                {
-                    break;
-                }
-            case Interactions.FlushToilet:
-                {
-                    break;
-                }
-            case Interactions.CloseSkylightWithRemote:
-                {
-                    break;
-                }
-            case Interactions.CloseBasementHatch:
-                {
-                    break;
-                }
-            default:
-                {
-                    break;
-                }
+            if (playerController.playerControlActions.Player.Interact.triggered)
+            {
+                FindObjectOfType<ToiletActivity>().ResetActivity();
+            }
         }
     }
-
-    /*private int lineLength = 10; 
-    private int lineThickness = 2;  
-    private Color crosshairColor = Color.white;  
-
-    void OnGUI()
-    {
-        GUI.color = crosshairColor;
-
-        float centerX = Screen.width / 2;
-        float centerY = Screen.height / 2;
-
-        GUI.DrawTexture(new Rect(centerX - lineLength, centerY - (lineThickness / 2), lineLength * 2, lineThickness), Texture2D.whiteTexture);
-        GUI.DrawTexture(new Rect(centerX - (lineThickness / 2), centerY - lineLength, lineThickness, lineLength * 2), Texture2D.whiteTexture);
-    }*/
 }
