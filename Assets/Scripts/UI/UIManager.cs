@@ -361,8 +361,8 @@ public class UIManager : MonoBehaviour
     {
         if (!activeIcons.ContainsKey(eventIndex))
             return;
-
-        activeIcons[eventIndex].SetActive(false);
+        if (activeIcons[eventIndex] != null)
+            activeIcons[eventIndex].SetActive(false);
     }
     private void ReactivateIcons()
     {
@@ -459,7 +459,7 @@ public class UIManager : MonoBehaviour
         mainCamera = mainCam.GetComponent<Camera>();
         volume = mainCam.GetComponent<Volume>();
 
-        if (motionBlurEnabled)
+        if (chromaticAbberationEnabled)
         {
             volume.profile.TryGet(out ChromaticAberration chromatic);
             if (chromatic != null)
@@ -485,7 +485,7 @@ public class UIManager : MonoBehaviour
         mainCamera = mainCam.GetComponent<Camera>();
         volume = mainCam.GetComponent<Volume>();
 
-        if (motionBlurEnabled)
+        if (bloomEnabled)
         {
             volume.profile.TryGet(out Bloom bloom);
             if (bloom != null)
