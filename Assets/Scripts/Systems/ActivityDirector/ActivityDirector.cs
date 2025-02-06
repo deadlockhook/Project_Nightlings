@@ -130,14 +130,20 @@ public class ActivityDirector : MonoBehaviour
     private float triggerPetdoorActivityLogicRangeEnd = 55000.0f;
     private float petdoorActivityTimeLimit = 20000.0f;
 
+    private float triggerBasementActivityLogicRangeStart = 3000.0f;
+    private float triggerBasementActivityLogicRangeEnd = 5000.0f;
+    private float basementHatchActivityTimeLimit = 2000.0f;
+
     private List<activityTrigger> windowEventObjects;
     private activityTrigger petdoorEventObject;
+    private activityTrigger basementHatchEventObject;
 
     private List<Vector3> toySpawnLocations;
 
     private float currentDeltaTime = 0;
     private float lastDeltaTimeForWindowEvents = 0;
     private float lastDeltaTimeForPetDoorEvents = 0;
+    private float lastDeltaTimeForBasementHatchEvent = 0;
 
     private timedActivity nightActivity;
     private timedActivity deathTrigger;
@@ -178,12 +184,16 @@ public class ActivityDirector : MonoBehaviour
         if (GameObject.FindObjectOfType<PetDoorActivity>() != null)
             petdoorEventObject = new activityTrigger(GameObject.FindObjectOfType<PetDoorActivity>().gameObject, petdoorActivityTimeLimit, 0, OnPetDoorActivityStart, OnPetDoorActivityFinished, OnPetDoorActivityUpdate);
 
+        if (GameObject.FindObjectOfType<BasementHatch>() != null)
+            basementHatchEventObject = new activityTrigger(GameObject.FindObjectOfType<BasementHatch>().gameObject, basementHatchActivityTimeLimit, 0, OnBasementHatchActivityStart, OnBasementHatchActivityFinished, OnBasementHatchActivityUpdate);
+
         SpawnToys();
         nightActivity.Activate(activeActivites);
     }
 
     private bool petdoorActivityFinished = false;
     private bool windowActivityFinished = false;
+    private bool basementHatchActivityFinished = false;
 
     private void OnPetDoorActivityStart(int activityIndex)
     {
@@ -208,6 +218,32 @@ public class ActivityDirector : MonoBehaviour
         petdoorEventObject.eventTime.Deactivate(activeActivites);
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerEnd();
         petdoorActivityFinished = true;
+        deathTrigger.Activate(activeActivites);
+    }
+
+    private void OnBasementHatchActivityStart(int activityIndex)
+    {
+        basementHatchEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerStart();
+        uiManager.ShowIcon(iconPrefab, basementHatchEventObject.gameObj.transform.position, 0);
+    }
+
+    private void OnBasementHatchActivityUpdate(int activityIndex)
+    {
+        lastDeltaTimeForBasementHatchEvent = currentDeltaTime;
+
+        if (basementHatchEventObject.gameObj.GetComponent<PetDoorActivity>().OnActivityUpdate(basementHatchEventObject.eventTime.GetProgress()))
+        {
+            basementHatchEventObject.eventTime.Deactivate(activeActivites);
+            basementHatchEventObject.eventTime.Reset();
+            uiManager.HideIcon(0);
+        }
+    }
+
+    private void OnBasementHatchActivityFinished(int activityIndex)
+    {
+        basementHatchEventObject.eventTime.Deactivate(activeActivites);
+        basementHatchEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerEnd();
+        basementHatchActivityFinished = true;
         deathTrigger.Activate(activeActivites);
     }
 
@@ -283,12 +319,22 @@ public class ActivityDirector : MonoBehaviour
         if (petdoorActivityFinished)
             return;
 
-        Debug.Log("Petdoor active " + (currentDeltaTime - lastDeltaTimeForPetDoorEvents));
-
         if (petdoorEventObject.gameObj && currentDeltaTime - lastDeltaTimeForPetDoorEvents >= Random.Range(triggerPetdoorActivityLogicRangeStart, triggerPetdoorActivityLogicRangeEnd) && !petdoorEventObject.eventTime.IsActive())
         {
             petdoorEventObject.eventTime.Activate(activeActivites);
             lastDeltaTimeForPetDoorEvents = currentDeltaTime;
+        }
+    }
+
+    private void DispatchBasementHatchEvent()
+    {
+        if (basementHatchActivityFinished)
+            return;
+
+        if (basementHatchEventObject.gameObj && currentDeltaTime - lastDeltaTimeForBasementHatchEvent >= Random.Range(triggerBasementActivityLogicRangeStart, triggerBasementActivityLogicRangeEnd) && !basementHatchEventObject.eventTime.IsActive())
+        {
+            basementHatchEventObject.eventTime.Activate(activeActivites);
+            lastDeltaTimeForBasementHatchEvent = currentDeltaTime;
         }
     }
 
@@ -313,8 +359,12 @@ public class ActivityDirector : MonoBehaviour
 
         currentDeltaTime += Time.deltaTime * 1000f;
 
+        //Dispatch on night 1
         DispatchWindowEvents();
         DispatchPetdoorEvent();
+
+        //Dispatch on night 2
+        DispatchBasementHatchEvent();
 
         for (int currentIndex = 0; currentIndex < activeActivites.Count; currentIndex++)
             activeActivites[currentIndex].OnUpdate();
