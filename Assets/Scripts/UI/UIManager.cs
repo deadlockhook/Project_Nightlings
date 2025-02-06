@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -155,34 +156,45 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-	private void Update()
-	{
-		if (winUI.activeSelf || loseUI.activeSelf)
-		{
-			return;
-		}
+    private void Update()
+    {
+        if (winUI.activeSelf || loseUI.activeSelf)
+            return;
 
-		if (Input.GetKeyDown(KeyCode.Escape))
-		{
-			if (optionsUI.activeSelf)
-			{
-				Back();
-			}
-			else if (!mainMenuUI.activeSelf)
-			{
-				if (isPaused)
-				{
-					ResumeGame();
-				}
-				else
-				{
-					PauseGame();
-				}
-			}
-		}
-	}
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (optionsUI.activeSelf)
+            {
+                Back();
+            }
+            else if (!mainMenuUI.activeSelf)
+            {
+                if (isPaused)
+                {
+                    ResumeGame();
+                }
+                else
+                {
+                    PauseGame();
+                }
+            }
+        }
 
-	public void Back()
+        // Handle icon visibility dynamically
+        if (!iconsEnabled)
+        {
+            foreach (var eventIndex in activeIcons.Keys.ToList())
+            {
+                DeactivateIcon(eventIndex);
+            }
+        }
+        else
+        {
+            ReactivateIcons();
+        }
+    }
+
+    public void Back()
 	{
 		if (uiStateHistory.Count > 1)
 		{
@@ -264,40 +276,54 @@ public class UIManager : MonoBehaviour
 
 	[HideInInspector] public bool iconsEnabled = false;
 
-	public void ToggleIconsEnabled(bool enabled)
-	{
-		enabled = audioVisualToggle.isOn;
-		iconsEnabled = enabled;
+    public void ToggleIconsEnabled(bool enabled)
+    {
+        enabled = audioVisualToggle.isOn;
+        iconsEnabled = enabled;
 
-		if (!iconsEnabled)
-		{
-			foreach (var icon in activeIcons.Values)
-			{
-				Destroy(icon);
-			}
-			activeIcons.Clear();
-		}
-	}
+        foreach (var icon in activeIcons.Values)
+        {
+            icon.SetActive(iconsEnabled);
+        }
+    }
 
-	public void ShowIcon(GameObject iconPrefab, Vector3 position, int eventIndex)
-	{
-		if (!iconsEnabled || activeIcons.ContainsKey(eventIndex))
-			return;
+    public void ShowIcon(GameObject iconPrefab, Vector3 position, int eventIndex)
+    {
+        if (activeIcons.ContainsKey(eventIndex))
+            return;
 
-		GameObject icon = Instantiate(iconPrefab, position, Quaternion.identity);
-		activeIcons.Add(eventIndex, icon);
-	}
+        GameObject icon = Instantiate(iconPrefab, position, Quaternion.identity);
+        activeIcons.Add(eventIndex, icon);
+    }
 
-	public void HideIcon(int eventIndex)
-	{
-		if (!iconsEnabled || !activeIcons.ContainsKey(eventIndex))
-			return;
+    public void HideIcon(int eventIndex)
+    {
+        if (!activeIcons.ContainsKey(eventIndex))
+            return;
 
-		Destroy(activeIcons[eventIndex]);
-		activeIcons.Remove(eventIndex);
-	}
+        Destroy(activeIcons[eventIndex]);
+        activeIcons.Remove(eventIndex);
+    }
 
-	private IEnumerator TransitionToState(UIState newState)
+    public void DeactivateIcon(int eventIndex)
+    {
+        if (!activeIcons.ContainsKey(eventIndex))
+            return;
+
+        activeIcons[eventIndex].SetActive(false);
+    }
+    private void ReactivateIcons()
+    {
+        foreach (var icon in activeIcons.Values)
+        {
+            if (!icon.activeSelf)
+            {
+                icon.SetActive(true);
+            }
+        }
+    }
+
+    private IEnumerator TransitionToState(UIState newState)
 	{
 		loadingScreen.SetActive(true);
 		CanvasGroup canvasGroup = loadingScreen.GetComponent<CanvasGroup>();
