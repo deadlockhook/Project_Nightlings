@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Rendering.Universal;
 using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
 
 public class UIManager : MonoBehaviour
@@ -21,7 +23,9 @@ public class UIManager : MonoBehaviour
 		PauseMenu,
 		Gameplay,
 		Options,
-		Win,
+		SoundOptions,
+		VideoOptions,
+        Win,
 		Lose
 	}
 
@@ -32,8 +36,10 @@ public class UIManager : MonoBehaviour
 	private GameObject optionsUI;
 	private GameObject winUI;
 	private GameObject loseUI;
+	private GameObject soundOptionsUI;
+    private GameObject videoOptionsUI;
 
-	[Header("Loading Screen")]
+    [Header("Loading Screen")]
 	public GameObject loadingScreen;
 	public float loadingDisplayDuration = 0.5f;
 	public float loadingFadeDuration = 1.0f;
@@ -41,7 +47,10 @@ public class UIManager : MonoBehaviour
 
 	private bool isPaused = false;
 	private Toggle audioVisualToggle;
-	private Color previousSceneColor;
+	private Toggle motionBlurToggle;
+	private Toggle chromaticAbberationToggle;
+	private Toggle bloomToggle;
+    private Color previousSceneColor;
 
 	//Singleton
 	private void Awake()
@@ -61,11 +70,17 @@ public class UIManager : MonoBehaviour
 		pauseMenuUI = transform.Find("Pause").gameObject;
 		gameplayUI = transform.Find("Gameplay").gameObject;
 		optionsUI = transform.Find("Options").gameObject;
-		winUI = transform.Find("Win").gameObject;
+        soundOptionsUI = transform.Find("SoundOptions").gameObject;
+        videoOptionsUI = transform.Find("VideoOptions").gameObject;
+        winUI = transform.Find("Win").gameObject;
 		loseUI = transform.Find("Lose").gameObject;
-		audioVisualToggle = optionsUI.transform.Find("AudioVisualToggle").GetComponent<Toggle>();
 
-		clocks = new List<GameObject>();
+		audioVisualToggle = soundOptionsUI.transform.Find("AudioVisualToggle").GetComponent<Toggle>();
+        motionBlurToggle = videoOptionsUI.transform.Find("MotionBlurToggle").GetComponent<Toggle>();
+		chromaticAbberationToggle = videoOptionsUI.transform.Find("ChromaticAbberationToggle").GetComponent<Toggle>();
+		bloomToggle = videoOptionsUI.transform.Find("BloomToggle").GetComponent<Toggle>();
+
+        clocks = new List<GameObject>();
 		clocks.AddRange(GameObject.FindGameObjectsWithTag("Clock"));
 
         ChangeUIState(UIState.MainMenu);
@@ -80,7 +95,7 @@ public class UIManager : MonoBehaviour
 
 	public void ChangeUIState(UIState state)
 	{
-		if (state == UIState.Options)
+		if (state == UIState.Options || state == UIState.SoundOptions|| state == UIState.VideoOptions)
 		{
 			GameObject activeUI = GetActiveUIPanel();
 			if (activeUI != null)
@@ -93,7 +108,9 @@ public class UIManager : MonoBehaviour
 		pauseMenuUI.SetActive(false);
 		gameplayUI.SetActive(false);
 		optionsUI.SetActive(false);
-		winUI.SetActive(false);
+        soundOptionsUI.SetActive(false);
+        videoOptionsUI.SetActive(false);
+        winUI.SetActive(false);
 		loseUI.SetActive(false);
 
 		switch (state)
@@ -114,7 +131,6 @@ public class UIManager : MonoBehaviour
 				pauseMenuUI.SetActive(true);
 				isPaused = true;
 				break;
-
 			case UIState.Gameplay:
 				SoundManager.Instance.StopMusic();
 				Time.timeScale = 1f;
@@ -128,7 +144,19 @@ public class UIManager : MonoBehaviour
 				Cursor.lockState = CursorLockMode.None;
 				ApplyPreviousSceneColor();
 				break;
-			case UIState.Win:
+			case UIState.SoundOptions:
+                Time.timeScale = 0f;
+                soundOptionsUI.SetActive(true);
+                Cursor.lockState = CursorLockMode.None;
+                ApplyPreviousSceneColor();
+                break;
+            case UIState.VideoOptions:
+                Time.timeScale = 0f;
+                videoOptionsUI.SetActive(true);
+                Cursor.lockState = CursorLockMode.None;
+                ApplyPreviousSceneColor();
+                break;
+            case UIState.Win:
 				Cursor.lockState = CursorLockMode.None;
 				Time.timeScale = 0f;
 				winUI.SetActive(true);
@@ -155,9 +183,20 @@ public class UIManager : MonoBehaviour
 	private void ApplyPreviousSceneColor()
 	{
 		Image optionsImage = optionsUI.GetComponent<Image>();
+		Image soundOptionsImage = soundOptionsUI.GetComponent<Image>();
+		Image videoOptionsImage = videoOptionsUI.GetComponent<Image>();
+
 		if (optionsImage != null)
 		{
 			optionsImage.color = previousSceneColor;
+		}
+		if (soundOptionsImage != null)
+		{
+			soundOptionsImage.color = previousSceneColor;
+		}
+		if (videoOptionsImage != null)
+		{
+			videoOptionsImage.color = previousSceneColor;
 		}
 	}
 
@@ -170,7 +209,7 @@ public class UIManager : MonoBehaviour
         {
             if (optionsUI.activeSelf)
             {
-                Back();
+                OptionsBack();
             }
             else if (!mainMenuUI.activeSelf)
             {
@@ -198,20 +237,32 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void Back()
-	{
-		if (uiStateHistory.Count > 1)
-		{
-			uiStateHistory.Pop();
-			ChangeUIState(uiStateHistory.Peek());
-		}
-		else
-		{
-			ChangeUIState(UIState.MainMenu);
-		}
-	}
+    public void OptionsBack()
+    {
+        if (uiStateHistory.Count > 1)
+        {
+            UIState previousState = uiStateHistory.Peek();
 
-	public void PauseGame()
+            while (previousState == UIState.Options || previousState == UIState.SoundOptions || previousState == UIState.VideoOptions)
+            {
+                uiStateHistory.Pop();
+                if (uiStateHistory.Count == 0)
+                    break;
+
+                previousState = uiStateHistory.Peek();
+            }
+
+            ChangeUIState(previousState);
+        }
+        else
+        {
+            ChangeUIState(UIState.MainMenu);
+        }
+    }
+
+
+
+    public void PauseGame()
 	{
 		if (winUI.activeSelf || loseUI.activeSelf)
 			return;
@@ -238,7 +289,17 @@ public class UIManager : MonoBehaviour
 		ChangeUIState(UIState.Options);
 	}
 
-	public void QuitGame()
+	public void GoToSoundOptions()
+    {
+        ChangeUIState(UIState.SoundOptions);
+    }
+
+    public void GoToVideoOptions()
+    {
+        ChangeUIState(UIState.VideoOptions);
+    }
+
+    public void QuitGame()
 	{
 		Debug.Log("Quitting game");
 		Application.Quit();
@@ -277,19 +338,6 @@ public class UIManager : MonoBehaviour
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		ChangeUIStateWithLoading(UIState.Gameplay);
 	}
-
-	[HideInInspector] public bool iconsEnabled = false;
-
-    public void ToggleIconsEnabled(bool enabled)
-    {
-        enabled = audioVisualToggle.isOn;
-        iconsEnabled = enabled;
-
-        foreach (var icon in activeIcons.Values)
-        {
-            icon.SetActive(iconsEnabled);
-        }
-    }
 
     public void ShowIcon(GameObject iconPrefab, Vector3 position, int eventIndex)
     {
@@ -357,4 +405,103 @@ public class UIManager : MonoBehaviour
 	{
 		clocks.ForEach(clock => clock.GetComponent<Clock>().ResetClock());
     }
+
+    // OPTIONS SECTION
+	private GameObject mainCam;
+	private Camera mainCamera;
+	private Volume volume;
+
+    [HideInInspector] public bool iconsEnabled = false;
+	private bool motionBlurEnabled = false;
+	private bool chromaticAbberationEnabled = false;
+	private bool bloomEnabled = false;
+    public void ToggleIconsEnabled(bool enabled)
+    {
+        enabled = audioVisualToggle.isOn;
+        iconsEnabled = enabled;
+
+        foreach (var icon in activeIcons.Values)
+        {
+            icon.SetActive(iconsEnabled);
+        }
+    }
+
+	public void ToggleMotionBlur(bool enabled)
+	{
+		enabled = motionBlurToggle.isOn;
+        motionBlurEnabled = enabled;
+		mainCam = GameObject.Find("Main Camera");
+        mainCamera = mainCam.GetComponent<Camera>();
+		volume = mainCam.GetComponent<Volume>();
+
+        if (motionBlurEnabled)
+        {
+            volume.profile.TryGet(out MotionBlur motionBlur);
+            if (motionBlur != null)
+            {
+                motionBlur.active = true;
+            }
+        }
+        else
+        {
+            volume.profile.TryGet(out MotionBlur motionBlur);
+            if (motionBlur != null)
+            {
+                motionBlur.active = false;
+            }
+        }
+    }
+    public void ToggleChromaticAbberation(bool enabled)
+    {
+        enabled = chromaticAbberationToggle.isOn;
+        chromaticAbberationEnabled = enabled;
+        mainCam = GameObject.Find("Main Camera");
+        mainCamera = mainCam.GetComponent<Camera>();
+        volume = mainCam.GetComponent<Volume>();
+
+        if (motionBlurEnabled)
+        {
+            volume.profile.TryGet(out ChromaticAberration chromatic);
+            if (chromatic != null)
+            {
+                chromatic.active = true;
+            }
+        }
+        else
+        {
+            volume.profile.TryGet(out ChromaticAberration chromatic);
+            if (chromatic != null)
+            {
+                chromatic.active = false;
+            }
+        }
+    }
+
+	public void ToggleBloom(bool enabled)
+	{
+        enabled = bloomToggle.isOn;
+        bloomEnabled = enabled;
+        mainCam = GameObject.Find("Main Camera");
+        mainCamera = mainCam.GetComponent<Camera>();
+        volume = mainCam.GetComponent<Volume>();
+
+        if (motionBlurEnabled)
+        {
+            volume.profile.TryGet(out Bloom bloom);
+            if (bloom != null)
+            {
+                bloom.active = true;
+            }
+        }
+        else
+        {
+            volume.profile.TryGet(out Bloom bloom);
+            if (bloom != null)
+            {
+                bloom.active = false;
+            }
+        }
+
+    }
+
 }
