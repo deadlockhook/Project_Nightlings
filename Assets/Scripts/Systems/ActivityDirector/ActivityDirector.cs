@@ -137,16 +137,13 @@ public class ActivityDirector : MonoBehaviour
     private float triggerPetdoorActivityLogicRangeEnd = 55000.0f;
     private float petdoorActivityTimeLimit = 20000.0f;
 
-    // private float triggerBasementActivityLogicRangeStart = 25000.0f;
-    //private float triggerBasementActivityLogicRangeEnd = 33000.0f;
-    // private float basementHatchActivityTimeLimit = 24000.0f;
-    private float triggerBasementActivityLogicRangeStart = 3000.0f;
-    private float triggerBasementActivityLogicRangeEnd = 3000.0f;
-    private float basementHatchActivityTimeLimit = 6000.0f;
+    private float triggerBasementActivityLogicRangeStart = 25000.0f;
+    private float triggerBasementActivityLogicRangeEnd = 33000.0f;
+    private float basementHatchActivityTimeLimit = 24000.0f;
 
-    private float triggerFireplaceActivityLogicRangeStart = 1000.0f;
-    private float triggerFireplaceActivityLogicRangeEnd = 1000.0f;
-    private float fireplaceActivityTimeLimit = 6000.0f;
+    private float triggerFireplaceActivityLogicRangeStart = 0.0f;
+    private float triggerFireplaceActivityLogicRangeEnd = 0.0f;
+    private float fireplaceActivityTimeLimit = 60000.0f;
 
     private List<activityTrigger> windowEventObjects;
     private activityTrigger petdoorEventObject;
@@ -179,10 +176,10 @@ public class ActivityDirector : MonoBehaviour
         lastDeltaTimeForPetDoorEvents = lastDeltaTimeForWindowEvents;
 
         nightActivity = new timedActivity[3];
-        nightActivity[0] = new timedActivity(4000, 0, OnNightStart, OnProgressToNextNight, null);
-        //nightActivity[0] = new timedActivity(420000, 0, OnNightStart, OnProgressToNextNight, null);
-        nightActivity[1] = new timedActivity(420000, 1, OnNightStart, OnProgressToNextNight, null);
-        nightActivity[2] = new timedActivity(4000, 2, OnNightStart, OnWin, null);
+      //  420000
+        nightActivity[0] = new timedActivity(10, 0, OnNightStart, OnProgressToNextNight, null);
+        nightActivity[1] = new timedActivity(10, 1, OnNightStart, OnProgressToNextNight, null);
+        nightActivity[2] = new timedActivity(420000, 2, OnNightStart, OnWin, null);
 
         deathTrigger = new timedActivity(10000, 0, null, OnDeath, null);
 

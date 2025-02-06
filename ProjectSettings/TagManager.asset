@@ -13,6 +13,7 @@ TagManager:
   - BasementHatch_Door
   - Clock
   - Interactable_Plank
+  - Skylight_Remote
   layers:
   - Default
   - TransparentFX

@@ -125,6 +125,14 @@ public class InteractionManager : MonoBehaviour
                 FindObjectOfType<BasementHatch>().ResetActivity();
             }
         }
+
+        if (gameObj.tag.Contains("Skylight_Remote"))
+        {
+            if (playerController.playerControlActions.Player.Interact.triggered)
+            {
+                FindObjectOfType<SkylightActivity>().ResetActivity();
+            }
+        }
     }
 
     void TriggerEvent(Interactions action)
