@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
 
 public class UIManager : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class UIManager : MonoBehaviour
 	//public Transform worldSpaceCanvas;
 	private Dictionary<int, GameObject> activeIcons = new Dictionary<int, GameObject>();
 	private Stack<UIState> uiStateHistory = new Stack<UIState>();
+	private List<GameObject> clocks;
 
 	public enum UIState
 	{
@@ -63,7 +65,10 @@ public class UIManager : MonoBehaviour
 		loseUI = transform.Find("Lose").gameObject;
 		audioVisualToggle = optionsUI.transform.Find("AudioVisualToggle").GetComponent<Toggle>();
 
-		ChangeUIState(UIState.MainMenu);
+		clocks = new List<GameObject>();
+		clocks.AddRange(GameObject.FindGameObjectsWithTag("Clock"));
+
+        ChangeUIState(UIState.MainMenu);
 	}
 	private void CapturePreviousUIImage(Image uiImage)
 	{
@@ -180,7 +185,6 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        // Handle icon visibility dynamically
         if (!iconsEnabled)
         {
             foreach (var eventIndex in activeIcons.Keys.ToList())
@@ -345,7 +349,12 @@ public class UIManager : MonoBehaviour
 	}
 
 	public void ChangeUIStateWithLoading(UIState newState)
-	{
+    {
 		StartCoroutine(TransitionToState(newState));
 	}
+
+	public void ProceedingToNextNight()
+	{
+		clocks.ForEach(clock => clock.GetComponent<Clock>().ResetClock());
+    }
 }
