@@ -145,10 +145,16 @@ public class ActivityDirector : MonoBehaviour
     private float triggerFireplaceActivityLogicRangeEnd = 0.0f;
     private float fireplaceActivityTimeLimit = 60000.0f;
 
+    private float triggerSkylightActivityLogicRangeStart = 1000.0f;
+    private float triggerSkylightActivityLogicRangeEnd = 2000.0f;
+    private float skylightActivityTimeLimit = 6000.0f;
+
     private List<activityTrigger> windowEventObjects;
     private activityTrigger petdoorEventObject;
     private activityTrigger basementHatchEventObject;
     private activityTrigger fireplaceEventObject;
+    private activityTrigger skylightEventObject;
+
 
     private List<Vector3> toySpawnLocations;
 
@@ -157,6 +163,7 @@ public class ActivityDirector : MonoBehaviour
     private float lastDeltaTimeForPetDoorEvents = 0;
     private float lastDeltaTimeForBasementHatchEvent = 0;
     private float lastDeltaTimeForFireplaceEvent = 0;
+    private float lastDeltaTimeForSkylightEvent = 0;
 
     private timedActivity[] nightActivity;
     private int activeNight = 0;
@@ -176,7 +183,7 @@ public class ActivityDirector : MonoBehaviour
         lastDeltaTimeForPetDoorEvents = lastDeltaTimeForWindowEvents;
 
         nightActivity = new timedActivity[3];
-      //  420000
+        //  420000
         nightActivity[0] = new timedActivity(10, 0, OnNightStart, OnProgressToNextNight, null);
         nightActivity[1] = new timedActivity(10, 1, OnNightStart, OnProgressToNextNight, null);
         nightActivity[2] = new timedActivity(420000, 2, OnNightStart, OnWin, null);
@@ -210,6 +217,9 @@ public class ActivityDirector : MonoBehaviour
         if (GameObject.FindObjectOfType<FireplaceActivity>() != null)
             fireplaceEventObject = new activityTrigger(GameObject.FindObjectOfType<FireplaceActivity>().gameObject, fireplaceActivityTimeLimit, 0, OnFireplaceActivityStart, OnFireplaceActivityFinished, OnFireplaceActivityUpdate);
 
+        if (GameObject.FindObjectOfType<SkylightActivity>() != null)
+            skylightEventObject = new activityTrigger(GameObject.FindObjectOfType<SkylightActivity>().gameObject, skylightActivityTimeLimit, 0, OnSkylightActivityStart, OnSkylightActivityFinished, OnSkylightActivityUpdate);
+
         nightActivity[0].Activate(activeActivites);
     }
 
@@ -217,6 +227,7 @@ public class ActivityDirector : MonoBehaviour
     private bool windowActivityFinished = false;
     private bool basementHatchActivityFinished = false;
     private bool fireplaceActivityFinished = false;
+    private bool skylightActivityFinished = false;
 
     private void OnPetDoorActivityStart(int activityIndex)
     {
@@ -323,6 +334,29 @@ public class ActivityDirector : MonoBehaviour
         deathTrigger.Activate(activeActivites);
     }
 
+    private void OnSkylightActivityStart(int activityIndex)
+    {
+        skylightEventObject.gameObj.GetComponent<SkylightActivity>().ActivityTriggerStart();
+        uiManager.ShowIcon(iconPrefab, skylightEventObject.gameObj.transform.position, 3);
+    }
+    private void OnSkylightActivityUpdate(int activityIndex)
+    {
+        lastDeltaTimeForSkylightEvent = currentDeltaTime;
+        if (skylightEventObject.gameObj.GetComponent<SkylightActivity>().OnActivityUpdate(skylightEventObject.eventTime.GetProgress()))
+        {
+            skylightEventObject.eventTime.Deactivate(activeActivites);
+            skylightEventObject.eventTime.Reset();
+            uiManager.HideIcon(3);
+        }
+    }
+    private void OnSkylightActivityFinished(int activityIndex)
+    {
+        skylightEventObject.eventTime.Deactivate(activeActivites);
+        skylightEventObject.gameObj.GetComponent<SkylightActivity>().ActivityTriggerEnd();
+        skylightActivityFinished = true;
+        deathTrigger.Activate(activeActivites);
+    }
+
     public void SpawnToys()
     {
         int countToSelect = Mathf.Clamp(Random.Range(minToySpawnLocations, maxToySpawnLocations + 1), 0, toySpawnLocations.Count);
@@ -397,6 +431,17 @@ public class ActivityDirector : MonoBehaviour
         }
     }
 
+    private void DispatchSkylightEvent()
+    {
+        if (skylightActivityFinished)
+            return;
+
+        if (skylightEventObject != null && skylightEventObject.gameObj && currentDeltaTime - lastDeltaTimeForSkylightEvent >= Random.Range(triggerSkylightActivityLogicRangeStart, triggerSkylightActivityLogicRangeEnd) && !skylightEventObject.eventTime.IsActive())
+        {
+            skylightEventObject.eventTime.Activate(activeActivites);
+            lastDeltaTimeForSkylightEvent = currentDeltaTime;
+        }
+    }
     private void OnNightStart(int activityIndex)
     {
         SpawnToys();
@@ -429,17 +474,18 @@ public class ActivityDirector : MonoBehaviour
 
         currentDeltaTime += Time.deltaTime * 1000f;
 
-        DispatchWindowEvents();
-        DispatchPetdoorEvent();
+        //  DispatchWindowEvents();
+        //   DispatchPetdoorEvent();
 
         if (activeNight > 0)
         {
-            DispatchBasementHatchEvent();
-            DispatchFireplaceEvent();
+            //  DispatchBasementHatchEvent();
+            //   DispatchFireplaceEvent();
         }
 
         if (activeNight > 1)
         {
+            DispatchSkylightEvent();
             //Night 3 activities
         }
 

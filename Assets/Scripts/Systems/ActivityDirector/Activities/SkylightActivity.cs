@@ -23,8 +23,10 @@ public class SkylightActivity : MonoBehaviour
     private void Start()
     {
         soundManager = FindObjectOfType<SoundManager>();
-        startYPosition = transform.position.y;
-        endYPosition = startYPosition + 0.00909f;
+
+        startYPosition = transform.localPosition.y;
+        endYPosition = startYPosition - 0.00909f;
+
         triggerAudio = GetComponent<AudioSource>();
         soundTriggers = new ActivityDirector.playedSoundAtTrigger[3];
         soundTriggers[0] = new ActivityDirector.playedSoundAtTrigger(0.25f, triggerAudio);
@@ -44,7 +46,7 @@ public class SkylightActivity : MonoBehaviour
         shouldReset = true;
         resetAnimBegin = true;
         resetProgress = 1.0f - lastActivityProgress;
-        positionYOnResetBegin = transform.position.y;
+        positionYOnResetBegin = transform.localPosition.y;
     }
     public void ActivityTriggerStart()
     {
@@ -72,10 +74,8 @@ public class SkylightActivity : MonoBehaviour
                 PlayTriggerAudio();
         }
 
-        transform.position = new Vector3(transform.position.x, startYPosition + (0.00909f * activityProgress), transform.position.z);
-
+        transform.localPosition = new Vector3(transform.localPosition.x, startYPosition - (0.00909f * activityProgress), transform.localPosition.z);
         lastActivityProgress = activityProgress;
-
         return false;
     }
     public void ActivityTriggerEnd()
@@ -99,11 +99,11 @@ public class SkylightActivity : MonoBehaviour
             {
                 resetProgress = 0.0f;
                 resetAnimBegin = false;
-                transform.position = new Vector3(transform.position.x, startYPosition, transform.position.z);
+                transform.localPosition = new Vector3(transform.localPosition.x, startYPosition, transform.localPosition.z);
             }
             else
             {
-                transform.position = new Vector3(transform.position.x, endYPosition - (0.00909f * (resetProgress)), transform.position.z);
+                transform.localPosition = new Vector3(transform.localPosition.x, endYPosition + (0.009409f * resetProgress), transform.localPosition.z);
             }
         }
 
