@@ -176,10 +176,10 @@ public class ActivityDirector : MonoBehaviour
         lastDeltaTimeForPetDoorEvents = lastDeltaTimeForWindowEvents;
 
         nightActivity = new timedActivity[3];
-
-        nightActivity[0] = new timedActivity(420000, 0, OnNightStart, OnProgressToNextNight, null);
-        nightActivity[1] = new timedActivity(420000, 0, OnNightStart, OnProgressToNextNight, null);
-        nightActivity[2] = new timedActivity(420000, 0, OnNightStart, OnWin, null);
+        nightActivity[0] = new timedActivity(4000, 0, OnNightStart, OnProgressToNextNight, null);
+        //nightActivity[0] = new timedActivity(420000, 0, OnNightStart, OnProgressToNextNight, null);
+        nightActivity[1] = new timedActivity(420000, 1, OnNightStart, OnProgressToNextNight, null);
+        nightActivity[2] = new timedActivity(4000, 2, OnNightStart, OnWin, null);
 
         deathTrigger = new timedActivity(10000, 0, null, OnDeath, null);
 
@@ -378,7 +378,7 @@ public class ActivityDirector : MonoBehaviour
         if (basementHatchActivityFinished)
             return;
 
-        if (basementHatchEventObject.gameObj && currentDeltaTime - lastDeltaTimeForBasementHatchEvent >= Random.Range(triggerBasementActivityLogicRangeStart, triggerBasementActivityLogicRangeEnd) && !basementHatchEventObject.eventTime.IsActive())
+        if (basementHatchEventObject != null && basementHatchEventObject.gameObj && currentDeltaTime - lastDeltaTimeForBasementHatchEvent >= Random.Range(triggerBasementActivityLogicRangeStart, triggerBasementActivityLogicRangeEnd) && !basementHatchEventObject.eventTime.IsActive())
         {
             basementHatchEventObject.eventTime.Activate(activeActivites);
             lastDeltaTimeForBasementHatchEvent = currentDeltaTime;
@@ -404,6 +404,7 @@ public class ActivityDirector : MonoBehaviour
     }
     private void OnProgressToNextNight(int activityIndex)
     {
+        nightActivity[activityIndex].Deactivate(activeActivites);
         nightActivity[activityIndex + 1].Activate(activeActivites);
     }
 
@@ -428,30 +429,19 @@ public class ActivityDirector : MonoBehaviour
 
         currentDeltaTime += Time.deltaTime * 1000f;
 
+        DispatchWindowEvents();
+        DispatchPetdoorEvent();
 
-        switch (activeNight)
+        if (activeNight > 0)
         {
-            case 0:
-                {
-                    //Dispatch on night 1
-                    DispatchWindowEvents();
-                    DispatchPetdoorEvent();
-                    break;
-                }
-            case 1:
-                {
-                    //Dispatch on night 2
-                    DispatchBasementHatchEvent();
-                    DispatchFireplaceEvent();
-                    break;
-                }
-            case 2:
-                {
-                    //Dispatch on night 3
-                    break;
-                }
+            DispatchBasementHatchEvent();
+            DispatchFireplaceEvent();
         }
 
+        if (activeNight > 1)
+        {
+          //Night 3 activities
+        }
 
         for (int currentIndex = 0; currentIndex < activeActivites.Count; currentIndex++)
             activeActivites[currentIndex].OnUpdate();
