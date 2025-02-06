@@ -10,6 +10,7 @@ TagManager:
   - Activity_PetDoor
   - Interactable_Toy
   - ToySpawn
+  - Clock
   layers:
   - Default
   - TransparentFX
