@@ -158,7 +158,9 @@ public class ActivityDirector : MonoBehaviour
     private float lastDeltaTimeForBasementHatchEvent = 0;
     private float lastDeltaTimeForFireplaceEvent = 0;
 
-    private timedActivity nightActivity;
+    private timedActivity[] nightActivity;
+    private int activeNight = 0;
+
     private timedActivity deathTrigger;
 
     public GameObject iconPrefab;
@@ -173,7 +175,12 @@ public class ActivityDirector : MonoBehaviour
         lastDeltaTimeForWindowEvents = Time.deltaTime * 1000.0f;
         lastDeltaTimeForPetDoorEvents = lastDeltaTimeForWindowEvents;
 
-        nightActivity = new timedActivity(420000, 0, null, OnWin, null);
+        nightActivity = new timedActivity[3];
+
+        nightActivity[0] = new timedActivity(420000, 0, OnNightStart, OnProgressToNextNight, null);
+        nightActivity[1] = new timedActivity(420000, 0, OnNightStart, OnProgressToNextNight, null);
+        nightActivity[2] = new timedActivity(420000, 0, OnNightStart, OnWin, null);
+
         deathTrigger = new timedActivity(10000, 0, null, OnDeath, null);
 
         toySpawnLocations = new List<Vector3>();
@@ -203,8 +210,7 @@ public class ActivityDirector : MonoBehaviour
         if (GameObject.FindObjectOfType<FireplaceActivity>() != null)
             fireplaceEventObject = new activityTrigger(GameObject.FindObjectOfType<FireplaceActivity>().gameObject, fireplaceActivityTimeLimit, 0, OnFireplaceActivityStart, OnFireplaceActivityFinished, OnFireplaceActivityUpdate);
 
-        SpawnToys();
-        nightActivity.Activate(activeActivites);
+        nightActivity[0].Activate(activeActivites);
     }
 
     private bool petdoorActivityFinished = false;
@@ -391,6 +397,15 @@ public class ActivityDirector : MonoBehaviour
         }
     }
 
+    private void OnNightStart(int activityIndex)
+    {
+        SpawnToys();
+        activeNight = activityIndex;
+    }
+    private void OnProgressToNextNight(int activityIndex)
+    {
+        nightActivity[activityIndex + 1].Activate(activeActivites);
+    }
 
     private bool stopActivityDirector = false;
     private void OnWin(int activityIndex)
@@ -413,13 +428,30 @@ public class ActivityDirector : MonoBehaviour
 
         currentDeltaTime += Time.deltaTime * 1000f;
 
-        //Dispatch on night 1
-        DispatchWindowEvents();
-        DispatchPetdoorEvent();
 
-        //Dispatch on night 2
-        DispatchBasementHatchEvent();
-        DispatchFireplaceEvent();
+        switch (activeNight)
+        {
+            case 0:
+                {
+                    //Dispatch on night 1
+                    DispatchWindowEvents();
+                    DispatchPetdoorEvent();
+                    break;
+                }
+            case 1:
+                {
+                    //Dispatch on night 2
+                    DispatchBasementHatchEvent();
+                    DispatchFireplaceEvent();
+                    break;
+                }
+            case 2:
+                {
+                    //Dispatch on night 3
+                    break;
+                }
+        }
+
 
         for (int currentIndex = 0; currentIndex < activeActivites.Count; currentIndex++)
             activeActivites[currentIndex].OnUpdate();
