@@ -223,7 +223,7 @@ public class ActivityDirector : MonoBehaviour
 
     private void OnBasementHatchActivityStart(int activityIndex)
     {
-        basementHatchEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerStart();
+        basementHatchEventObject.gameObj.GetComponent<BasementHatch>().ActivityTriggerStart();
         uiManager.ShowIcon(iconPrefab, basementHatchEventObject.gameObj.transform.position, 0);
     }
 
@@ -231,7 +231,7 @@ public class ActivityDirector : MonoBehaviour
     {
         lastDeltaTimeForBasementHatchEvent = currentDeltaTime;
 
-        if (basementHatchEventObject.gameObj.GetComponent<PetDoorActivity>().OnActivityUpdate(basementHatchEventObject.eventTime.GetProgress()))
+        if (basementHatchEventObject.gameObj.GetComponent<BasementHatch>().OnActivityUpdate(basementHatchEventObject.eventTime.GetProgress()))
         {
             basementHatchEventObject.eventTime.Deactivate(activeActivites);
             basementHatchEventObject.eventTime.Reset();
@@ -242,7 +242,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnBasementHatchActivityFinished(int activityIndex)
     {
         basementHatchEventObject.eventTime.Deactivate(activeActivites);
-        basementHatchEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerEnd();
+        basementHatchEventObject.gameObj.GetComponent<BasementHatch>().ActivityTriggerEnd();
         basementHatchActivityFinished = true;
         deathTrigger.Activate(activeActivites);
     }
