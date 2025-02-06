@@ -137,9 +137,12 @@ public class ActivityDirector : MonoBehaviour
     private float triggerPetdoorActivityLogicRangeEnd = 55000.0f;
     private float petdoorActivityTimeLimit = 20000.0f;
 
-    private float triggerBasementActivityLogicRangeStart = 25000.0f;
-    private float triggerBasementActivityLogicRangeEnd = 33000.0f;
-    private float basementHatchActivityTimeLimit = 24000.0f;
+    // private float triggerBasementActivityLogicRangeStart = 25000.0f;
+    //private float triggerBasementActivityLogicRangeEnd = 33000.0f;
+    // private float basementHatchActivityTimeLimit = 24000.0f;
+    private float triggerBasementActivityLogicRangeStart = 3000.0f;
+    private float triggerBasementActivityLogicRangeEnd = 3000.0f;
+    private float basementHatchActivityTimeLimit = 6000.0f;
 
     private float triggerFireplaceActivityLogicRangeStart = 1000.0f;
     private float triggerFireplaceActivityLogicRangeEnd = 1000.0f;
@@ -440,7 +443,7 @@ public class ActivityDirector : MonoBehaviour
 
         if (activeNight > 1)
         {
-          //Night 3 activities
+            //Night 3 activities
         }
 
         for (int currentIndex = 0; currentIndex < activeActivites.Count; currentIndex++)

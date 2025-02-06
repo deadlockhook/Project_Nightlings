@@ -11,6 +11,8 @@ TagManager:
   - Interactable_Toy
   - ToySpawn
   - BasementHatch_Door
+  - Clock
+  - Interactable_Plank
   layers:
   - Default
   - TransparentFX
