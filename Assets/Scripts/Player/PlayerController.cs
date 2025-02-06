@@ -81,6 +81,7 @@ public class PlayerController : MonoBehaviour
 	private Vector2 movementInput;
 	private Vector2 lookInput;
 
+	private Vector3 lastSpawnPosition;
 	private void Awake()
 	{
 		playerControlActions = new PlayerControlActions();
@@ -145,7 +146,10 @@ public class PlayerController : MonoBehaviour
 				rangeDrainRate = 0f;
 			}
 		}
-	}
+
+		lastSpawnPosition = transform.localPosition;
+
+    }
 
 	private void Update()
 	{
@@ -387,4 +391,9 @@ public class PlayerController : MonoBehaviour
 		footsteps.Stop();
 		Debug.Log("player died");
 	}
+
+	public void Respawn()
+	{
+		transform.localPosition = lastSpawnPosition;
+    }
 }

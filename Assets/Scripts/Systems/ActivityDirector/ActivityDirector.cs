@@ -449,8 +449,10 @@ public class ActivityDirector : MonoBehaviour
     }
     private void OnProgressToNextNight(int activityIndex)
     {
+
         nightActivity[activityIndex].Deactivate(activeActivites);
         nightActivity[activityIndex + 1].Activate(activeActivites);
+        playerController.Respawn();
     }
 
     private bool stopActivityDirector = false;

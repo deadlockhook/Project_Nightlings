@@ -76,6 +76,7 @@ public class SkylightActivity : MonoBehaviour
 
         transform.localPosition = new Vector3(transform.localPosition.x, startYPosition - (0.00909f * activityProgress), transform.localPosition.z);
         lastActivityProgress = activityProgress;
+
         return false;
     }
     public void ActivityTriggerEnd()
