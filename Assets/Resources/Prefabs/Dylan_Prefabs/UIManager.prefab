@@ -431,7 +431,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8790709780570191409}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: Back
+        m_MethodName: GoToOptions
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3471,7 +3471,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8790709780570191409}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: Back
+        m_MethodName: GoToOptions
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
