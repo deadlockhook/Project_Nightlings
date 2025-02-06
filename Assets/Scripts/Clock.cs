@@ -21,7 +21,7 @@ public class Clock : MonoBehaviour
             currentHour -= 12;
         }
 
-        string period = (totalMinutes < 7 * 60) ? "PM" : "AM";
+        string period = "AM";
 
         int currentSecond = Mathf.FloorToInt((timeElapsed % 1) * 60);
 
@@ -35,6 +35,6 @@ public class Clock : MonoBehaviour
     public void ResetClock()
     {
         timeElapsed = 0f;
-        timeDisplay.text = "12:00 PM";
+        timeDisplay.text = "12:00 AM";
     }
 }
