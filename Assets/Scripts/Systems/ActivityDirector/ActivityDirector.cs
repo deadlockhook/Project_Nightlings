@@ -46,6 +46,13 @@ public class ActivityDirector : MonoBehaviour
             active = false;
         }
 
+        public void RemoveProgressPercentage(float progressToRemove)
+        {
+            currentTime -= triggerTime * progressToRemove;
+
+            if (currentTime < 0)
+                currentTime = 0;
+        }
         public void OnUpdate()
         {
             if (!active)
@@ -130,13 +137,18 @@ public class ActivityDirector : MonoBehaviour
     private float triggerPetdoorActivityLogicRangeEnd = 55000.0f;
     private float petdoorActivityTimeLimit = 20000.0f;
 
-    private float triggerBasementActivityLogicRangeStart = 3000.0f;
-    private float triggerBasementActivityLogicRangeEnd = 5000.0f;
-    private float basementHatchActivityTimeLimit = 2000.0f;
+    private float triggerBasementActivityLogicRangeStart = 25000.0f;
+    private float triggerBasementActivityLogicRangeEnd = 33000.0f;
+    private float basementHatchActivityTimeLimit = 24000.0f;
+
+    private float triggerFireplaceActivityLogicRangeStart = 1000.0f;
+    private float triggerFireplaceActivityLogicRangeEnd = 1000.0f;
+    private float fireplaceActivityTimeLimit = 6000.0f;
 
     private List<activityTrigger> windowEventObjects;
     private activityTrigger petdoorEventObject;
     private activityTrigger basementHatchEventObject;
+    private activityTrigger fireplaceEventObject;
 
     private List<Vector3> toySpawnLocations;
 
@@ -144,6 +156,7 @@ public class ActivityDirector : MonoBehaviour
     private float lastDeltaTimeForWindowEvents = 0;
     private float lastDeltaTimeForPetDoorEvents = 0;
     private float lastDeltaTimeForBasementHatchEvent = 0;
+    private float lastDeltaTimeForFireplaceEvent = 0;
 
     private timedActivity nightActivity;
     private timedActivity deathTrigger;
@@ -187,6 +200,9 @@ public class ActivityDirector : MonoBehaviour
         if (GameObject.FindObjectOfType<BasementHatch>() != null)
             basementHatchEventObject = new activityTrigger(GameObject.FindObjectOfType<BasementHatch>().gameObject, basementHatchActivityTimeLimit, 0, OnBasementHatchActivityStart, OnBasementHatchActivityFinished, OnBasementHatchActivityUpdate);
 
+        if (GameObject.FindObjectOfType<FireplaceActivity>() != null)
+            fireplaceEventObject = new activityTrigger(GameObject.FindObjectOfType<FireplaceActivity>().gameObject, fireplaceActivityTimeLimit, 0, OnFireplaceActivityStart, OnFireplaceActivityFinished, OnFireplaceActivityUpdate);
+
         SpawnToys();
         nightActivity.Activate(activeActivites);
     }
@@ -194,6 +210,7 @@ public class ActivityDirector : MonoBehaviour
     private bool petdoorActivityFinished = false;
     private bool windowActivityFinished = false;
     private bool basementHatchActivityFinished = false;
+    private bool fireplaceActivityFinished = false;
 
     private void OnPetDoorActivityStart(int activityIndex)
     {
@@ -273,7 +290,31 @@ public class ActivityDirector : MonoBehaviour
         activityObject.eventTime.Deactivate(activeActivites);
         activityObject.gameObj.GetComponent<WindowsActivity>().ActivityTriggerEnd();
         windowActivityFinished = true;
-        deathTrigger.Activate(activeActivites);  
+        deathTrigger.Activate(activeActivites);
+    }
+
+    private void OnFireplaceActivityStart(int activityIndex)
+    {
+        fireplaceEventObject.gameObj.GetComponent<FireplaceActivity>().ActivityTriggerStart(fireplaceEventObject.eventTime);
+        uiManager.ShowIcon(iconPrefab, fireplaceEventObject.gameObj.transform.position, 2);
+    }
+
+    private void OnFireplaceActivityUpdate(int activityIndex)
+    {
+        lastDeltaTimeForFireplaceEvent = currentDeltaTime;
+        if (fireplaceEventObject.gameObj.GetComponent<FireplaceActivity>().OnActivityUpdate(fireplaceEventObject.eventTime.GetProgress()))
+        {
+            fireplaceEventObject.eventTime.Deactivate(activeActivites);
+            fireplaceEventObject.eventTime.Reset();
+            uiManager.HideIcon(2);
+        }
+    }
+    private void OnFireplaceActivityFinished(int activityIndex)
+    {
+        fireplaceEventObject.eventTime.Deactivate(activeActivites);
+        fireplaceEventObject.gameObj.GetComponent<FireplaceActivity>().ActivityTriggerEnd();
+        fireplaceActivityFinished = true;
+        deathTrigger.Activate(activeActivites);
     }
 
     public void SpawnToys()
@@ -338,6 +379,19 @@ public class ActivityDirector : MonoBehaviour
         }
     }
 
+    private void DispatchFireplaceEvent()
+    {
+        if (fireplaceActivityFinished)
+            return;
+
+        if (fireplaceEventObject != null && fireplaceEventObject.gameObj && currentDeltaTime - lastDeltaTimeForFireplaceEvent >= Random.Range(triggerFireplaceActivityLogicRangeStart, triggerFireplaceActivityLogicRangeEnd) && !fireplaceEventObject.eventTime.IsActive())
+        {
+            fireplaceEventObject.eventTime.Activate(activeActivites);
+            lastDeltaTimeForFireplaceEvent = currentDeltaTime;
+        }
+    }
+
+
     private bool stopActivityDirector = false;
     private void OnWin(int activityIndex)
     {
@@ -365,6 +419,7 @@ public class ActivityDirector : MonoBehaviour
 
         //Dispatch on night 2
         DispatchBasementHatchEvent();
+        DispatchFireplaceEvent();
 
         for (int currentIndex = 0; currentIndex < activeActivites.Count; currentIndex++)
             activeActivites[currentIndex].OnUpdate();

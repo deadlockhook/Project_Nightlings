@@ -103,7 +103,6 @@ public class BasementHatch : MonoBehaviour
             {
                 rightDoor.localRotation = Quaternion.Euler(rightDoor.localRotation.eulerAngles.x, rightDoor.localRotation.eulerAngles.y, rotationZOnResetBeginForRightDoor - (rotationZOnResetBeginForRightDoor * resetProgress));
                 leftDoor.localRotation = Quaternion.Euler(leftDoor.localRotation.eulerAngles.x, leftDoor.localRotation.eulerAngles.y, (rotationZOnResetBeginForRightDoor - (rotationZOnResetBeginForRightDoor * resetProgress)) * -1.0f);
-
             }
         }
 
