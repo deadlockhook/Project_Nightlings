@@ -982,7 +982,7 @@ GameObject:
   - component: {fileID: 111492226}
   - component: {fileID: 111492225}
   - component: {fileID: 111492224}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plank (4)
   m_TagString: Interactable_Plank
   m_Icon: {fileID: 0}
@@ -1535,7 +1535,7 @@ GameObject:
   - component: {fileID: 180614908}
   - component: {fileID: 180614907}
   - component: {fileID: 180614906}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plank (2)
   m_TagString: Interactable_Plank
   m_Icon: {fileID: 0}
@@ -4752,7 +4752,7 @@ GameObject:
   - component: {fileID: 716374155}
   - component: {fileID: 716374154}
   - component: {fileID: 716374153}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plank (5)
   m_TagString: Interactable_Plank
   m_Icon: {fileID: 0}
@@ -5074,7 +5074,7 @@ GameObject:
   - component: {fileID: 745569838}
   - component: {fileID: 745569837}
   - component: {fileID: 745569836}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plank (3)
   m_TagString: Interactable_Plank
   m_Icon: {fileID: 0}
@@ -8390,7 +8390,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &1236446102
 Light:
   m_ObjectHideFlags: 0
@@ -13850,7 +13850,7 @@ GameObject:
   - component: {fileID: 1975829274}
   - component: {fileID: 1975829273}
   - component: {fileID: 1975829272}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plank (1)
   m_TagString: Interactable_Plank
   m_Icon: {fileID: 0}
@@ -15068,22 +15068,22 @@ PrefabInstance:
     - target: {fileID: 1717893237130139417, guid: 9cd28fbef222abc4b81fee8c0d362a2e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -12.347
+      value: -22.29
       objectReference: {fileID: 0}
     - target: {fileID: 1717893237130139417, guid: 9cd28fbef222abc4b81fee8c0d362a2e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.4
+      value: 6.5
       objectReference: {fileID: 0}
     - target: {fileID: 1717893237130139417, guid: 9cd28fbef222abc4b81fee8c0d362a2e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.304
+      value: -19.169
       objectReference: {fileID: 0}
     - target: {fileID: 1717893237130139417, guid: 9cd28fbef222abc4b81fee8c0d362a2e,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.1360974
+      value: 0.95409983
       objectReference: {fileID: 0}
     - target: {fileID: 1717893237130139417, guid: 9cd28fbef222abc4b81fee8c0d362a2e,
         type: 3}
@@ -15093,7 +15093,7 @@ PrefabInstance:
     - target: {fileID: 1717893237130139417, guid: 9cd28fbef222abc4b81fee8c0d362a2e,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9906955
+      value: 0.29948878
       objectReference: {fileID: 0}
     - target: {fileID: 1717893237130139417, guid: 9cd28fbef222abc4b81fee8c0d362a2e,
         type: 3}
@@ -15108,7 +15108,7 @@ PrefabInstance:
     - target: {fileID: 1717893237130139417, guid: 9cd28fbef222abc4b81fee8c0d362a2e,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 195.644
+      value: 34.854
       objectReference: {fileID: 0}
     - target: {fileID: 1717893237130139417, guid: 9cd28fbef222abc4b81fee8c0d362a2e,
         type: 3}
