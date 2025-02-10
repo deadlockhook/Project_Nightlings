@@ -335,6 +335,7 @@ public class UIManager : MonoBehaviour
 		Time.timeScale = 1f;
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		ChangeUIStateWithLoading(UIState.Gameplay);
+		activeIcons.Clear();
 	}
 
 	public void ShowIcon(GameObject iconPrefab, Vector3 position, int eventIndex)
@@ -362,11 +363,17 @@ public class UIManager : MonoBehaviour
 		if (activeIcons[eventIndex] != null)
 			activeIcons[eventIndex].SetActive(false);
 	}
+
 	private void ReactivateIcons()
 	{
-		foreach (var icon in activeIcons.Values)
+		foreach (var eventIndex in activeIcons.Keys.ToList())
 		{
-			if (!icon.activeSelf)
+			GameObject icon = activeIcons[eventIndex];
+			if (icon == null)
+			{
+				activeIcons.Remove(eventIndex);
+			}
+			else if (!icon.activeSelf)
 			{
 				icon.SetActive(true);
 			}
