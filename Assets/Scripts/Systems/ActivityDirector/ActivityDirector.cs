@@ -391,6 +391,11 @@ public class ActivityDirector : MonoBehaviour
 
     public void SpawnToys()
     {
+        GameObject[] previousSpawnedToys = GameObject.FindGameObjectsWithTag("Interactable_Toy");
+
+        for (int current = 0; current < previousSpawnedToys.Length; current++)
+            Destroy(previousSpawnedToys[current]);
+
         int countToSelect = Mathf.Clamp(Random.Range(minToySpawnLocations, maxToySpawnLocations + 1), 0, toySpawnLocations.Count);
 
         List<Vector3> shuffledLocations = new List<Vector3>(toySpawnLocations);
