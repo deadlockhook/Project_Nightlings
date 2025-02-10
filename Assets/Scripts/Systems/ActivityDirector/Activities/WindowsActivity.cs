@@ -73,7 +73,7 @@ public class WindowsActivity : MonoBehaviour
            if (trigger.ShouldPlay(activityProgress))
                 PlayTriggerAudio();
         }
-        
+
         Vector3 target = new Vector3(transform.position.x, startYPosition + (0.8972201f * activityProgress), transform.position.z);
         transform.position = target;
 
@@ -111,5 +111,4 @@ public class WindowsActivity : MonoBehaviour
         }
 
     }
-
 }

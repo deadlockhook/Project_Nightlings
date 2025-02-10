@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
 using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
@@ -44,6 +45,9 @@ public class UIManager : MonoBehaviour
 	public float loadingDisplayDuration = 0.5f;
 	public float loadingFadeDuration = 1.0f;
 
+	[Header("Death Screen")]
+	public GameObject blackScreen;
+	public TMP_Text deathCauseText;
 
 	private bool isPaused = false;
 	private Toggle audioVisualToggle;
@@ -202,6 +206,9 @@ public class UIManager : MonoBehaviour
 
 	private void Update()
 	{
+		if (blackScreen != null && blackScreen.activeSelf)
+			return;
+
 		if (winUI.activeSelf || loseUI.activeSelf)
 			return;
 
@@ -309,10 +316,30 @@ public class UIManager : MonoBehaviour
 		ChangeUIState(UIState.Win);
 	}
 
-	public void LoseGame()
+	public void LoseGame(string deathCause)
 	{
 		isPaused = true;
-		ChangeUIState(UIState.Lose);
+		StartCoroutine(LoseSequence(deathCause));
+	}
+
+	private IEnumerator LoseSequence(string deathCause)
+	{
+		if (blackScreen != null)
+			blackScreen.SetActive(true);
+			gameplayUI.SetActive(false);
+
+		yield return new WaitForSecondsRealtime(3f);
+
+		if (blackScreen != null)
+			blackScreen.SetActive(false);
+
+		loseUI.SetActive(true);
+
+		if (deathCauseText != null)
+			deathCauseText.text = "You were killed by: " + deathCause;
+
+		Cursor.lockState = CursorLockMode.None;
+		Time.timeScale = 0f;
 	}
 
 	public bool IsPaused()
