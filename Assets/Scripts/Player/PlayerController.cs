@@ -86,15 +86,15 @@ public class PlayerController : MonoBehaviour
 	{
 		playerControlActions = new PlayerControlActions();
 
-        staminaBar = GameObject.Find("StaminaBar")?.GetComponent<Image>();
+		staminaBar = GameObject.Find("StaminaBar")?.GetComponent<Image>();
 
-        if (staminaBar == null)
-        {
-            staminaBar = FindObjectsOfType<Image>(true)
-                .FirstOrDefault(img => img.gameObject.name == "StaminaBar");
-        }
+		if (staminaBar == null)
+		{
+			staminaBar = FindObjectsOfType<Image>(true)
+				.FirstOrDefault(img => img.gameObject.name == "StaminaBar");
+		}
 
-        if (staminaBar == null)
+		if (staminaBar == null)
 		{
 			Debug.LogError("No Stamina Bar");
 		}
@@ -148,8 +148,7 @@ public class PlayerController : MonoBehaviour
 		}
 
 		lastSpawnPosition = transform.localPosition;
-
-    }
+	}
 
 	private void Update()
 	{
@@ -182,7 +181,12 @@ public class PlayerController : MonoBehaviour
 			staminaCoolDownTimer += Time.deltaTime;
 			if (staminaCoolDownTimer >= staminaCoolDown && currentStamina < maxStamina)
 			{
-				currentStamina += staminaRechargeRate * Time.deltaTime;
+				float rechargeRate = staminaRechargeRate;
+				if (movementInput.sqrMagnitude < 0.01f)
+				{
+					rechargeRate *= 2.0f;
+				}
+				currentStamina += rechargeRate * Time.deltaTime;
 				currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
 			}
 		}
@@ -234,7 +238,7 @@ public class PlayerController : MonoBehaviour
 			inputDirection.Normalize();
 		}
 
-		if (playerControlActions.Player.Sprint.IsPressed() && currentStamina > 0 && inputDirection.magnitude > 0)
+		if (!isRecharging && playerControlActions.Player.Sprint.IsPressed() && currentStamina > 0 && inputDirection.magnitude > 0)
 		{
 			isWalking = false;
 			isRunning = true;
@@ -248,7 +252,15 @@ public class PlayerController : MonoBehaviour
 			isRunning = false;
 		}
 
-		float targetSpeed = isRunning ? runSpeed : walkSpeed;
+		float effectiveWalkSpeed = walkSpeed;
+		float effectiveRunSpeed = runSpeed;
+		if (isRecharging)
+		{
+			effectiveWalkSpeed *= 0.5f;
+			effectiveRunSpeed = effectiveWalkSpeed;
+		}
+
+		float targetSpeed = isRunning ? effectiveRunSpeed : effectiveWalkSpeed;
 		if (inputDirection.magnitude == 0)
 			targetSpeed = 0;
 
@@ -395,5 +407,5 @@ public class PlayerController : MonoBehaviour
 	public void Respawn()
 	{
 		transform.localPosition = lastSpawnPosition;
-    }
+	}
 }
