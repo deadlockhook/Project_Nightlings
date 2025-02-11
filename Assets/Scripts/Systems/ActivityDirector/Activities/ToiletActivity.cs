@@ -7,7 +7,7 @@ public class ToiletActivity : MonoBehaviour
     private bool shouldReset = false;
     private bool resetAnimBegin = false;
     private float resetProgress = 0.0f;
-    private float positionYOnResetBegin = 0.0f;
+    private float rotationXOnResetBegin = 0.0f;
     private bool activityFinished = false;
     private bool inActivity = false;
 
@@ -45,7 +45,7 @@ public class ToiletActivity : MonoBehaviour
         shouldReset = true;
         resetAnimBegin = true;
         resetProgress = 1.0f - lastActivityProgress;
-        //positionYOnResetBegin = transform.localPosition.y;
+        rotationXOnResetBegin = transform.localRotation.eulerAngles.x;
     }
     public void ActivityTriggerStart()
     {
@@ -73,8 +73,7 @@ public class ToiletActivity : MonoBehaviour
                 PlayTriggerAudio();
         }
 
-        this.GetComponent<Renderer>().material.color = Color.Lerp(Color.white, Color.red, activityProgress);
-        // transform.localPosition = new Vector3(transform.localPosition.x, startYPosition - (0.00909f * activityProgress), transform.localPosition.z);
+        transform.localRotation = Quaternion.Euler(-90.0f * activityProgress, transform.localRotation.eulerAngles.y, transform.localRotation.eulerAngles.z);
         lastActivityProgress = activityProgress;
 
         return false;
@@ -101,13 +100,10 @@ public class ToiletActivity : MonoBehaviour
             {
                 resetProgress = 0.0f;
                 resetAnimBegin = false;
-                //transform.localPosition = new Vector3(transform.localPosition.x, startYPosition, transform.localPosition.z);
             }
             else
             {
-                this.GetComponent<Renderer>().material.color = Color.Lerp(Color.white, Color.red,1.0F - resetProgress);
-
-                //transform.localPosition = new Vector3(transform.localPosition.x, endYPosition + (0.009409f * resetProgress), transform.localPosition.z);
+                transform.localRotation = Quaternion.Euler(-90.0f * (1.0f - resetProgress), transform.localRotation.eulerAngles.y, transform.localRotation.eulerAngles.z);
             }
         }
 

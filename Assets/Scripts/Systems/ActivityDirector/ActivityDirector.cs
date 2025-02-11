@@ -148,9 +148,14 @@ public class ActivityDirector : MonoBehaviour
     private float triggerSkylightActivityLogicRangeEnd = 80000.0f;
     private float skylightActivityTimeLimit = 20000.0f;
 
-    private float toiletActivityLogicRangeStart = 50000.0f;
-    private float toiletActivityLogicRangeEnd = 60000.0f;
-    private float toiletActivityTimeLimit = 25000.0f;
+    //private float toiletActivityLogicRangeStart = 50000.0f;
+    //private float toiletActivityLogicRangeEnd = 60000.0f;
+    // private float toiletActivityTimeLimit = 25000.0f;
+
+
+    private float toiletActivityLogicRangeStart = 500.0f;
+    private float toiletActivityLogicRangeEnd = 600.0f;
+    private float toiletActivityTimeLimit = 15000.0f;
 
     private List<activityTrigger> windowEventObjects;
     private activityTrigger petdoorEventObject;
