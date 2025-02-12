@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bbdb9f15384e924d90778fcc866fffa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentMusic: 
   sounds:
   - name: PlayerWalk
     clip: {fileID: 8300000, guid: 83d577976823b4246a45797985e4cc49, type: 3}
@@ -73,6 +74,18 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 5559dfd61b6da7f4e9dc768e9637f89f, type: 3}
   - name: DoorBell
     clip: {fileID: 8300000, guid: 7e74c901c41faee48a5373a2eafbb5b1, type: 3}
+  - name: BasementKnock
+    clip: {fileID: 8300000, guid: 2cb7d15ba4fe9524a975aa7152d46a86, type: 3}
+  - name: FireBurning
+    clip: {fileID: 8300000, guid: 2d6ebc1f2f79f1e4787bbb3040dccc20, type: 3}
+  - name: RefuelFire
+    clip: {fileID: 8300000, guid: 600a31a7913d310469e0d9e6a9129da5, type: 3}
+  - name: ToiletFlush
+    clip: {fileID: 8300000, guid: 5cdc07c75777a9346a83be2692607fc0, type: 3}
+  - name: ToiletSplash
+    clip: {fileID: 8300000, guid: 61c01fe7454e2664f80094188f2dda80, type: 3}
+  - name: Clock
+    clip: {fileID: 8300000, guid: cdc23aded6b4e284bb0066c9a7da3b27, type: 3}
   masterVolume: 1
   sfxVolume: 1
   musicVolume: 1

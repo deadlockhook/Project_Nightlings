@@ -10,6 +10,11 @@ TagManager:
   - Activity_PetDoor
   - Interactable_Toy
   - ToySpawn
+  - BasementHatch_Door
+  - Clock
+  - Interactable_Plank
+  - Skylight_Remote
+  - Toilet_Flush
   layers:
   - Default
   - TransparentFX
