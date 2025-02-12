@@ -34,7 +34,7 @@ public class ToiletActivity : MonoBehaviour
     }
     private void PlayTriggerAudio()
     {
-        soundManager.PlaySound("Creak2", triggerAudio);
+        soundManager.PlaySound("ToiletSplash", triggerAudio);
     }
     public void ResetActivity()
     {
@@ -46,6 +46,7 @@ public class ToiletActivity : MonoBehaviour
         resetAnimBegin = true;
         resetProgress = 1.0f - lastActivityProgress;
         rotationXOnResetBegin = transform.localRotation.eulerAngles.x;
+        SoundManager.Instance.PlaySound("ToiletFlush", triggerAudio);
     }
     public void ActivityTriggerStart()
     {
