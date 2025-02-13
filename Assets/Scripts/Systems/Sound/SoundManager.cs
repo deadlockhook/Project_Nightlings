@@ -134,6 +134,23 @@ public class SoundManager : MonoBehaviour
             source.volume = sfxVolume * masterVolume;
             source.Play();
         }
+
+        if (source != null)
+        {
+            if (source.isPlaying && source.clip != clip)
+            {
+                AudioSource newSource = source.gameObject.AddComponent<AudioSource>();
+
+                if (newSource.isPlaying && newSource.clip == clip)
+                    return;
+
+                newSource.clip = clip;
+                newSource.volume = sfxVolume * masterVolume;
+                newSource.Play();
+                return;
+            }
+        }
+
         else
         {
             Play2DSound(clip);
@@ -173,6 +190,7 @@ public class SoundManager : MonoBehaviour
         UpdateVolumes();
         musicSource.Play();
     }
+
     public void PauseAllSounds()
     {
         foreach (var source in audioSources.Values)
@@ -222,6 +240,7 @@ public class SoundManager : MonoBehaviour
             source.volume = sfxVolume * masterVolume;
         }
     }
+
     public void StopMusic()
     {
         if (musicSource.isPlaying)
@@ -230,5 +249,4 @@ public class SoundManager : MonoBehaviour
             currentMusic = null;
         }
     }
-
 }
