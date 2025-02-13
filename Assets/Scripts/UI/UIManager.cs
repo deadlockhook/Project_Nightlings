@@ -443,7 +443,11 @@ public class UIManager : MonoBehaviour
 
 	public void NightButton(int night)
     {
-
+        if (winUI.activeSelf || loseUI.activeSelf)
+            return;
+        isPaused = false;
+        ChangeUIState(UIState.Gameplay);
+        activityDirector.StartNight(night);
     }
 
     // OPTIONS SECTION

@@ -105,6 +105,17 @@ public class SoundManager : MonoBehaviour
         musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
     }
 
+    private void Update()
+    {
+        if (Time.timeScale == 0)
+        {
+            PauseAllSounds();
+        }
+        else
+        {
+            ResumeAllSounds();
+        }
+    }
 
     public void PlaySound(string soundName, AudioSource source = null)
     {
@@ -161,6 +172,27 @@ public class SoundManager : MonoBehaviour
         musicSource.clip = clip;
         UpdateVolumes();
         musicSource.Play();
+    }
+    public void PauseAllSounds()
+    {
+        foreach (var source in audioSources.Values)
+        {
+            if (source.isPlaying)
+            {
+                source.Pause();
+            }
+        }
+    }
+
+    public void ResumeAllSounds()
+    {
+        foreach (var source in audioSources.Values)
+        {
+            if (!source.isPlaying)
+            {
+                source.UnPause();
+            }
+        }
     }
 
     public void SetMasterVolume(float volume)

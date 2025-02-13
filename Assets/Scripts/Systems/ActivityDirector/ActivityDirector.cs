@@ -75,6 +75,8 @@ public class ActivityDirector : MonoBehaviour
             activites.Add(this);
             active = true;
 
+            currentTime = 0;
+
             if (actionStart != null)
                 actionStart(triggerIndex);
         }
@@ -512,6 +514,15 @@ public class ActivityDirector : MonoBehaviour
     {
         nightActivity[activityIndex].Deactivate(activeActivites);
         nightActivity[activityIndex + 1].Activate(activeActivites);
+        playerController.Respawn();
+    }
+
+    public void StartNight(int nightIndex)
+    {
+        nightActivity[1].Deactivate(activeActivites);
+        nightActivity[2].Deactivate(activeActivites);
+        nightActivity[0].Deactivate(activeActivites);
+        nightActivity[nightIndex].Activate(activeActivites);
         playerController.Respawn();
     }
 
