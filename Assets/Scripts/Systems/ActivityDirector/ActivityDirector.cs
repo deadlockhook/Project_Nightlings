@@ -148,14 +148,14 @@ public class ActivityDirector : MonoBehaviour
     private float triggerSkylightActivityLogicRangeEnd = 80000.0f;
     private float skylightActivityTimeLimit = 20000.0f;
 
-    //private float toiletActivityLogicRangeStart = 50000.0f;
-    //private float toiletActivityLogicRangeEnd = 60000.0f;
-    // private float toiletActivityTimeLimit = 25000.0f;
+    private float toiletActivityLogicRangeStart = 50000.0f;
+    private float toiletActivityLogicRangeEnd = 60000.0f;
+     private float toiletActivityTimeLimit = 25000.0f;
 
 
-    private float toiletActivityLogicRangeStart = 500.0f;
-    private float toiletActivityLogicRangeEnd = 600.0f;
-    private float toiletActivityTimeLimit = 15000.0f;
+  //  private float toiletActivityLogicRangeStart = 500.0f;
+  //  private float toiletActivityLogicRangeEnd = 600.0f;
+  //  private float toiletActivityTimeLimit = 15000.0f;
 
     private List<activityTrigger> windowEventObjects;
     private activityTrigger petdoorEventObject;
@@ -196,8 +196,8 @@ public class ActivityDirector : MonoBehaviour
 
         nightActivity = new timedActivity[3];
         //  420000
-        nightActivity[0] = new timedActivity(1000, 0, OnNightStart, OnProgressToNextNight, null);
-        nightActivity[1] = new timedActivity(1000, 1, OnNightStart, OnProgressToNextNight, null);
+        nightActivity[0] = new timedActivity(420000, 0, OnNightStart, OnProgressToNextNight, null);
+        nightActivity[1] = new timedActivity(420000, 1, OnNightStart, OnProgressToNextNight, null);
         nightActivity[2] = new timedActivity(420000, 2, OnNightStart, OnWin, null);
 
         deathTrigger = new timedActivity(10000, 0, null, OnDeath, null);
