@@ -5381,6 +5381,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bellIconPrefab: {fileID: 2531136830291740803, guid: 929d26b19b4cc01479717fe080c42539,
     type: 3}
+  loseTimeline: {fileID: 0}
   loadingScreen: {fileID: 5636748318794963977}
   loadingDisplayDuration: 0.5
   loadingFadeDuration: 1

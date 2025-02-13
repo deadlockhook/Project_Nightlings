@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
 using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
 using TMPro;
+using UnityEngine.Playables;
 
 public class UIManager : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class UIManager : MonoBehaviour
 	private Stack<UIState> uiStateHistory = new Stack<UIState>();
 	private List<GameObject> clocks;
 	private ActivityDirector activityDirector;
+
+	public PlayableDirector loseTimeline;
 
     public enum UIState
 	{
@@ -327,16 +330,26 @@ public class UIManager : MonoBehaviour
 
 	private IEnumerator LoseSequence(string deathCause)
 	{
+		if (loseTimeline != null)
+		{
+			Debug.Log("Playing lose timeline");
+			loseTimeline.Play();
+			yield return new WaitForSecondsRealtime((float)loseTimeline.duration);
+		}
+		else
+		{
+			yield return new WaitForSecondsRealtime(3f);
+		}
+
 		if (blackScreen != null)
 			blackScreen.SetActive(true);
 			gameplayUI.SetActive(false);
 
-		yield return new WaitForSecondsRealtime(3f);
+		yield return new WaitForSecondsRealtime(1f);
 
 		if (blackScreen != null)
 			blackScreen.SetActive(false);
-
-		loseUI.SetActive(true);
+			loseUI.SetActive(true);
 
 		if (deathCauseText != null)
 			deathCauseText.text = "You were killed by: " + deathCause;
@@ -546,5 +559,22 @@ public class UIManager : MonoBehaviour
 				bloom.active = false;
 			}
 		}
+	}
+
+	// Testing atm, not final
+	private void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+		if (loseTimeline == null) {
+			GameObject timelineObject = GameObject.Find("TimeLineData");
+			if (timelineObject != null)
+				loseTimeline = timelineObject.GetComponent<PlayableDirector>();
+		}
+	}
+
+	private void OnEnable() {
+		SceneManager.sceneLoaded += OnSceneLoaded;
+	}
+
+	private void OnDisable() {
+		SceneManager.sceneLoaded -= OnSceneLoaded;
 	}
 }
