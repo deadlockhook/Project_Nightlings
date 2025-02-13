@@ -17,8 +17,9 @@ public class UIManager : MonoBehaviour
 	private Dictionary<int, GameObject> activeIcons = new Dictionary<int, GameObject>();
 	private Stack<UIState> uiStateHistory = new Stack<UIState>();
 	private List<GameObject> clocks;
+	private ActivityDirector activityDirector;
 
-	public enum UIState
+    public enum UIState
 	{
 		MainMenu,
 		PauseMenu,
@@ -70,7 +71,9 @@ public class UIManager : MonoBehaviour
 
 	private void Start()
 	{
-		mainMenuUI = transform.Find("MainMenu").gameObject;
+		activityDirector = FindObjectOfType<ActivityDirector>();
+
+        mainMenuUI = transform.Find("MainMenu").gameObject;
 		pauseMenuUI = transform.Find("Pause").gameObject;
 		gameplayUI = transform.Find("Gameplay").gameObject;
 		optionsUI = transform.Find("Options").gameObject;
@@ -438,8 +441,13 @@ public class UIManager : MonoBehaviour
 		clocks.ForEach(clock => clock.GetComponent<Clock>().ResetClock());
 	}
 
-	// OPTIONS SECTION
-	private GameObject mainCam;
+	public void NightButton(int night)
+    {
+
+    }
+
+    // OPTIONS SECTION
+    private GameObject mainCam;
 	private Camera mainCamera;
 	private Volume volume;
 

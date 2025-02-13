@@ -32,7 +32,7 @@ public class BasementHatch : MonoBehaviour
 
     private void PlayTriggerAudio()
     {
-        soundManager.PlaySound("DoorBell", triggerAudio);
+        soundManager.PlaySound("BasementKnock", triggerAudio);
     }
     public void ResetActivity()
     {
