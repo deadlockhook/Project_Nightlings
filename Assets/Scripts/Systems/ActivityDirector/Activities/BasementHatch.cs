@@ -13,7 +13,7 @@ public class BasementHatch : MonoBehaviour
     private bool inActivity = false;
 
     private SoundManager soundManager;
-    private AudioSource triggerAudio;
+    private AudioSource triggerAudio1;
     private ActivityDirector.playedSoundAtTrigger[] soundTriggers;
 
     private Transform leftDoor;
@@ -21,18 +21,24 @@ public class BasementHatch : MonoBehaviour
     private void Start()
     {
         soundManager = FindObjectOfType<SoundManager>();
-        triggerAudio = GetComponent<AudioSource>();
+
+        AudioSource[] sources = GetComponents<AudioSource>();
+        if (sources.Length >= 1)
+        {
+            triggerAudio1 = sources[0];
+        }
+
         soundTriggers = new ActivityDirector.playedSoundAtTrigger[3];
-        soundTriggers[0] = new ActivityDirector.playedSoundAtTrigger(0.25f, triggerAudio);
-        soundTriggers[1] = new ActivityDirector.playedSoundAtTrigger(0.50f, triggerAudio);
-        soundTriggers[2] = new ActivityDirector.playedSoundAtTrigger(0.75f, triggerAudio);
+        soundTriggers[0] = new ActivityDirector.playedSoundAtTrigger(0.25f, triggerAudio1);
+        soundTriggers[1] = new ActivityDirector.playedSoundAtTrigger(0.50f, triggerAudio1);
+        soundTriggers[2] = new ActivityDirector.playedSoundAtTrigger(0.75f, triggerAudio1);
         leftDoor = transform.Find("Left Door");
         rightDoor = transform.Find("Right Door");
     }
 
     private void PlayTriggerAudio()
     {
-        soundManager.PlaySound("BasementKnock", triggerAudio);
+        soundManager.PlaySound("BasementKnock", triggerAudio1);
     }
     public void ResetActivity()
     {

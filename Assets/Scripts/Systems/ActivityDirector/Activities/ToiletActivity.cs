@@ -15,7 +15,8 @@ public class ToiletActivity : MonoBehaviour
     private float startYPosition = 0.0f;
     private float lastActivityProgress = 0.0f;
 
-    private AudioSource triggerAudio;
+    private AudioSource triggerAudio1;
+    private AudioSource triggerAudio2;
     private SoundManager soundManager;
 
     private ActivityDirector.playedSoundAtTrigger[] soundTriggers;
@@ -26,15 +27,21 @@ public class ToiletActivity : MonoBehaviour
         startYPosition = transform.localPosition.y;
         endYPosition = startYPosition - 0.00909f;
 
-        triggerAudio = GetComponent<AudioSource>();
+        AudioSource[] sources = GetComponents<AudioSource>();
+        if (sources.Length >= 2)
+        {
+            triggerAudio1 = sources[0];
+            triggerAudio2 = sources[1];
+        }
+
         soundTriggers = new ActivityDirector.playedSoundAtTrigger[3];
-        soundTriggers[0] = new ActivityDirector.playedSoundAtTrigger(0.25f, triggerAudio);
-        soundTriggers[1] = new ActivityDirector.playedSoundAtTrigger(0.50f, triggerAudio);
-        soundTriggers[2] = new ActivityDirector.playedSoundAtTrigger(0.75f, triggerAudio);
+        soundTriggers[0] = new ActivityDirector.playedSoundAtTrigger(0.25f, triggerAudio1);
+        soundTriggers[1] = new ActivityDirector.playedSoundAtTrigger(0.50f, triggerAudio1);
+        soundTriggers[2] = new ActivityDirector.playedSoundAtTrigger(0.75f, triggerAudio1);
     }
     private void PlayTriggerAudio()
     {
-        soundManager.PlaySound("ToiletSplash", triggerAudio);
+        soundManager.PlaySound("ToiletSplash", triggerAudio1);
     }
     public void ResetActivity()
     {
@@ -46,7 +53,7 @@ public class ToiletActivity : MonoBehaviour
         resetAnimBegin = true;
         resetProgress = 1.0f - lastActivityProgress;
         rotationXOnResetBegin = transform.localRotation.eulerAngles.x;
-        SoundManager.Instance.PlaySound("ToiletFlush", triggerAudio);
+        SoundManager.Instance.PlaySound("ToiletFlush", triggerAudio2);
     }
     public void ActivityTriggerStart()
     {
