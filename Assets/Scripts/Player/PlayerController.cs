@@ -397,8 +397,8 @@ public class PlayerController : MonoBehaviour
 		if (characterController != null)
 			characterController.enabled = false;
 
-		//if (flashlight != null)
-			//flashlight.enabled = false;
+		if (flashlight != null)
+			flashlight.enabled = false;
 
 		footsteps.Stop();
 		Debug.Log("player died");
