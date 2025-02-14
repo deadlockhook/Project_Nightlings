@@ -270,8 +270,12 @@ public class ActivityDirector : MonoBehaviour
         petdoorEventObject.eventTime.Deactivate(activeActivites);
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerEnd();
         petdoorActivityFinished = true;
-        deathTrigger.Activate(activeActivites);
-        deathCause = "Pet Door";
+
+        if (!deathTrigger.IsActive())
+        {
+            deathCause = "Pet Door";
+            deathTrigger.Activate(activeActivites);
+        }
     }
 
     private void OnBasementHatchActivityStart(int activityIndex)
@@ -297,8 +301,12 @@ public class ActivityDirector : MonoBehaviour
         basementHatchEventObject.eventTime.Deactivate(activeActivites);
         basementHatchEventObject.gameObj.GetComponent<BasementHatch>().ActivityTriggerEnd();
         basementHatchActivityFinished = true;
-        deathTrigger.Activate(activeActivites);
-        deathCause = "Basement Hatch";
+
+        if (!deathTrigger.IsActive())
+        {
+            deathCause = "Basement Hatch";
+            deathTrigger.Activate(activeActivites);
+        }
     }
 
     private void OnWindowActivityStart(int activityIndex)
@@ -326,8 +334,12 @@ public class ActivityDirector : MonoBehaviour
         activityObject.eventTime.Deactivate(activeActivites);
         activityObject.gameObj.GetComponent<WindowsActivity>().ActivityTriggerEnd();
         windowActivityFinished = true;
-        deathTrigger.Activate(activeActivites);
-        deathCause = "Window";
+
+        if (!deathTrigger.IsActive())
+        {
+            deathCause = "Window";
+            deathTrigger.Activate(activeActivites);
+        }
     }
 
     private void OnFireplaceActivityStart(int activityIndex)
@@ -351,8 +363,12 @@ public class ActivityDirector : MonoBehaviour
         fireplaceEventObject.eventTime.Deactivate(activeActivites);
         fireplaceEventObject.gameObj.GetComponent<FireplaceActivity>().ActivityTriggerEnd();
         fireplaceActivityFinished = true;
-        deathTrigger.Activate(activeActivites);
-        deathCause = "Fireplace";
+
+        if (!deathTrigger.IsActive())
+        {
+            deathCause = "Fireplace";
+            deathTrigger.Activate(activeActivites);
+        }
     }
 
     private void OnSkylightActivityStart(int activityIndex)
@@ -375,8 +391,12 @@ public class ActivityDirector : MonoBehaviour
         skylightEventObject.eventTime.Deactivate(activeActivites);
         skylightEventObject.gameObj.GetComponent<SkylightActivity>().ActivityTriggerEnd();
         skylightActivityFinished = true;
-        deathTrigger.Activate(activeActivites);
-        deathCause = "Skylight";
+
+        if (!deathTrigger.IsActive())
+        {
+            deathCause = "Skylight";
+            deathTrigger.Activate(activeActivites);
+        }
     }
 
     private void OnToiletActivityStart(int activityIndex)
@@ -399,8 +419,12 @@ public class ActivityDirector : MonoBehaviour
     {
         toiletEventObject.eventTime.Deactivate(activeActivites);
         toiletEventObject.gameObj.GetComponent<ToiletActivity>().ActivityTriggerEnd();
-        deathTrigger.Activate(activeActivites);
-        deathCause = "Toilet";
+
+        if (!deathTrigger.IsActive())
+        {
+            deathCause = "Toilet";
+            deathTrigger.Activate(activeActivites);
+        }
     }
 
     public void SpawnToys()

@@ -22,7 +22,7 @@ public class UIManager : MonoBehaviour
 
 	public PlayableDirector loseTimeline;
 
-    public enum UIState
+	public enum UIState
 	{
 		MainMenu,
 		PauseMenu,
@@ -76,7 +76,7 @@ public class UIManager : MonoBehaviour
 	{
 		activityDirector = FindObjectOfType<ActivityDirector>();
 
-        mainMenuUI = transform.Find("MainMenu").gameObject;
+		mainMenuUI = transform.Find("MainMenu").gameObject;
 		pauseMenuUI = transform.Find("Pause").gameObject;
 		gameplayUI = transform.Find("Gameplay").gameObject;
 		optionsUI = transform.Find("Options").gameObject;
@@ -455,16 +455,16 @@ public class UIManager : MonoBehaviour
 	}
 
 	public void NightButton(int night)
-    {
-        if (winUI.activeSelf || loseUI.activeSelf)
-            return;
-        isPaused = false;
-        ChangeUIState(UIState.Gameplay);
-        activityDirector.StartNight(night);
-    }
+	{
+		if (winUI.activeSelf || loseUI.activeSelf)
+			return;
+		isPaused = false;
+		ChangeUIState(UIState.Gameplay);
+		activityDirector.StartNight(night);
+	}
 
-    // OPTIONS SECTION
-    private GameObject mainCam;
+	// OPTIONS SECTION
+	private GameObject mainCam;
 	private Camera mainCamera;
 	private Volume volume;
 
@@ -561,7 +561,7 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-	// Testing atm, not final
+	// Testing atm, not final, only for jumpscare cause player is not singleton
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
 		if (loseTimeline == null) {
 			GameObject timelineObject = GameObject.Find("TimeLineData");
