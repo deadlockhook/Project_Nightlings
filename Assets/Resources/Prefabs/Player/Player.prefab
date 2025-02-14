@@ -536,7 +536,7 @@ MonoBehaviour:
   lookSensitivity: 0.1
   normalFOV: 75
   sprintFOV: 80
-  maxStamina: 100
+  maxStamina: 150
   staminaDrainRate: 10
   staminaRechargeRate: 8
   staminaCoolDown: 1
