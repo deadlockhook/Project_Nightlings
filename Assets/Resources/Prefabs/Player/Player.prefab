@@ -546,9 +546,9 @@ MonoBehaviour:
   headBobSpeed: 10
   flashlightGameObject: {fileID: 8916961133800133634}
   flashlight: {fileID: 9077902820812710601}
-  maxLightIntensity: 3
+  maxLightIntensity: 6
   minLightIntensity: 0
-  maxLightRange: 30
+  maxLightRange: 100
   minLightRange: 15
   drainRate: 0.1
 --- !u!114 &8345334328223838854
@@ -1108,7 +1108,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 2167
+    m_Bits: 2295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
