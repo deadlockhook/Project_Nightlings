@@ -445,7 +445,7 @@ GameObject:
   - component: {fileID: 9117308093046247896}
   - component: {fileID: 5703452597506913083}
   m_Layer: 0
-  m_Name: skylightTemp
+  m_Name: Skylight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
