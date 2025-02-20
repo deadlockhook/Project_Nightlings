@@ -256,7 +256,7 @@ public class PlayerController : MonoBehaviour
 		float effectiveRunSpeed = runSpeed;
 		if (isRecharging)
 		{
-			effectiveWalkSpeed *= 0.5f;
+			effectiveWalkSpeed *= 0.75f;
 			effectiveRunSpeed = effectiveWalkSpeed;
 		}
 
