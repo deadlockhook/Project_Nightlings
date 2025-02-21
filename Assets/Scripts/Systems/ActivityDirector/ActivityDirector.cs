@@ -251,6 +251,7 @@ public class ActivityDirector : MonoBehaviour
     {
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerStart();
         uiManager.ShowIcon(iconPrefab, petdoorEventObject.gameObj.transform.position, 0);
+        HintManager.Instance.DisplayGameHint(HintType.PetDoor);
     }
 
     private void OnPetDoorActivityUpdate(int activityIndex)
@@ -282,6 +283,7 @@ public class ActivityDirector : MonoBehaviour
     {
         basementHatchEventObject.gameObj.GetComponent<BasementHatch>().ActivityTriggerStart();
         uiManager.ShowIcon(iconPrefab, basementHatchEventObject.gameObj.transform.position, 1);
+        HintManager.Instance.DisplayGameHint(HintType.BasementHatch);
     }
 
     private void OnBasementHatchActivityUpdate(int activityIndex)
@@ -313,6 +315,7 @@ public class ActivityDirector : MonoBehaviour
     {
         windowEventObjects[activityIndex].gameObj.GetComponent<WindowsActivity>().ActivityTriggerStart();
         uiManager.ShowIcon(iconPrefab, windowEventObjects[activityIndex].gameObj.transform.position, activityIndex);
+        HintManager.Instance.DisplayGameHint(HintType.Window);
     }
 
     private void OnWindowActivityUpdate(int activityIndex)
@@ -346,6 +349,7 @@ public class ActivityDirector : MonoBehaviour
     {
         fireplaceEventObject.gameObj.GetComponent<FireplaceActivity>().ActivityTriggerStart(fireplaceEventObject.eventTime);
         uiManager.ShowIcon(iconPrefab, fireplaceEventObject.gameObj.transform.position, 2);
+        //HintManager.Instance.DisplayGameHint(HintType.Fireplace); Gonna make it trigger when about to go out
     }
 
     private void OnFireplaceActivityUpdate(int activityIndex)
@@ -375,6 +379,7 @@ public class ActivityDirector : MonoBehaviour
     {
         skylightEventObject.gameObj.GetComponent<SkylightActivity>().ActivityTriggerStart();
         uiManager.ShowIcon(iconPrefab, skylightEventObject.gameObj.transform.position, 3);
+        HintManager.Instance.DisplayGameHint(HintType.Skylight);
     }
     private void OnSkylightActivityUpdate(int activityIndex)
     {
@@ -403,6 +408,7 @@ public class ActivityDirector : MonoBehaviour
     {
         toiletEventObject.gameObj.GetComponent<ToiletActivity>().ActivityTriggerStart();
         uiManager.ShowIcon(iconPrefab, toiletEventObject.gameObj.transform.position, 4);
+        HintManager.Instance.DisplayGameHint(HintType.Toilet);
     }
 
     private void OnToiletActivityUpdate(int activityIndex)
