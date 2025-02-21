@@ -293,6 +293,7 @@ public class UIManager : MonoBehaviour
 	public void GoToMainMenu()
 	{
 		ChangeUIState(UIState.MainMenu);
+		SceneManager.LoadScene("MainMenu");
 	}
 
 	public void GoToOptions()
@@ -376,7 +377,7 @@ public class UIManager : MonoBehaviour
 	public void RestartScene()
 	{
 		Time.timeScale = 1f;
-		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+		SceneManager.LoadScene("Main");
 		ChangeUIStateWithLoading(UIState.Gameplay);
 		activeIcons.Clear();
 	}
