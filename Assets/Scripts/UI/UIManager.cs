@@ -74,7 +74,7 @@ public class UIManager : MonoBehaviour
 
 	private void Start()
 	{
-		activityDirector = FindObjectOfType<ActivityDirector>();
+		//activityDirector = FindObjectOfType<ActivityDirector>();
 
 		mainMenuUI = transform.Find("MainMenu").gameObject;
 		pauseMenuUI = transform.Find("Pause").gameObject;
@@ -374,7 +374,7 @@ public class UIManager : MonoBehaviour
 		return mainMenuUI.activeSelf;
 	}
 
-	public void RestartScene()
+	public void StartGame()
 	{
 		Time.timeScale = 1f;
 		SceneManager.LoadScene("Main");
@@ -459,9 +459,26 @@ public class UIManager : MonoBehaviour
 	{
 		if (winUI.activeSelf || loseUI.activeSelf)
 			return;
-		isPaused = false;
-		ChangeUIState(UIState.Gameplay);
-		activityDirector.StartNight(night);
+		StartCoroutine(LoadMainAndStartNight(night));
+	}
+
+	private IEnumerator LoadMainAndStartNight(int night)
+	{
+		Time.timeScale = 1f;
+		activeIcons.Clear();
+
+		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Main");
+		ChangeUIStateWithLoading(UIState.Gameplay);
+
+		yield return new WaitUntil(() => asyncLoad.isDone);
+
+		yield return null;
+
+		activityDirector = FindObjectOfType<ActivityDirector>();
+		if(activityDirector != null)
+		{
+			activityDirector.StartNight(night);
+		}
 	}
 
 	// OPTIONS SECTION
@@ -563,7 +580,8 @@ public class UIManager : MonoBehaviour
 	}
 
 	// Testing atm, not final, only for jumpscare cause player is not singleton
-	private void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+	{
 		if (loseTimeline == null) {
 			GameObject timelineObject = GameObject.Find("TimeLineData");
 			if (timelineObject != null)
