@@ -89,6 +89,15 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Crouch"",
+                    ""type"": ""Button"",
+                    ""id"": ""e6e98447-c146-49bf-bb4e-593e4e27ced1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -355,6 +364,17 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
                     ""action"": ""FlashlightToggle"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""959c4a97-b5fe-4cb7-aa3c-d06ffc02a10d"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -431,6 +451,7 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_FlashlightRecharge = m_Player.FindAction("FlashlightRecharge", throwIfNotFound: true);
         m_Player_FlashlightToggle = m_Player.FindAction("FlashlightToggle", throwIfNotFound: true);
+        m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -499,6 +520,7 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Sprint;
     private readonly InputAction m_Player_FlashlightRecharge;
     private readonly InputAction m_Player_FlashlightToggle;
+    private readonly InputAction m_Player_Crouch;
     public struct PlayerActions
     {
         private @PlayerControlActions m_Wrapper;
@@ -510,6 +532,7 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
         public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
         public InputAction @FlashlightRecharge => m_Wrapper.m_Player_FlashlightRecharge;
         public InputAction @FlashlightToggle => m_Wrapper.m_Player_FlashlightToggle;
+        public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -540,6 +563,9 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
             @FlashlightToggle.started += instance.OnFlashlightToggle;
             @FlashlightToggle.performed += instance.OnFlashlightToggle;
             @FlashlightToggle.canceled += instance.OnFlashlightToggle;
+            @Crouch.started += instance.OnCrouch;
+            @Crouch.performed += instance.OnCrouch;
+            @Crouch.canceled += instance.OnCrouch;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -565,6 +591,9 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
             @FlashlightToggle.started -= instance.OnFlashlightToggle;
             @FlashlightToggle.performed -= instance.OnFlashlightToggle;
             @FlashlightToggle.canceled -= instance.OnFlashlightToggle;
+            @Crouch.started -= instance.OnCrouch;
+            @Crouch.performed -= instance.OnCrouch;
+            @Crouch.canceled -= instance.OnCrouch;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -636,5 +665,6 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
         void OnSprint(InputAction.CallbackContext context);
         void OnFlashlightRecharge(InputAction.CallbackContext context);
         void OnFlashlightToggle(InputAction.CallbackContext context);
+        void OnCrouch(InputAction.CallbackContext context);
     }
 }
