@@ -385,4 +385,9 @@ public class PlayerController : MonoBehaviour
 	{
 		transform.localPosition = lastSpawnPosition;
 	}
+
+	public void EatCandy()
+	{
+		Debug.Log("Suger Rush");
+	}
 }
