@@ -175,6 +175,7 @@ public class UIManager : MonoBehaviour
 				nightPickerUI.SetActive(true);
 				break;
 			case UIState.NightInfo:
+				SoundManager.Instance.StopMusic();
 				Time.timeScale = 1f;
 				nightInfoUI.SetActive(true);
 				break;
@@ -456,31 +457,30 @@ public class UIManager : MonoBehaviour
 		clocks.ForEach(clock => clock.GetComponent<Clock>().ResetClock());
 	}
 
-    public void DylanButton(int night)
-    {
-        if (winUI.activeSelf || loseUI.activeSelf)
-            return;
-        StartCoroutine(LoadDylanScene(night));
-    }
+	public void DylanButton(int night)
+	{
+		if (winUI.activeSelf || loseUI.activeSelf)
+			return;
+		StartCoroutine(LoadDylanScene(night));
+	}
 
-    private IEnumerator LoadDylanScene(int night)
-    {
-        Time.timeScale = 1f;
-        activeIcons.Clear();
+	private IEnumerator LoadDylanScene(int night)
+	{
+		Time.timeScale = 1f;
+		activeIcons.Clear();
 
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Dylan_Test");
-        ChangeUIStateWithLoading(UIState.Gameplay);
+		SceneManager.LoadScene("Dylan_Test");
+		ChangeUIStateWithLoading(UIState.NightInfo);
 
-        yield return new WaitUntil(() => asyncLoad.isDone);
-        yield return null;
+		yield return null;
 
-        activityDirector = FindObjectOfType<ActivityDirector>();
-        yield return StartCoroutine(ShowNightInfo(night));
+		activityDirector = FindObjectOfType<ActivityDirector>();
+		yield return StartCoroutine(ShowNightInfo(night));
 
-        activityDirector.StartNight(night);
-    }
+		activityDirector.StartNight(night);
+	}
 
-    public void NightButton(int night)
+	public void NightButton(int night)
 	{
 		if (winUI.activeSelf || loseUI.activeSelf)
 			return;
@@ -492,10 +492,9 @@ public class UIManager : MonoBehaviour
 		Time.timeScale = 1f;
 		activeIcons.Clear();
 
-		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Main");
-		ChangeUIStateWithLoading(UIState.Gameplay);
+		SceneManager.LoadScene("Main");
+		ChangeUIStateWithLoading(UIState.NightInfo);
 
-		yield return new WaitUntil(() => asyncLoad.isDone);
 		yield return null;
 
 		activityDirector = FindObjectOfType<ActivityDirector>();
