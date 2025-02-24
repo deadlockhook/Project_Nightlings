@@ -568,9 +568,24 @@ public class UIManager : MonoBehaviour
 
 	private void SetupMainCamera()
 	{
-		mainCam = GameObject.Find("Main Camera");
-		mainCamera = mainCam.GetComponent<Camera>();
-		volume = mainCam.GetComponent<Volume>();
+		if (mainCam == null)
+		{
+			mainCam = GameObject.Find("Main Camera");
+			if (mainCam != null)
+			{
+				mainCamera = mainCam.GetComponent<Camera>();
+				volume = mainCam.GetComponent<Volume>();
+			}
+		}
+	}
+
+	private void ToggleEffect<T>(bool enabled) where T : VolumeComponent
+	{
+		SetupMainCamera();
+		if (volume != null && volume.profile.TryGet<T>(out T effect))
+		{
+			effect.active = enabled;
+		}
 	}
 
 	public void ToggleIconsEnabled(bool enabled)
@@ -588,69 +603,21 @@ public class UIManager : MonoBehaviour
 	{
 		enabled = motionBlurToggle.isOn;
 		motionBlurEnabled = enabled;
-		SetupMainCamera();
-		if (motionBlurEnabled)
-		{
-			volume.profile.TryGet(out MotionBlur motionBlur);
-			if (motionBlur != null)
-			{
-				motionBlur.active = true;
-			}
-		}
-		else
-		{
-			volume.profile.TryGet(out MotionBlur motionBlur);
-			if (motionBlur != null)
-			{
-				motionBlur.active = false;
-			}
-		}
+		ToggleEffect<MotionBlur>(enabled);
 	}
 
 	public void ToggleChromaticAbberation(bool enabled)
 	{
 		enabled = chromaticAbberationToggle.isOn;
 		chromaticAbberationEnabled = enabled;
-		SetupMainCamera();
-		if (chromaticAbberationEnabled)
-		{
-			volume.profile.TryGet(out ChromaticAberration chromatic);
-			if (chromatic != null)
-			{
-				chromatic.active = true;
-			}
-		}
-		else
-		{
-			volume.profile.TryGet(out ChromaticAberration chromatic);
-			if (chromatic != null)
-			{
-				chromatic.active = false;
-			}
-		}
+		ToggleEffect<ChromaticAberration>(enabled);
 	}
 
 	public void ToggleBloom(bool enabled)
 	{
 		enabled = bloomToggle.isOn;
 		bloomEnabled = enabled;
-		SetupMainCamera();
-		if (bloomEnabled)
-		{
-			volume.profile.TryGet(out Bloom bloom);
-			if (bloom != null)
-			{
-				bloom.active = true;
-			}
-		}
-		else
-		{
-			volume.profile.TryGet(out Bloom bloom);
-			if (bloom != null)
-			{
-				bloom.active = false;
-			}
-		}
+		ToggleEffect<Bloom>(enabled);
 	}
 
 	// This is for the jumpscare atm, need to find a better way to do this
