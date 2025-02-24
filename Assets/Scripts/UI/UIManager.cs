@@ -102,7 +102,7 @@ public class UIManager : MonoBehaviour
 		ChangeUIState(UIState.MainMenu);
 	}
 
-	public void ChangeUIState(UIState state)
+	private void DeactivateAllScreens()
 	{
 		mainMenuUI.SetActive(false);
 		pauseMenuUI.SetActive(false);
@@ -114,7 +114,11 @@ public class UIManager : MonoBehaviour
 		loseUI.SetActive(false);
 		if (nightPickerUI != null) nightPickerUI.SetActive(false);
 		if (nightInfoUI != null) nightInfoUI.SetActive(false);
+	}
 
+	public void ChangeUIState(UIState state)
+	{
+		DeactivateAllScreens();
 		switch (state)
 		{
 			case UIState.MainMenu:
@@ -190,21 +194,14 @@ public class UIManager : MonoBehaviour
 		return null;
 	}
 
-	private void Update()
+	private void HandleEscapeInput()
 	{
-		if (blackScreen != null && blackScreen.activeSelf)
-			return;
-
-		if (winUI.activeSelf || loseUI.activeSelf)
-			return;
-
 		bool canUseEscape = true;
 		if ((loadingScreen != null && loadingScreen.activeSelf) ||
 			(nightInfoUI != null && nightInfoUI.activeSelf))
 		{
 			canUseEscape = false;
 		}
-
 		if (Input.GetKeyDown(KeyCode.Escape) && canUseEscape)
 		{
 			if (optionsUI.activeSelf || soundOptionsUI.activeSelf || videoOptionsUI.activeSelf)
@@ -227,6 +224,17 @@ public class UIManager : MonoBehaviour
 				}
 			}
 		}
+	}
+
+	private void Update()
+	{
+		if (blackScreen != null && blackScreen.activeSelf)
+			return;
+
+		if (winUI.activeSelf || loseUI.activeSelf)
+			return;
+
+		HandleEscapeInput();
 
 		if (!iconsEnabled)
 		{
@@ -534,6 +542,14 @@ public class UIManager : MonoBehaviour
 	private bool motionBlurEnabled = false;
 	private bool chromaticAbberationEnabled = false;
 	private bool bloomEnabled = false;
+
+	private void SetupMainCamera()
+	{
+		mainCam = GameObject.Find("Main Camera");
+		mainCamera = mainCam.GetComponent<Camera>();
+		volume = mainCam.GetComponent<Volume>();
+	}
+
 	public void ToggleIconsEnabled(bool enabled)
 	{
 		enabled = audioVisualToggle.isOn;
@@ -549,10 +565,7 @@ public class UIManager : MonoBehaviour
 	{
 		enabled = motionBlurToggle.isOn;
 		motionBlurEnabled = enabled;
-		mainCam = GameObject.Find("Main Camera");
-		mainCamera = mainCam.GetComponent<Camera>();
-		volume = mainCam.GetComponent<Volume>();
-
+		SetupMainCamera();
 		if (motionBlurEnabled)
 		{
 			volume.profile.TryGet(out MotionBlur motionBlur);
@@ -575,10 +588,7 @@ public class UIManager : MonoBehaviour
 	{
 		enabled = chromaticAbberationToggle.isOn;
 		chromaticAbberationEnabled = enabled;
-		mainCam = GameObject.Find("Main Camera");
-		mainCamera = mainCam.GetComponent<Camera>();
-		volume = mainCam.GetComponent<Volume>();
-
+		SetupMainCamera();
 		if (chromaticAbberationEnabled)
 		{
 			volume.profile.TryGet(out ChromaticAberration chromatic);
@@ -601,10 +611,7 @@ public class UIManager : MonoBehaviour
 	{
 		enabled = bloomToggle.isOn;
 		bloomEnabled = enabled;
-		mainCam = GameObject.Find("Main Camera");
-		mainCamera = mainCam.GetComponent<Camera>();
-		volume = mainCam.GetComponent<Volume>();
-
+		SetupMainCamera();
 		if (bloomEnabled)
 		{
 			volume.profile.TryGet(out Bloom bloom);
