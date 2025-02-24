@@ -456,7 +456,31 @@ public class UIManager : MonoBehaviour
 		clocks.ForEach(clock => clock.GetComponent<Clock>().ResetClock());
 	}
 
-	public void NightButton(int night)
+    public void DylanButton(int night)
+    {
+        if (winUI.activeSelf || loseUI.activeSelf)
+            return;
+        StartCoroutine(LoadDylanScene(night));
+    }
+
+    private IEnumerator LoadDylanScene(int night)
+    {
+        Time.timeScale = 1f;
+        activeIcons.Clear();
+
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Dylan_Test");
+        ChangeUIStateWithLoading(UIState.Gameplay);
+
+        yield return new WaitUntil(() => asyncLoad.isDone);
+        yield return null;
+
+        activityDirector = FindObjectOfType<ActivityDirector>();
+        yield return StartCoroutine(ShowNightInfo(night));
+
+        activityDirector.StartNight(night);
+    }
+
+    public void NightButton(int night)
 	{
 		if (winUI.activeSelf || loseUI.activeSelf)
 			return;
