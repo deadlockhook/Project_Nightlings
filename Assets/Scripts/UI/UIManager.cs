@@ -6,7 +6,6 @@ using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
-using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
 using TMPro;
 using UnityEngine.Playables;
 
@@ -14,7 +13,6 @@ public class UIManager : MonoBehaviour
 {
 	public static UIManager Instance { get; private set; }
 	public GameObject bellIconPrefab;
-	//public Transform worldSpaceCanvas;
 	private Dictionary<int, GameObject> activeIcons = new Dictionary<int, GameObject>();
 	private Stack<UIState> uiStateHistory = new Stack<UIState>();
 	private List<GameObject> clocks;
@@ -31,7 +29,9 @@ public class UIManager : MonoBehaviour
 		SoundOptions,
 		VideoOptions,
 		Win,
-		Lose
+		Lose,
+		NightPicker,
+		NightInfo
 	}
 
 	[Header("UI Screens")]
@@ -53,12 +53,15 @@ public class UIManager : MonoBehaviour
 	public GameObject blackScreen;
 	public TMP_Text deathCauseText;
 
+	[Header("Night Picker and Info UI")]
+	public GameObject nightPickerUI;
+	public GameObject nightInfoUI;
+
 	private bool isPaused = false;
 	private Toggle audioVisualToggle;
 	private Toggle motionBlurToggle;
 	private Toggle chromaticAbberationToggle;
 	private Toggle bloomToggle;
-	private Color previousSceneColor;
 
 	//Singleton
 	private void Awake()
@@ -74,8 +77,9 @@ public class UIManager : MonoBehaviour
 
 	private void Start()
 	{
-		//activityDirector = FindObjectOfType<ActivityDirector>();
+		// This is cursed code really...
 
+		//activityDirector = FindObjectOfType<ActivityDirector>();
 		mainMenuUI = transform.Find("MainMenu").gameObject;
 		pauseMenuUI = transform.Find("Pause").gameObject;
 		gameplayUI = transform.Find("Gameplay").gameObject;
@@ -84,6 +88,8 @@ public class UIManager : MonoBehaviour
 		videoOptionsUI = transform.Find("VideoOptions").gameObject;
 		winUI = transform.Find("Win").gameObject;
 		loseUI = transform.Find("Lose").gameObject;
+		nightPickerUI = transform.Find("NightPicker").gameObject;
+		nightInfoUI = transform.Find("NightInfo").gameObject;
 
 		audioVisualToggle = soundOptionsUI.transform.Find("AudioVisualToggle").GetComponent<Toggle>();
 		motionBlurToggle = videoOptionsUI.transform.Find("MotionBlurToggle").GetComponent<Toggle>();
@@ -95,25 +101,9 @@ public class UIManager : MonoBehaviour
 
 		ChangeUIState(UIState.MainMenu);
 	}
-	private void CapturePreviousUIImage(Image uiImage)
-	{
-		if (uiImage != null)
-		{
-			previousSceneColor = uiImage.color;
-		}
-	}
 
 	public void ChangeUIState(UIState state)
 	{
-		if (state == UIState.Options || state == UIState.SoundOptions|| state == UIState.VideoOptions)
-		{
-			GameObject activeUI = GetActiveUIPanel();
-			if (activeUI != null)
-			{
-				CapturePreviousUIImage(activeUI.GetComponent<Image>());
-			}
-		}
-
 		mainMenuUI.SetActive(false);
 		pauseMenuUI.SetActive(false);
 		gameplayUI.SetActive(false);
@@ -122,6 +112,8 @@ public class UIManager : MonoBehaviour
 		videoOptionsUI.SetActive(false);
 		winUI.SetActive(false);
 		loseUI.SetActive(false);
+		if (nightPickerUI != null) nightPickerUI.SetActive(false);
+		if (nightInfoUI != null) nightInfoUI.SetActive(false);
 
 		switch (state)
 		{
@@ -152,19 +144,16 @@ public class UIManager : MonoBehaviour
 				Time.timeScale = 0f;
 				optionsUI.SetActive(true);
 				Cursor.lockState = CursorLockMode.None;
-				ApplyPreviousSceneColor();
 				break;
 			case UIState.SoundOptions:
 				Time.timeScale = 0f;
 				soundOptionsUI.SetActive(true);
 				Cursor.lockState = CursorLockMode.None;
-				ApplyPreviousSceneColor();
 				break;
 			case UIState.VideoOptions:
 				Time.timeScale = 0f;
 				videoOptionsUI.SetActive(true);
 				Cursor.lockState = CursorLockMode.None;
-				ApplyPreviousSceneColor();
 				break;
 			case UIState.Win:
 				Cursor.lockState = CursorLockMode.None;
@@ -175,6 +164,15 @@ public class UIManager : MonoBehaviour
 				Cursor.lockState = CursorLockMode.None;
 				Time.timeScale = 0f;
 				loseUI.SetActive(true);
+				break;
+			case UIState.NightPicker:
+				Cursor.lockState = CursorLockMode.None;
+				Time.timeScale = 0f;
+				nightPickerUI.SetActive(true);
+				break;
+			case UIState.NightInfo:
+				Time.timeScale = 1f;
+				nightInfoUI.SetActive(true);
 				break;
 		}
 		uiStateHistory.Push(state);
@@ -187,27 +185,9 @@ public class UIManager : MonoBehaviour
 		if (gameplayUI.activeSelf) return gameplayUI;
 		if (winUI.activeSelf) return winUI;
 		if (loseUI.activeSelf) return loseUI;
+		if (nightPickerUI != null && nightPickerUI.activeSelf) return nightPickerUI;
+		if (nightInfoUI != null && nightInfoUI.activeSelf) return nightInfoUI;
 		return null;
-	}
-
-	private void ApplyPreviousSceneColor()
-	{
-		Image optionsImage = optionsUI.GetComponent<Image>();
-		Image soundOptionsImage = soundOptionsUI.GetComponent<Image>();
-		Image videoOptionsImage = videoOptionsUI.GetComponent<Image>();
-
-		if (optionsImage != null)
-		{
-			optionsImage.color = previousSceneColor;
-		}
-		if (soundOptionsImage != null)
-		{
-			soundOptionsImage.color = previousSceneColor;
-		}
-		if (videoOptionsImage != null)
-		{
-			videoOptionsImage.color = previousSceneColor;
-		}
 	}
 
 	private void Update()
@@ -218,11 +198,22 @@ public class UIManager : MonoBehaviour
 		if (winUI.activeSelf || loseUI.activeSelf)
 			return;
 
-		if (Input.GetKeyDown(KeyCode.Escape))
+		bool canUseEscape = true;
+		if ((loadingScreen != null && loadingScreen.activeSelf) ||
+			(nightInfoUI != null && nightInfoUI.activeSelf))
+		{
+			canUseEscape = false;
+		}
+
+		if (Input.GetKeyDown(KeyCode.Escape) && canUseEscape)
 		{
 			if (optionsUI.activeSelf || soundOptionsUI.activeSelf || videoOptionsUI.activeSelf)
 			{
 				OptionsBack();
+			}
+			else if (nightPickerUI != null && nightPickerUI.activeSelf)
+			{
+				ChangeUIState(UIState.MainMenu);
 			}
 			else if (!mainMenuUI.activeSelf)
 			{
@@ -271,6 +262,11 @@ public class UIManager : MonoBehaviour
 		{
 			ChangeUIState(UIState.MainMenu);
 		}
+	}
+
+	public void BackFromNightPicker()
+	{
+		ChangeUIState(UIState.MainMenu);
 	}
 
 	public void PauseGame()
@@ -333,7 +329,7 @@ public class UIManager : MonoBehaviour
 	{
 		if (loseTimeline != null)
 		{
-			Debug.Log("Playing lose timeline");
+			Debug.Log("JUMPSCARE");
 			loseTimeline.Play();
 			yield return new WaitForSecondsRealtime((float)loseTimeline.duration);
 		}
@@ -344,13 +340,13 @@ public class UIManager : MonoBehaviour
 
 		if (blackScreen != null)
 			blackScreen.SetActive(true);
-			gameplayUI.SetActive(false);
+		gameplayUI.SetActive(false);
 
 		yield return new WaitForSecondsRealtime(1f);
 
 		if (blackScreen != null)
 			blackScreen.SetActive(false);
-			loseUI.SetActive(true);
+		loseUI.SetActive(true);
 
 		if (deathCauseText != null)
 			deathCauseText.text = "You were killed by: " + deathCause;
@@ -376,10 +372,7 @@ public class UIManager : MonoBehaviour
 
 	public void StartGame()
 	{
-		Time.timeScale = 1f;
-		SceneManager.LoadScene("Main");
-		ChangeUIStateWithLoading(UIState.Gameplay);
-		activeIcons.Clear();
+		ChangeUIState(UIState.NightPicker);
 	}
 
 	public void ShowIcon(GameObject iconPrefab, Vector3 position, int eventIndex)
@@ -459,10 +452,10 @@ public class UIManager : MonoBehaviour
 	{
 		if (winUI.activeSelf || loseUI.activeSelf)
 			return;
-		StartCoroutine(LoadMainAndStartNight(night));
+		StartCoroutine(LoadMainAndShowNightInfo(night));
 	}
 
-	private IEnumerator LoadMainAndStartNight(int night)
+	private IEnumerator LoadMainAndShowNightInfo(int night)
 	{
 		Time.timeScale = 1f;
 		activeIcons.Clear();
@@ -471,14 +464,65 @@ public class UIManager : MonoBehaviour
 		ChangeUIStateWithLoading(UIState.Gameplay);
 
 		yield return new WaitUntil(() => asyncLoad.isDone);
-
 		yield return null;
 
 		activityDirector = FindObjectOfType<ActivityDirector>();
-		if(activityDirector != null)
+		yield return StartCoroutine(ShowNightInfo(night));
+
+		activityDirector.StartNight(night);
+	}
+
+	private IEnumerator ShowNightInfo(int night)
+	{
+		ChangeUIState(UIState.NightInfo);
+
+		PlayerController player = FindObjectOfType<PlayerController>();
+		if (player != null)
 		{
-			activityDirector.StartNight(night);
+			player.enabled = false;
 		}
+
+		TMP_Text nightInfoText = nightInfoUI.GetComponentInChildren<TMP_Text>();
+		switch (night)
+		{
+			case 0:
+				nightInfoText.text = "Friday, 12:00AM";
+				break;
+			case 1:
+				nightInfoText.text = "Saturday, 12:00AM";
+				break;
+			case 2:
+				nightInfoText.text = "Sunday, 12:00AM";
+				break;
+			default:
+				nightInfoText.text = "Bro what night are you on?";
+				break;
+		}
+
+		CanvasGroup cg = nightInfoUI.GetComponent<CanvasGroup>();
+		if (cg == null)
+			cg = nightInfoUI.AddComponent<CanvasGroup>();
+		cg.alpha = 1f;
+
+		yield return new WaitForSeconds(5f);
+
+		float fadeDuration = 2f;
+		float timer = 0f;
+		while (timer < fadeDuration)
+		{
+			timer += Time.deltaTime;
+			cg.alpha = Mathf.Lerp(1f, 0f, timer / fadeDuration);
+			yield return null;
+		}
+
+		nightInfoUI.SetActive(false);
+
+		if (player != null)
+		{
+			player.enabled = true;
+		}
+
+		ChangeUIState(UIState.Gameplay);
 	}
 
 	// OPTIONS SECTION
@@ -579,21 +623,24 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-	// Testing atm, not final, only for jumpscare cause player is not singleton
+	// This is for the jumpscare atm, need to find a better way to do this
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
-		if (loseTimeline == null) {
+		if (loseTimeline == null)
+		{
 			GameObject timelineObject = GameObject.Find("TimeLineData");
 			if (timelineObject != null)
 				loseTimeline = timelineObject.GetComponent<PlayableDirector>();
 		}
 	}
 
-	private void OnEnable() {
+	private void OnEnable()
+	{
 		SceneManager.sceneLoaded += OnSceneLoaded;
 	}
 
-	private void OnDisable() {
+	private void OnDisable()
+	{
 		SceneManager.sceneLoaded -= OnSceneLoaded;
 	}
 }
