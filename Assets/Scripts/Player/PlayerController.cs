@@ -155,7 +155,8 @@ public class PlayerController : MonoBehaviour
 	// flashlight toggle on/off
 	private void ProcessFlashlightToggle()
 	{
-		if (playerControlActions.Player.FlashlightToggle.triggered && !isRecharging)
+		var controls = playerControlActions.Player;
+		if (controls.FlashlightToggle.triggered && !isRecharging)
 		{
 			SoundManager.Instance.PlaySound("Flashlight");
 			flashlightEnabled = !flashlightEnabled;
@@ -208,7 +209,7 @@ public class PlayerController : MonoBehaviour
 	private Vector3 GetInputDirection()
 	{
 		Vector3 dir = transform.right * movementInput.x + transform.forward * movementInput.y;
-		if (dir.magnitude > 1f)
+		if (dir.sqrMagnitude > 1f)
 			dir.Normalize();
 		return dir;
 	}
@@ -220,9 +221,7 @@ public class PlayerController : MonoBehaviour
 		{
 			isRunning = true;
 			isWalking = false;
-			currentStamina -= staminaDrainRate * Time.deltaTime;
-			if (currentStamina < 0)
-				currentStamina = 0;
+			currentStamina = Mathf.Max(currentStamina - staminaDrainRate * Time.deltaTime, 0f);
 		}
 		else
 		{
