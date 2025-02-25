@@ -8,8 +8,8 @@ public class PetDoorActivity : MonoBehaviour
     private bool resetAnimBegin = false;
     private float resetProgress = 0.0f;
     private float rotationXOnResetBegin = 0.0f;
-    private bool activityFinished = false;
-    private bool inActivity = false;
+    public bool activityFinished = false;
+    public bool inActivity = false;
 
     private SoundManager soundManager;
     private AudioSource triggerAudio1;
@@ -33,17 +33,6 @@ public class PetDoorActivity : MonoBehaviour
     private void PlayTriggerAudio()
     {
         soundManager.PlaySound("DoorBell", triggerAudio1);
-    }
-    private void OnTriggerEnter(Collider collision)
-    {
-        if (activityFinished || !inActivity)
-            return;
-
-        if (collision.gameObject.tag == "Interactable_Toy")
-        {
-            ResetActivity();
-            Destroy(collision.gameObject);
-        }
     }
 
     public void ResetActivity()

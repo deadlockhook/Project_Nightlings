@@ -128,8 +128,8 @@ public class ActivityDirector : MonoBehaviour
     private List<timedActivity> activeActivites;
 
 
-    private AudioSource rainAndThunder;
-    private Vector3 rainAndThunderInitialPosition;
+   // private AudioSource rainAndThunder;
+   // private Vector3 rainAndThunderInitialPosition;
 
     public List<GameObject> toyPrefabs;
     [SerializeField] private int minToySpawnLocations = 12;
@@ -193,8 +193,8 @@ public class ActivityDirector : MonoBehaviour
 
     void Start()
     {
-        rainAndThunder = GameObject.Find("DynamicAimbienceSource").GetComponent<AudioSource>();
-        rainAndThunderInitialPosition = rainAndThunder.transform.position;
+        //rainAndThunder = GameObject.Find("DynamicAimbienceSource").GetComponent<AudioSource>();
+       // rainAndThunderInitialPosition = rainAndThunder.transform.position;
 
         uiManager = FindObjectOfType<UIManager>();
         playerController = FindObjectOfType<PlayerController>();
@@ -584,58 +584,28 @@ public class ActivityDirector : MonoBehaviour
 
         foreach (var window in windowEventObjects)
         {
-            //  if (window.eventTime.IsActive())
-            //   {
-            if (Physics.Raycast(playerController.transform.position, window.gameObj.transform.position - playerController.transform.position, out RaycastHit hit_a, 1000))
-            {
-                if (hit_a.collider.gameObject == window.gameObj && hit_a.distance < last_distance)
-                {
-                    last_distance = hit_a.distance;
-                    closestOpeningPoint = window.gameObj;
-                    break;
-                }
-            }
-            //  }
+            AudioSource audioSource = window.gameObj.GetComponent<AudioSource>();
+
+            if (window.eventTime.IsActive())
+                audioSource.volume =  soundManager.musicVolume;
+            else
+                audioSource.volume = 0.5f * soundManager.musicVolume;
+
         }
 
-        // if (petdoorEventObject.eventTime.IsActive())
-        // {
-        //compare with a trigger collider instead of petdoor
-        if (Physics.Raycast(playerController.transform.position, petdoorEventObject.gameObj.transform.position - playerController.transform.position, out RaycastHit hit_b, 1000))
-        {
-            if (hit_b.collider.gameObject == petdoorEventObject.gameObj && hit_b.distance < last_distance)
-            {
-                last_distance = hit_b.distance;
-                closestOpeningPoint = petdoorEventObject.gameObj;
-            }
-        }
-        //  }
+        AudioSource audioSourcePetDoor = petdoorEventObject.gameObj.GetComponent<AudioSource>();
 
+        if (petdoorEventObject.eventTime.IsActive())
+            audioSourcePetDoor.volume = soundManager.musicVolume;
+        else
+            audioSourcePetDoor.volume = 0.5f * soundManager.musicVolume;
 
-        // if (skylightEventObject.eventTime.IsActive())
-        // {
-        if (Physics.Raycast(playerController.transform.position, skylightEventObject.gameObj.transform.position - playerController.transform.position, out RaycastHit hit_c, 1000))
-        {
-            if (hit_c.collider.gameObject == skylightEventObject.gameObj && hit_c.distance < last_distance)
-            {
-                last_distance = hit_c.distance;
-                closestOpeningPoint = skylightEventObject.gameObj;
-            }
-        }
-   // }
+        AudioSource audioSourceSkylight = skylightEventObject.gameObj.GetComponent<AudioSource>();
 
-        if (closestOpeningPoint != null)
-        {
-            //set it to only the last closest point to avoid spatial blend issues
-            rainAndThunder.transform.position = closestOpeningPoint.transform.position;
-            rainAndThunder.spatialBlend = 1.0f;
-        }
-       // else
-       // {
-       //     rainAndThunder.transform.position = rainAndThunderInitialPosition;
-       //     rainAndThunder.spatialBlend = 1.0f;
-
-      //  }
+        if (skylightEventObject.eventTime.IsActive())
+            audioSourceSkylight.volume = soundManager.musicVolume;
+        else
+            audioSourceSkylight.volume = 0.5f * soundManager.musicVolume;
 
     }
 
