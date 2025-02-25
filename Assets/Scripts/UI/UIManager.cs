@@ -537,9 +537,9 @@ public class UIManager : MonoBehaviour
 			cg = nightInfoUI.AddComponent<CanvasGroup>();
 		cg.alpha = 1f;
 
-		yield return new WaitForSeconds(5f);
+		yield return new WaitForSeconds(1f);
 
-		float fadeDuration = 2f;
+		float fadeDuration = 0.25f;
 		float timer = 0f;
 		while (timer < fadeDuration)
 		{
