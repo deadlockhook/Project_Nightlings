@@ -91,6 +91,11 @@ public class FireplaceActivity : MonoBehaviour
                 PlayTriggerAudio();
         }
 
+        if (activityProgress >= 0.5f)
+        {
+            HintManager.Instance.DisplayGameHint(HintType.Fireplace);
+        }
+
         this.GetComponent<Renderer>().material.color = Color.Lerp(Color.white, Color.red, activityProgress);
 
         return false;

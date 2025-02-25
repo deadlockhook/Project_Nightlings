@@ -349,7 +349,6 @@ public class ActivityDirector : MonoBehaviour
     {
         fireplaceEventObject.gameObj.GetComponent<FireplaceActivity>().ActivityTriggerStart(fireplaceEventObject.eventTime);
         uiManager.ShowIcon(iconPrefab, fireplaceEventObject.gameObj.transform.position, 2);
-        //HintManager.Instance.DisplayGameHint(HintType.Fireplace); Gonna make it trigger when about to go out
     }
 
     private void OnFireplaceActivityUpdate(int activityIndex)
