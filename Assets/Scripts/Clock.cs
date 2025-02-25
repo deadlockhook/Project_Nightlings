@@ -6,6 +6,13 @@ public class Clock : MonoBehaviour
     public TextMeshProUGUI timeDisplay;
     public float timeMultiplier = 1f;
     private float timeElapsed = 0f;
+    private AudioSource audioSource;
+
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+        SoundManager.Instance.PlaySound("Clock", audioSource);
+    }
 
     void Update()
     {

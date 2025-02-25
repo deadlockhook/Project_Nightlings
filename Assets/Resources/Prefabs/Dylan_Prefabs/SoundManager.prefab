@@ -86,6 +86,16 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 61c01fe7454e2664f80094188f2dda80, type: 3}
   - name: Clock
     clip: {fileID: 8300000, guid: cdc23aded6b4e284bb0066c9a7da3b27, type: 3}
+  - name: TinToyDrop
+    clip: {fileID: 8300000, guid: 145d1aa26e2c66c41b040bd880a94bda, type: 3}
+  - name: PlasticToyDrop
+    clip: {fileID: 8300000, guid: a42e25043c6762c429e6213656bb19e5, type: 3}
+  - name: WoodToyDrop
+    clip: {fileID: 8300000, guid: f9f14387624c9fa4f9d20254257925fa, type: 3}
+  - name: BasementShut
+    clip: {fileID: 8300000, guid: ab7771a43632c0c49a8dbad73aa20b31, type: 3}
+  - name: WindowShut
+    clip: {fileID: 8300000, guid: ee0bcb89643713844a47506e0239cd57, type: 3}
   masterVolume: 1
   sfxVolume: 1
   musicVolume: 1

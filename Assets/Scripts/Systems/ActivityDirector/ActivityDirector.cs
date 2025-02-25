@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
 
 public class ActivityDirector : MonoBehaviour
@@ -75,6 +76,8 @@ public class ActivityDirector : MonoBehaviour
             activites.Add(this);
             active = true;
 
+            currentTime = 0;
+
             if (actionStart != null)
                 actionStart(triggerIndex);
         }
@@ -148,14 +151,14 @@ public class ActivityDirector : MonoBehaviour
     private float triggerSkylightActivityLogicRangeEnd = 80000.0f;
     private float skylightActivityTimeLimit = 20000.0f;
 
-    //private float toiletActivityLogicRangeStart = 50000.0f;
-    //private float toiletActivityLogicRangeEnd = 60000.0f;
-    // private float toiletActivityTimeLimit = 25000.0f;
+    private float toiletActivityLogicRangeStart = 50000.0f;
+    private float toiletActivityLogicRangeEnd = 60000.0f;
+    private float toiletActivityTimeLimit = 25000.0f;
 
 
-    private float toiletActivityLogicRangeStart = 500.0f;
-    private float toiletActivityLogicRangeEnd = 600.0f;
-    private float toiletActivityTimeLimit = 15000.0f;
+    //  private float toiletActivityLogicRangeStart = 500.0f;
+    //  private float toiletActivityLogicRangeEnd = 600.0f;
+    //  private float toiletActivityTimeLimit = 15000.0f;
 
     private List<activityTrigger> windowEventObjects;
     private activityTrigger petdoorEventObject;
@@ -196,8 +199,8 @@ public class ActivityDirector : MonoBehaviour
 
         nightActivity = new timedActivity[3];
         //  420000
-        nightActivity[0] = new timedActivity(1000, 0, OnNightStart, OnProgressToNextNight, null);
-        nightActivity[1] = new timedActivity(1000, 1, OnNightStart, OnProgressToNextNight, null);
+        nightActivity[0] = new timedActivity(420000, 0, OnNightStart, OnProgressToNextNight, null);
+        nightActivity[1] = new timedActivity(420000, 1, OnNightStart, OnProgressToNextNight, null);
         nightActivity[2] = new timedActivity(420000, 2, OnNightStart, OnWin, null);
 
         deathTrigger = new timedActivity(10000, 0, null, OnDeath, null);
@@ -249,6 +252,7 @@ public class ActivityDirector : MonoBehaviour
     {
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerStart();
         uiManager.ShowIcon(iconPrefab, petdoorEventObject.gameObj.transform.position, 0);
+        HintManager.Instance.DisplayGameHint(HintType.PetDoor);
     }
 
     private void OnPetDoorActivityUpdate(int activityIndex)
@@ -268,14 +272,19 @@ public class ActivityDirector : MonoBehaviour
         petdoorEventObject.eventTime.Deactivate(activeActivites);
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerEnd();
         petdoorActivityFinished = true;
-        deathTrigger.Activate(activeActivites);
-        deathCause = "Pet Door";
+
+        if (!deathTrigger.IsActive())
+        {
+            deathCause = "Pet Door";
+            deathTrigger.Activate(activeActivites);
+        }
     }
 
     private void OnBasementHatchActivityStart(int activityIndex)
     {
         basementHatchEventObject.gameObj.GetComponent<BasementHatch>().ActivityTriggerStart();
         uiManager.ShowIcon(iconPrefab, basementHatchEventObject.gameObj.transform.position, 1);
+        HintManager.Instance.DisplayGameHint(HintType.BasementHatch);
     }
 
     private void OnBasementHatchActivityUpdate(int activityIndex)
@@ -295,14 +304,19 @@ public class ActivityDirector : MonoBehaviour
         basementHatchEventObject.eventTime.Deactivate(activeActivites);
         basementHatchEventObject.gameObj.GetComponent<BasementHatch>().ActivityTriggerEnd();
         basementHatchActivityFinished = true;
-        deathTrigger.Activate(activeActivites);
-        deathCause = "Basement Hatch";
+
+        if (!deathTrigger.IsActive())
+        {
+            deathCause = "Basement Hatch";
+            deathTrigger.Activate(activeActivites);
+        }
     }
 
     private void OnWindowActivityStart(int activityIndex)
     {
         windowEventObjects[activityIndex].gameObj.GetComponent<WindowsActivity>().ActivityTriggerStart();
         uiManager.ShowIcon(iconPrefab, windowEventObjects[activityIndex].gameObj.transform.position, activityIndex);
+        HintManager.Instance.DisplayGameHint(HintType.Window);
     }
 
     private void OnWindowActivityUpdate(int activityIndex)
@@ -324,8 +338,12 @@ public class ActivityDirector : MonoBehaviour
         activityObject.eventTime.Deactivate(activeActivites);
         activityObject.gameObj.GetComponent<WindowsActivity>().ActivityTriggerEnd();
         windowActivityFinished = true;
-        deathTrigger.Activate(activeActivites);
-        deathCause = "Window";
+
+        if (!deathTrigger.IsActive())
+        {
+            deathCause = "Window";
+            deathTrigger.Activate(activeActivites);
+        }
     }
 
     private void OnFireplaceActivityStart(int activityIndex)
@@ -349,14 +367,19 @@ public class ActivityDirector : MonoBehaviour
         fireplaceEventObject.eventTime.Deactivate(activeActivites);
         fireplaceEventObject.gameObj.GetComponent<FireplaceActivity>().ActivityTriggerEnd();
         fireplaceActivityFinished = true;
-        deathTrigger.Activate(activeActivites);
-        deathCause = "Fireplace";
+
+        if (!deathTrigger.IsActive())
+        {
+            deathCause = "Fireplace";
+            deathTrigger.Activate(activeActivites);
+        }
     }
 
     private void OnSkylightActivityStart(int activityIndex)
     {
         skylightEventObject.gameObj.GetComponent<SkylightActivity>().ActivityTriggerStart();
         uiManager.ShowIcon(iconPrefab, skylightEventObject.gameObj.transform.position, 3);
+        HintManager.Instance.DisplayGameHint(HintType.Skylight);
     }
     private void OnSkylightActivityUpdate(int activityIndex)
     {
@@ -373,14 +396,19 @@ public class ActivityDirector : MonoBehaviour
         skylightEventObject.eventTime.Deactivate(activeActivites);
         skylightEventObject.gameObj.GetComponent<SkylightActivity>().ActivityTriggerEnd();
         skylightActivityFinished = true;
-        deathTrigger.Activate(activeActivites);
-        deathCause = "Skylight";
+
+        if (!deathTrigger.IsActive())
+        {
+            deathCause = "Skylight";
+            deathTrigger.Activate(activeActivites);
+        }
     }
 
     private void OnToiletActivityStart(int activityIndex)
     {
         toiletEventObject.gameObj.GetComponent<ToiletActivity>().ActivityTriggerStart();
         uiManager.ShowIcon(iconPrefab, toiletEventObject.gameObj.transform.position, 4);
+        HintManager.Instance.DisplayGameHint(HintType.Toilet);
     }
 
     private void OnToiletActivityUpdate(int activityIndex)
@@ -397,8 +425,12 @@ public class ActivityDirector : MonoBehaviour
     {
         toiletEventObject.eventTime.Deactivate(activeActivites);
         toiletEventObject.gameObj.GetComponent<ToiletActivity>().ActivityTriggerEnd();
-        deathTrigger.Activate(activeActivites);
-        deathCause = "Toilet";
+
+        if (!deathTrigger.IsActive())
+        {
+            deathCause = "Toilet";
+            deathTrigger.Activate(activeActivites);
+        }
     }
 
     public void SpawnToys()
@@ -515,6 +547,15 @@ public class ActivityDirector : MonoBehaviour
         playerController.Respawn();
     }
 
+    public void StartNight(int nightIndex)
+    {
+        nightActivity[1].Deactivate(activeActivites);
+        nightActivity[2].Deactivate(activeActivites);
+        nightActivity[0].Deactivate(activeActivites);
+        nightActivity[nightIndex].Activate(activeActivites);
+        playerController.Respawn();
+    }
+
     private bool stopActivityDirector = false;
     private void OnWin(int activityIndex)
     {
@@ -529,6 +570,67 @@ public class ActivityDirector : MonoBehaviour
         stopActivityDirector = true;
     }
 
+    void ControlRainAndThunderSpatialAudio()
+    {
+        GameObject closestOpeningPoint = null;
+        float last_distance = float.MaxValue;
+
+        foreach (var window in windowEventObjects)
+        {
+            //  if (window.eventTime.IsActive())
+            //   {
+            if (Physics.Raycast(playerController.transform.position, window.gameObj.transform.position - playerController.transform.position, out RaycastHit hit_a, 1000))
+            {
+                if (hit_a.collider.gameObject == window.gameObj && hit_a.distance < last_distance)
+                {
+                    last_distance = hit_a.distance;
+                    closestOpeningPoint = window.gameObj;
+                    break;
+                }
+            }
+            //  }
+        }
+
+        // if (petdoorEventObject.eventTime.IsActive())
+        // {
+        //compare with a trigger collider instead of petdoor
+        if (Physics.Raycast(playerController.transform.position, petdoorEventObject.gameObj.transform.position - playerController.transform.position, out RaycastHit hit_b, 1000))
+        {
+            if (hit_b.collider.gameObject == petdoorEventObject.gameObj && hit_b.distance < last_distance)
+            {
+                last_distance = hit_b.distance;
+                closestOpeningPoint = petdoorEventObject.gameObj;
+            }
+        }
+        //  }
+
+
+        // if (skylightEventObject.eventTime.IsActive())
+        // {
+        if (Physics.Raycast(playerController.transform.position, skylightEventObject.gameObj.transform.position - playerController.transform.position, out RaycastHit hit_c, 1000))
+        {
+            if (hit_c.collider.gameObject == skylightEventObject.gameObj && hit_c.distance < last_distance)
+            {
+                last_distance = hit_c.distance;
+                closestOpeningPoint = skylightEventObject.gameObj;
+            }
+        }
+   // }
+
+        if (closestOpeningPoint != null)
+        {
+            //rainAndThunderAudioSource.local_position = closestOpeningPoint != null ? closestOpeningPoint.transform.localPosition : playerController.transform.localPosition;
+
+            //change 2d to 3d audio
+        }
+        else
+        {
+          //  rainAndThunderAudioSource.local_position = playerController.transform.localPosition;
+            //change 3d to 2d audio
+        }
+
+    }
+
     void Update()
     {
         if (stopActivityDirector)
@@ -541,8 +643,8 @@ public class ActivityDirector : MonoBehaviour
 
         if (activeNight > 0)
         {
-              DispatchBasementHatchEvent();
-               DispatchFireplaceEvent();
+            DispatchBasementHatchEvent();
+            DispatchFireplaceEvent();
         }
 
         if (activeNight > 1)
@@ -550,6 +652,8 @@ public class ActivityDirector : MonoBehaviour
             DispatchSkylightEvent();
             DispatchToiletEvent();
         }
+
+        ControlRainAndThunderSpatialAudio();
 
         for (int currentIndex = 0; currentIndex < activeActivites.Count; currentIndex++)
             activeActivites[currentIndex].OnUpdate();

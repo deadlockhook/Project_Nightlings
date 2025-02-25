@@ -16,7 +16,7 @@ public class SkylightActivity : MonoBehaviour
     private float startYPosition = 0.0f;
     private float lastActivityProgress = 0.0f;
 
-    private AudioSource triggerAudio;
+    private AudioSource triggerAudio1;
     private SoundManager soundManager;
 
     private ActivityDirector.playedSoundAtTrigger[] soundTriggers;
@@ -27,15 +27,20 @@ public class SkylightActivity : MonoBehaviour
         startYPosition = transform.localPosition.y;
         endYPosition = startYPosition - 0.00909f;
 
-        triggerAudio = GetComponent<AudioSource>();
+        AudioSource[] sources = GetComponents<AudioSource>();
+        if (sources.Length >= 1)
+        {
+            triggerAudio1 = sources[0];
+        }
+
         soundTriggers = new ActivityDirector.playedSoundAtTrigger[3];
-        soundTriggers[0] = new ActivityDirector.playedSoundAtTrigger(0.25f, triggerAudio);
-        soundTriggers[1] = new ActivityDirector.playedSoundAtTrigger(0.50f, triggerAudio);
-        soundTriggers[2] = new ActivityDirector.playedSoundAtTrigger(0.75f, triggerAudio);
+        soundTriggers[0] = new ActivityDirector.playedSoundAtTrigger(0.25f, triggerAudio1);
+        soundTriggers[1] = new ActivityDirector.playedSoundAtTrigger(0.50f, triggerAudio1);
+        soundTriggers[2] = new ActivityDirector.playedSoundAtTrigger(0.75f, triggerAudio1);
     }
     private void PlayTriggerAudio()
     {
-        soundManager.PlaySound("Creak2", triggerAudio);
+        soundManager.PlaySound("Creak2", triggerAudio1);
     }
     public void ResetActivity()
     {
@@ -101,6 +106,7 @@ public class SkylightActivity : MonoBehaviour
                 resetProgress = 0.0f;
                 resetAnimBegin = false;
                 transform.localPosition = new Vector3(transform.localPosition.x, startYPosition, transform.localPosition.z);
+                SoundManager.Instance.PlaySound("WindowShut", triggerAudio1);
             }
             else
             {

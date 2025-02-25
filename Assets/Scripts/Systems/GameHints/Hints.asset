@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be151f00d0fa96c41a5135f43ffc1aa4, type: 3}
+  m_Name: Hints
+  m_EditorClassIdentifier: 
+  activityHints:
+  - hintType: 0
+    hints:
+    - Nightlings will attempt to enter though windows around the house. Shut them
+      before they can enter!
+  - hintType: 1
+    hints:
+    - A hungry Nightling is trying to crawl through the pet door! Find a toy and
+      feed it to repel it back!
+  - hintType: 2
+    hints:
+    - The basement hatch is being broken into! Rush to the basement and shut it before
+      they can enter!
+  - hintType: 3
+    hints:
+    - The fireplace is almost out! Grab wood from the basement and feed the fire
+      to keep it going! You can also use a toy if short on wood!
+  - hintType: 4
+    hints:
+    - A Nightling is trying to enter through the skylight! Use the remote in the
+      kitchen to close it!
+  - hintType: 5
+    hints:
+    - A Nightling is trying to crawl up the toilet! Flush it to send it away!

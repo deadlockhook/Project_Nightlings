@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class FireplaceActivity : MonoBehaviour
 {
@@ -9,23 +11,32 @@ public class FireplaceActivity : MonoBehaviour
     private bool inActivity = false;
 
     private SoundManager soundManager;
-    private AudioSource triggerAudio;
+    private AudioSource triggerAudio1;
+    private AudioSource triggerAudio2;
     private ActivityDirector.playedSoundAtTrigger[] soundTriggers;
 
     private ActivityDirector.timedActivity activityReference;
     private void Start()
     {
         soundManager = FindObjectOfType<SoundManager>();
-        triggerAudio = GetComponent<AudioSource>();
+        AudioSource[] sources = GetComponents<AudioSource>();
+        if (sources.Length >= 2)
+        {
+            triggerAudio1 = sources[0];
+            triggerAudio2 = sources[1];
+        }
+        triggerAudio1.loop = true;
+        triggerAudio1.Play();
+        triggerAudio1.spatialBlend = 1f;
         soundTriggers = new ActivityDirector.playedSoundAtTrigger[3];
-        soundTriggers[0] = new ActivityDirector.playedSoundAtTrigger(0.25f, triggerAudio);
-        soundTriggers[1] = new ActivityDirector.playedSoundAtTrigger(0.50f, triggerAudio);
-        soundTriggers[2] = new ActivityDirector.playedSoundAtTrigger(0.75f, triggerAudio);
+        soundTriggers[0] = new ActivityDirector.playedSoundAtTrigger(0.25f, triggerAudio1);
+        soundTriggers[1] = new ActivityDirector.playedSoundAtTrigger(0.50f, triggerAudio1);
+        soundTriggers[2] = new ActivityDirector.playedSoundAtTrigger(0.75f, triggerAudio1);
+        SoundManager.Instance.PlaySound("FireBurning", triggerAudio1);
     }
 
     private void PlayTriggerAudio()
     {
-        soundManager.PlaySound("DoorBell", triggerAudio);
     }
     private void OnTriggerEnter(Collider collision)
     {
@@ -36,12 +47,14 @@ public class FireplaceActivity : MonoBehaviour
         {
             UpdateActivityProgress(1.0f);
             Destroy(collision.gameObject);
+            SoundManager.Instance.PlaySound("RefuelFire", triggerAudio2);
         }
 
         if (collision.gameObject.tag == "Interactable_Toy")
         {
             UpdateActivityProgress(0.25f);
             Destroy(collision.gameObject);
+            SoundManager.Instance.PlaySound("RefuelFire", triggerAudio2);
         }
     }
     public void UpdateActivityProgress(float removeProgressPercentage)
@@ -62,6 +75,7 @@ public class FireplaceActivity : MonoBehaviour
     }
     public bool OnActivityUpdate(float activityProgress)
     {
+        triggerAudio1.volume = 1.0f - activityProgress;
         if (activityFinished)
             return true;
 
@@ -75,6 +89,11 @@ public class FireplaceActivity : MonoBehaviour
         {
             if (trigger.ShouldPlay(activityProgress))
                 PlayTriggerAudio();
+        }
+
+        if (activityProgress >= 0.5f)
+        {
+            HintManager.Instance.DisplayGameHint(HintType.Fireplace);
         }
 
         this.GetComponent<Renderer>().material.color = Color.Lerp(Color.white, Color.red, activityProgress);
