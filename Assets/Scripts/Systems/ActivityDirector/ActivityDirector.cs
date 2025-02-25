@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
 
 public class ActivityDirector : MonoBehaviour
@@ -152,12 +153,12 @@ public class ActivityDirector : MonoBehaviour
 
     private float toiletActivityLogicRangeStart = 50000.0f;
     private float toiletActivityLogicRangeEnd = 60000.0f;
-     private float toiletActivityTimeLimit = 25000.0f;
+    private float toiletActivityTimeLimit = 25000.0f;
 
 
-  //  private float toiletActivityLogicRangeStart = 500.0f;
-  //  private float toiletActivityLogicRangeEnd = 600.0f;
-  //  private float toiletActivityTimeLimit = 15000.0f;
+    //  private float toiletActivityLogicRangeStart = 500.0f;
+    //  private float toiletActivityLogicRangeEnd = 600.0f;
+    //  private float toiletActivityTimeLimit = 15000.0f;
 
     private List<activityTrigger> windowEventObjects;
     private activityTrigger petdoorEventObject;
@@ -569,6 +570,67 @@ public class ActivityDirector : MonoBehaviour
         stopActivityDirector = true;
     }
 
+    void ControlRainAndThunderSpatialAudio()
+    {
+        GameObject closestOpeningPoint = null;
+        float last_distance = float.MaxValue;
+
+        foreach (var window in windowEventObjects)
+        {
+            //  if (window.eventTime.IsActive())
+            //   {
+            if (Physics.Raycast(playerController.transform.position, window.gameObj.transform.position - playerController.transform.position, out RaycastHit hit_a, 1000))
+            {
+                if (hit_a.collider.gameObject == window.gameObj && hit_a.distance < last_distance)
+                {
+                    last_distance = hit_a.distance;
+                    closestOpeningPoint = window.gameObj;
+                    break;
+                }
+            }
+            //  }
+        }
+
+        // if (petdoorEventObject.eventTime.IsActive())
+        // {
+        //compare with a trigger collider instead of petdoor
+        if (Physics.Raycast(playerController.transform.position, petdoorEventObject.gameObj.transform.position - playerController.transform.position, out RaycastHit hit_b, 1000))
+        {
+            if (hit_b.collider.gameObject == petdoorEventObject.gameObj && hit_b.distance < last_distance)
+            {
+                last_distance = hit_b.distance;
+                closestOpeningPoint = petdoorEventObject.gameObj;
+            }
+        }
+        //  }
+
+
+        // if (skylightEventObject.eventTime.IsActive())
+        // {
+        if (Physics.Raycast(playerController.transform.position, skylightEventObject.gameObj.transform.position - playerController.transform.position, out RaycastHit hit_c, 1000))
+        {
+            if (hit_c.collider.gameObject == skylightEventObject.gameObj && hit_c.distance < last_distance)
+            {
+                last_distance = hit_c.distance;
+                closestOpeningPoint = skylightEventObject.gameObj;
+            }
+        }
+   // }
+
+        if (closestOpeningPoint != null)
+        {
+            //rainAndThunderAudioSource.local_position = closestOpeningPoint != null ? closestOpeningPoint.transform.localPosition : playerController.transform.localPosition;
+
+            //change 2d to 3d audio
+        }
+        else
+        {
+          //  rainAndThunderAudioSource.local_position = playerController.transform.localPosition;
+            //change 3d to 2d audio
+        }
+
+    }
+
     void Update()
     {
         if (stopActivityDirector)
@@ -581,8 +643,8 @@ public class ActivityDirector : MonoBehaviour
 
         if (activeNight > 0)
         {
-              DispatchBasementHatchEvent();
-               DispatchFireplaceEvent();
+            DispatchBasementHatchEvent();
+            DispatchFireplaceEvent();
         }
 
         if (activeNight > 1)
@@ -590,6 +652,8 @@ public class ActivityDirector : MonoBehaviour
             DispatchSkylightEvent();
             DispatchToiletEvent();
         }
+
+        ControlRainAndThunderSpatialAudio();
 
         for (int currentIndex = 0; currentIndex < activeActivites.Count; currentIndex++)
             activeActivites[currentIndex].OnUpdate();
