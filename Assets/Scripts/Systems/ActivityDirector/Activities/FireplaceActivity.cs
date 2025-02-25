@@ -56,6 +56,28 @@ public class FireplaceActivity : MonoBehaviour
             Destroy(collision.gameObject);
             SoundManager.Instance.PlaySound("RefuelFire", triggerAudio2);
         }
+
+        if (collision.gameObject.tag == "Interactable_Blocks")
+        {
+            UpdateActivityProgress(0.25f);
+
+            GameObject parent = collision.gameObject.transform.parent.gameObject;
+
+            if (parent)
+            {
+                Rigidbody[] blocks = parent.GetComponentsInChildren<Rigidbody>();
+
+                for (int i = 0; i < blocks.Length; i++)
+                {
+                    Rigidbody blockRigidBody = blocks[i];
+
+                    if (blockRigidBody)
+                    {
+                        Destroy(blockRigidBody.gameObject);
+                    }
+                }
+            }
+        }
     }
     public void UpdateActivityProgress(float removeProgressPercentage)
     {

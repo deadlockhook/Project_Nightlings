@@ -10,7 +10,6 @@ public class PetDoorActivityTrigger : MonoBehaviour
     void Start()
     {
         petDoorActivity = FindObjectOfType<PetDoorActivity>();
-
     }
     private void OnTriggerEnter(Collider collision)
     {
@@ -21,6 +20,27 @@ public class PetDoorActivityTrigger : MonoBehaviour
         {
             petDoorActivity.ResetActivity();
             Destroy(collision.gameObject);
+        }
+        else if (collision.gameObject.tag == "Interactable_Blocks")
+        {
+            petDoorActivity.ResetActivity();
+
+            GameObject parent = collision.gameObject.transform.parent.gameObject;
+
+            if (parent)
+            {
+                Rigidbody[] blocks = parent.GetComponentsInChildren<Rigidbody>();
+
+                for (int i = 0; i < blocks.Length; i++)
+                {
+                    Rigidbody blockRigidBody = blocks[i];
+
+                    if (blockRigidBody)
+                    {
+                        Destroy(blockRigidBody.gameObject);
+                    }
+                }
+            }
         }
     }
     // Update is called once per frame
