@@ -127,7 +127,9 @@ public class ActivityDirector : MonoBehaviour
     private PlayerController playerController;
     private List<timedActivity> activeActivites;
 
+
     private AudioSource rainAndThunder;
+    private Vector3 rainAndThunderInitialPosition;
 
     public List<GameObject> toyPrefabs;
     [SerializeField] private int minToySpawnLocations = 12;
@@ -191,6 +193,9 @@ public class ActivityDirector : MonoBehaviour
 
     void Start()
     {
+        rainAndThunder = GameObject.Find("DynamicAimbienceSource").GetComponent<AudioSource>();
+        rainAndThunderInitialPosition = rainAndThunder.transform.position;
+
         uiManager = FindObjectOfType<UIManager>();
         playerController = FindObjectOfType<PlayerController>();
         soundManager = FindObjectOfType<SoundManager>();
@@ -621,15 +626,16 @@ public class ActivityDirector : MonoBehaviour
 
         if (closestOpeningPoint != null)
         {
-            //rainAndThunderAudioSource.local_position = closestOpeningPoint != null ? closestOpeningPoint.transform.localPosition : playerController.transform.localPosition;
+            //set it to only the last closest point to avoid spatial blend issues
+            rainAndThunder.transform.position = closestOpeningPoint.transform.position;
+            rainAndThunder.spatialBlend = 1.0f;
+        }
+       // else
+       // {
+       //     rainAndThunder.transform.position = rainAndThunderInitialPosition;
+       //     rainAndThunder.spatialBlend = 1.0f;
 
-            //change 2d to 3d audio
-        }
-        else
-        {
-          //  rainAndThunderAudioSource.local_position = playerController.transform.localPosition;
-            //change 3d to 2d audio
-        }
+      //  }
 
     }
 
