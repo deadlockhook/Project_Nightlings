@@ -386,6 +386,8 @@ public class UIManager : MonoBehaviour
 
 	public void ShowIcon(GameObject iconPrefab, Vector3 position, int eventIndex)
 	{
+		if (!iconsEnabled)
+			return;
 		if (activeIcons.ContainsKey(eventIndex))
 			return;
 
