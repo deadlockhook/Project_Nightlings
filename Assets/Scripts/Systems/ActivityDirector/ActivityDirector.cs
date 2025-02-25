@@ -127,6 +127,8 @@ public class ActivityDirector : MonoBehaviour
     private PlayerController playerController;
     private List<timedActivity> activeActivites;
 
+    private AudioSource rainAndThunder;
+
     public List<GameObject> toyPrefabs;
     [SerializeField] private int minToySpawnLocations = 12;
     [SerializeField] private int maxToySpawnLocations = 20;
