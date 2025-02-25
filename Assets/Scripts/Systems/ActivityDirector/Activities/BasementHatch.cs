@@ -104,6 +104,7 @@ public class BasementHatch : MonoBehaviour
                 resetAnimBegin = false;
                 leftDoor.localRotation = Quaternion.Euler(leftDoor.localRotation.eulerAngles.x, leftDoor.localRotation.eulerAngles.y, 0);
                 rightDoor.localRotation = Quaternion.Euler(rightDoor.localRotation.eulerAngles.x, rightDoor.localRotation.eulerAngles.y, 0);
+                SoundManager.Instance.PlaySound("BasementShut", triggerAudio1);
             }
             else
             {

@@ -106,6 +106,7 @@ public class SkylightActivity : MonoBehaviour
                 resetProgress = 0.0f;
                 resetAnimBegin = false;
                 transform.localPosition = new Vector3(transform.localPosition.x, startYPosition, transform.localPosition.z);
+                SoundManager.Instance.PlaySound("WindowShut", triggerAudio1);
             }
             else
             {

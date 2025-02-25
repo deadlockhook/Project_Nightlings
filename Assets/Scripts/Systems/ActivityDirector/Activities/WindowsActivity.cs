@@ -109,6 +109,7 @@ public class WindowsActivity : MonoBehaviour
                 resetProgress = 0.0f;
                 resetAnimBegin = false;
                 transform.position = new Vector3(transform.position.x, startYPosition, transform.position.z);
+                SoundManager.Instance.PlaySound("WindowShut", triggerAudio1);
             }
             else
             {
