@@ -519,13 +519,13 @@ public class UIManager : MonoBehaviour
 		switch (night)
 		{
 			case 0:
-				nightInfoText.text = "Friday, 12:00AM";
+				nightInfoText.text = "Friday, 12:00am";
 				break;
 			case 1:
-				nightInfoText.text = "Saturday, 12:00AM";
+				nightInfoText.text = "Saturday, 12:00am";
 				break;
 			case 2:
-				nightInfoText.text = "Sunday, 12:00AM";
+				nightInfoText.text = "Sunday, 12:00am";
 				break;
 			default:
 				nightInfoText.text = "Bro what night are you on?";
