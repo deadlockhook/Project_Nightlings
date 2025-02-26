@@ -53,6 +53,9 @@ public class UIManager : MonoBehaviour
 	public GameObject blackScreen;
 	public TMP_Text deathCauseText;
 
+	[Header("Win Screen")]
+	public TMP_Text winText;
+
 	[Header("Night Picker and Info UI")]
 	public GameObject nightPickerUI;
 	public GameObject nightInfoUI;
@@ -333,6 +336,32 @@ public class UIManager : MonoBehaviour
 
 	public void WinGame()
 	{
+		string nightName = "Friday Night";
+		ActivityDirector director = FindObjectOfType<ActivityDirector>();
+		if (director != null)
+		{
+			switch (director.GetActiveNight())
+			{
+				case 0:
+					nightName = "Friday Night";
+					break;
+				case 1:
+					nightName = "Saturday Night";
+					break;
+				case 2:
+					nightName = "Sunday Night";
+					break;
+				default:
+					nightName = "Friday Night";
+					break;
+			}
+		}
+
+		if (winText != null)
+		{
+			winText.text = "You Survived " + nightName;
+		}
+
 		isPaused = true;
 		ChangeUIState(UIState.Win);
 	}

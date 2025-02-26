@@ -642,4 +642,9 @@ public class ActivityDirector : MonoBehaviour
         for (int currentIndex = 0; currentIndex < activeActivites.Count; currentIndex++)
             activeActivites[currentIndex].OnUpdate();
     }
+
+    public int GetActiveNight()
+    {
+        return activeNight;
+    }
 }
