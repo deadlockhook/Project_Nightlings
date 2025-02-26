@@ -258,7 +258,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnPetDoorActivityStart(int activityIndex)
     {
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerStart();
-        uiManager.ShowIcon(iconPrefab, petdoorEventObject.gameObj.transform.position, 0);
+        IconManager.Instance.RegisterIcon(0, petdoorEventObject.gameObj.transform.position);
         HintManager.Instance.DisplayGameHint(HintType.PetDoor);
     }
 
@@ -270,7 +270,7 @@ public class ActivityDirector : MonoBehaviour
         {
             petdoorEventObject.eventTime.Deactivate(activeActivites);
             petdoorEventObject.eventTime.Reset();
-            uiManager.HideIcon(0);
+            IconManager.Instance.UnregisterIcon(0);
         }
     }
 
@@ -290,7 +290,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnBasementHatchActivityStart(int activityIndex)
     {
         basementHatchEventObject.gameObj.GetComponent<BasementHatch>().ActivityTriggerStart();
-        uiManager.ShowIcon(iconPrefab, basementHatchEventObject.gameObj.transform.position, 1);
+        IconManager.Instance.RegisterIcon(1, basementHatchEventObject.gameObj.transform.position);
         HintManager.Instance.DisplayGameHint(HintType.BasementHatch);
     }
 
@@ -302,7 +302,7 @@ public class ActivityDirector : MonoBehaviour
         {
             basementHatchEventObject.eventTime.Deactivate(activeActivites);
             basementHatchEventObject.eventTime.Reset();
-            uiManager.HideIcon(1);
+            IconManager.Instance.UnregisterIcon(1);
         }
     }
 
@@ -322,7 +322,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnWindowActivityStart(int activityIndex)
     {
         windowEventObjects[activityIndex].gameObj.GetComponent<WindowsActivity>().ActivityTriggerStart();
-        uiManager.ShowIcon(iconPrefab, windowEventObjects[activityIndex].gameObj.transform.position, activityIndex);
+        IconManager.Instance.RegisterIcon(activityIndex, windowEventObjects[activityIndex].gameObj.transform.position);
         HintManager.Instance.DisplayGameHint(HintType.Window);
     }
 
@@ -335,7 +335,7 @@ public class ActivityDirector : MonoBehaviour
         {
             activityObject.eventTime.Deactivate(activeActivites);
             activityObject.eventTime.Reset();
-            uiManager.HideIcon(activityIndex);
+            IconManager.Instance.UnregisterIcon(activityIndex);
         }
     }
 
@@ -356,7 +356,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnFireplaceActivityStart(int activityIndex)
     {
         fireplaceEventObject.gameObj.GetComponent<FireplaceActivity>().ActivityTriggerStart(fireplaceEventObject.eventTime);
-        uiManager.ShowIcon(iconPrefab, fireplaceEventObject.gameObj.transform.position, 2);
+        IconManager.Instance.RegisterIcon(2, fireplaceEventObject.gameObj.transform.position);
     }
 
     private void OnFireplaceActivityUpdate(int activityIndex)
@@ -366,7 +366,7 @@ public class ActivityDirector : MonoBehaviour
         {
             fireplaceEventObject.eventTime.Deactivate(activeActivites);
             fireplaceEventObject.eventTime.Reset();
-            uiManager.HideIcon(2);
+            IconManager.Instance.UnregisterIcon(2);
         }
     }
     private void OnFireplaceActivityFinished(int activityIndex)
@@ -385,7 +385,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnSkylightActivityStart(int activityIndex)
     {
         skylightEventObject.gameObj.GetComponent<SkylightActivity>().ActivityTriggerStart();
-        uiManager.ShowIcon(iconPrefab, skylightEventObject.gameObj.transform.position, 3);
+        IconManager.Instance.RegisterIcon(3, skylightEventObject.gameObj.transform.position);
         HintManager.Instance.DisplayGameHint(HintType.Skylight);
     }
     private void OnSkylightActivityUpdate(int activityIndex)
@@ -395,7 +395,7 @@ public class ActivityDirector : MonoBehaviour
         {
             skylightEventObject.eventTime.Deactivate(activeActivites);
             skylightEventObject.eventTime.Reset();
-            uiManager.HideIcon(3);
+            IconManager.Instance.UnregisterIcon(3);
         }
     }
     private void OnSkylightActivityFinished(int activityIndex)
@@ -414,7 +414,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnToiletActivityStart(int activityIndex)
     {
         toiletEventObject.gameObj.GetComponent<ToiletActivity>().ActivityTriggerStart();
-        uiManager.ShowIcon(iconPrefab, toiletEventObject.gameObj.transform.position, 4);
+        IconManager.Instance.RegisterIcon(4, toiletEventObject.gameObj.transform.position);
         HintManager.Instance.DisplayGameHint(HintType.Toilet);
     }
 
@@ -425,7 +425,7 @@ public class ActivityDirector : MonoBehaviour
         {
             toiletEventObject.eventTime.Deactivate(activeActivites);
             toiletEventObject.eventTime.Reset();
-            uiManager.HideIcon(4);
+            IconManager.Instance.UnregisterIcon(4);
         }
     }
     private void OnToiletActivityFinished(int activityIndex)

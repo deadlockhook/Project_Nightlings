@@ -16,6 +16,7 @@ TagManager:
   - Skylight_Remote
   - Toilet_Flush
   - Interactable_Blocks
+  - Icon
   layers:
   - Default
   - TransparentFX

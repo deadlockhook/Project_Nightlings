@@ -85,9 +85,10 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8790709780570191409}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: ToggleIconsEnabled
+      - m_Target: {fileID: 1743694115167396852, guid: 86061036eb34c8f47b5c44982d7bf9af,
+          type: 3}
+        m_TargetAssemblyTypeName: IconManager, Assembly-CSharp
+        m_MethodName: ToggleIcons
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5688,8 +5689,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5848dedaf8ad0c542a98c6f6de124677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bellIconPrefab: {fileID: 2531136830291740803, guid: 929d26b19b4cc01479717fe080c42539,
-    type: 3}
   loseTimeline: {fileID: 0}
   loadingScreen: {fileID: 5636748318794963977}
   loadingDisplayDuration: 0.5
@@ -5699,7 +5698,6 @@ MonoBehaviour:
   winText: {fileID: 5806292664773683937}
   nightPickerUI: {fileID: 6303829692118610602}
   nightInfoUI: {fileID: 7354761026018449498}
-  iconsEnabled: 1
 --- !u!223 &7618648492901496417
 Canvas:
   m_ObjectHideFlags: 0
