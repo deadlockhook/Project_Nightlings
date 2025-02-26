@@ -99,7 +99,6 @@ public class UIManager : MonoBehaviour
 		clocks.AddRange(GameObject.FindGameObjectsWithTag("Clock"));
 
 		ChangeUIState(UIState.MainMenu);
-<<<<<<< Updated upstream
 
 		if (nightPickerUI != null)
 		{
@@ -110,9 +109,7 @@ public class UIManager : MonoBehaviour
 			}
 		}
 	}
-=======
-    }
->>>>>>> Stashed changes
+    
 
     private void DeactivateAllScreens()
 	{
