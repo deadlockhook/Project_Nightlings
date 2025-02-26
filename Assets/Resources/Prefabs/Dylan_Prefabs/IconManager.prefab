@@ -47,6 +47,6 @@ MonoBehaviour:
   iconPrefab: {fileID: 2531136830291740803, guid: 929d26b19b4cc01479717fe080c42539,
     type: 3}
   iconPadding: 50
-  iconLayer:
+  occlusionLayers:
     serializedVersion: 2
     m_Bits: 0

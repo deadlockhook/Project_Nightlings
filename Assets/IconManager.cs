@@ -13,6 +13,7 @@ public class IconManager : MonoBehaviour
 
     private Canvas iconCanvas;
     private Camera iconCamera;
+    private RectTransform canvasRect;
     private Dictionary<int, (GameObject icon, Vector3 worldPos)> activeIcons =
         new Dictionary<int, (GameObject, Vector3)>();
 
@@ -25,60 +26,40 @@ public class IconManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
-
         InitializeIconSystem();
     }
 
     void InitializeIconSystem()
     {
         CreateIconCanvas();
-        iconCamera = Camera.main;
-        if (iconCamera == null)
-        {
-            Debug.LogError("No camera found");
-        }
-        ConfigureRenderSystem();
     }
 
     void CreateIconCanvas()
     {
         GameObject canvasGO = new GameObject("IconCanvas");
         iconCanvas = canvasGO.AddComponent<Canvas>();
+        canvasRect = canvasGO.GetComponent<RectTransform>();
         CanvasScaler scaler = canvasGO.AddComponent<CanvasScaler>();
         canvasGO.AddComponent<GraphicRaycaster>();
 
+        iconCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         scaler.referenceResolution = new Vector2(1920, 1080);
-        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-
-        iconCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        iconCanvas.sortingOrder = 1000;
-
-        canvasGO.layer = LayerMask.NameToLayer("UI");
         DontDestroyOnLoad(canvasGO);
-    }
-
-    void ConfigureRenderSystem()
-    {
-        if (iconCanvas.renderMode == RenderMode.ScreenSpaceCamera)
-        {
-            iconCanvas.worldCamera = iconCamera;
-        }
     }
 
     private void Update()
     {
-        if (iconCanvas == null || iconCamera == null) return;
+        if (!iconCanvas) return;
 
         foreach (var kvp in activeIcons.ToList())
         {
             var (icon, worldPos) = kvp.Value;
-            if (icon == null)
+            if (!icon)
             {
                 activeIcons.Remove(kvp.Key);
                 continue;
             }
-
             UpdateIconPosition(icon, worldPos);
         }
     }
@@ -86,34 +67,83 @@ public class IconManager : MonoBehaviour
     void UpdateIconPosition(GameObject icon, Vector3 worldPosition)
     {
         RectTransform rt = icon.GetComponent<RectTransform>();
-        Vector3 screenPos = iconCamera.WorldToScreenPoint(worldPosition);
-        bool behindCamera = screenPos.z < 0;
+        Camera mainCam = Camera.main;
+
+        if (!mainCam) return;
+
+        Vector3 viewportPos = mainCam.WorldToViewportPoint(worldPosition);
+        bool behindCamera = Vector3.Dot(mainCam.transform.forward, worldPosition - mainCam.transform.position) < 0;
+
+        icon.SetActive(true);
+
+        Vector3 screenPos;
+
+        if (!behindCamera)
+        {
+            bool onScreen = viewportPos.x >= 0 && viewportPos.x <= 1 &&
+                            viewportPos.y >= 0 && viewportPos.y <= 1;
+
+            if (onScreen)
+            {
+                screenPos = mainCam.WorldToScreenPoint(worldPosition);
+            }
+            else
+            {
+                screenPos = GetScreenEdgePosition(viewportPos, mainCam, worldPosition, behindCamera);
+            }
+        }
+        else
+        {
+            screenPos = GetScreenEdgePosition(viewportPos, mainCam, worldPosition, behindCamera);
+        }
+
+        Vector2 anchoredPos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasRect,
+            screenPos,
+            null,
+            out anchoredPos
+        );
+
+        rt.anchoredPosition = anchoredPos;
+    }
+
+    Vector3 GetScreenEdgePosition(Vector3 viewportPos, Camera mainCam, Vector3 worldPosition, bool behindCamera)
+    {
+        Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+        Vector3 screenDir = (mainCam.WorldToScreenPoint(worldPosition) - screenCenter).normalized;
 
         if (behindCamera)
         {
-            screenPos.x = -screenPos.x;
-            screenPos.y = -screenPos.y;
+            screenDir *= -1;
         }
 
-        bool onScreen = !behindCamera &&
-                        screenPos.x >= 0 && screenPos.x <= Screen.width &&
-                        screenPos.y >= 0 && screenPos.y <= Screen.height;
+        float screenWidth = Screen.width - iconPadding * 2;
+        float screenHeight = Screen.height - iconPadding * 2;
 
-        if (!onScreen)
+        float angle = Mathf.Atan2(screenDir.y, screenDir.x);
+        float slope = Mathf.Tan(angle);
+
+        Vector3 screenPos;
+
+        if (Mathf.Abs(slope) > (screenHeight / screenWidth))
         {
-            Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2);
-            Vector3 dir = (screenPos - screenCenter).normalized;
-
-            float edgeX = (dir.x < 0) ? iconPadding : Screen.width - iconPadding;
-
-            float edgeY = Mathf.Clamp(screenPos.y, iconPadding, Screen.height - iconPadding);
-
-            screenPos = new Vector3(edgeX, edgeY, 0);
+            float y = Mathf.Sign(screenDir.y) * (screenHeight / 2);
+            float x = y / slope;
+            screenPos = new Vector3(x + screenCenter.x, y + screenCenter.y, 0);
+        }
+        else
+        {
+            float x = Mathf.Sign(screenDir.x) * (screenWidth / 2);
+            float y = x * slope;
+            screenPos = new Vector3(x + screenCenter.x, y + screenCenter.y, 0);
         }
 
-        rt.position = screenPos;
-    }
+        screenPos.x = Mathf.Clamp(screenPos.x, iconPadding, Screen.width - iconPadding);
+        screenPos.y = Mathf.Clamp(screenPos.y, iconPadding, Screen.height - iconPadding);
 
+        return screenPos;
+    }
 
     public void RegisterIcon(int id, Vector3 worldPosition)
     {
