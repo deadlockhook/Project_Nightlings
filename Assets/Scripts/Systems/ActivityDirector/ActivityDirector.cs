@@ -206,8 +206,8 @@ public class ActivityDirector : MonoBehaviour
 
         nightActivity = new timedActivity[3];
         //  420000
-        nightActivity[0] = new timedActivity(420000, 0, OnNightStart, OnProgressToNextNight, null);
-        nightActivity[1] = new timedActivity(420000, 1, OnNightStart, OnProgressToNextNight, null);
+        nightActivity[0] = new timedActivity(420000, 0, OnNightStart, OnWin, null);
+        nightActivity[1] = new timedActivity(420000, 1, OnNightStart, OnWin, null);
         nightActivity[2] = new timedActivity(420000, 2, OnNightStart, OnWin, null);
 
         deathTrigger = new timedActivity(10000, 0, null, OnDeath, null);
@@ -564,8 +564,14 @@ public class ActivityDirector : MonoBehaviour
     }
 
     private bool stopActivityDirector = false;
+
     private void OnWin(int activityIndex)
     {
+        if (ProgressManager.Instance != null)
+        {
+            ProgressManager.Instance.CompleteNight(activeNight);
+        }
+
         uiManager.WinGame();
         stopActivityDirector = true;
     }

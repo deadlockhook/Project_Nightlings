@@ -100,6 +100,15 @@ public class UIManager : MonoBehaviour
 		clocks.AddRange(GameObject.FindGameObjectsWithTag("Clock"));
 
 		ChangeUIState(UIState.MainMenu);
+
+		if (nightPickerUI != null)
+		{
+			NightButton[] nightButtons = nightPickerUI.GetComponentsInChildren<NightButton>(true);
+			foreach (NightButton button in nightButtons)
+			{
+				button.UpdateButtonState();
+			}
+		}
 	}
 
 	private void DeactivateAllScreens()
@@ -463,6 +472,12 @@ public class UIManager : MonoBehaviour
 	{
 		if (winUI.activeSelf || loseUI.activeSelf)
 			return;
+
+		if (ProgressManager.Instance != null && !ProgressManager.Instance.IsNightUnlocked(night))
+		{
+			return;
+		}
+
 		StartCoroutine(LoadDylanScene(night));
 	}
 
@@ -486,6 +501,12 @@ public class UIManager : MonoBehaviour
 	{
 		if (winUI.activeSelf || loseUI.activeSelf)
 			return;
+
+		if (ProgressManager.Instance != null && !ProgressManager.Instance.IsNightUnlocked(night))
+		{
+			return;
+		}
+
 		StartCoroutine(LoadMainAndShowNightInfo(night));
 	}
 
