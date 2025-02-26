@@ -90,4 +90,12 @@ public class ProgressManager : MonoBehaviour
 		progress.night3Completed = false;
 		SaveProgress();
 	}
+
+	public void UnlockAllNights()
+	{
+		progress.night1Completed = true;
+		progress.night2Completed = true;
+		progress.night3Completed = true;
+		SaveProgress();
+	}
 }
