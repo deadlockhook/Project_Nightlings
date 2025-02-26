@@ -563,7 +563,7 @@ public class UIManager : MonoBehaviour
 	private Camera mainCamera;
 	private Volume volume;
 
-	[HideInInspector] public bool iconsEnabled = false;
+	public bool iconsEnabled = true;
 	private bool motionBlurEnabled = false;
 	private bool chromaticAbberationEnabled = false;
 	private bool bloomEnabled = false;

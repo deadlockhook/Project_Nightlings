@@ -230,9 +230,9 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
-  m_IsOn: 0
+  m_IsOn: 1
 --- !u!1 &400677704351761619
 GameObject:
   m_ObjectHideFlags: 0
@@ -6468,7 +6468,7 @@ MonoBehaviour:
   deathCauseText: {fileID: 1855220487392555890}
   nightPickerUI: {fileID: 6303829692118610602}
   nightInfoUI: {fileID: 7354761026018449498}
-  iconsEnabled: 0
+  iconsEnabled: 1
 --- !u!223 &7618648492901496417
 Canvas:
   m_ObjectHideFlags: 0
