@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.PackageManager.UI;
+//using UnityEditor.PackageManager.UI;
 using UnityEngine;
 
 public class ActivityDirector : MonoBehaviour
@@ -127,6 +127,10 @@ public class ActivityDirector : MonoBehaviour
     private PlayerController playerController;
     private List<timedActivity> activeActivites;
 
+
+   // private AudioSource rainAndThunder;
+   // private Vector3 rainAndThunderInitialPosition;
+
     public List<GameObject> toyPrefabs;
     [SerializeField] private int minToySpawnLocations = 12;
     [SerializeField] private int maxToySpawnLocations = 20;
@@ -189,6 +193,9 @@ public class ActivityDirector : MonoBehaviour
 
     void Start()
     {
+        //rainAndThunder = GameObject.Find("DynamicAimbienceSource").GetComponent<AudioSource>();
+       // rainAndThunderInitialPosition = rainAndThunder.transform.position;
+
         uiManager = FindObjectOfType<UIManager>();
         playerController = FindObjectOfType<PlayerController>();
         soundManager = FindObjectOfType<SoundManager>();
@@ -199,8 +206,8 @@ public class ActivityDirector : MonoBehaviour
 
         nightActivity = new timedActivity[3];
         //  420000
-        nightActivity[0] = new timedActivity(420000, 0, OnNightStart, OnProgressToNextNight, null);
-        nightActivity[1] = new timedActivity(420000, 1, OnNightStart, OnProgressToNextNight, null);
+        nightActivity[0] = new timedActivity(420000, 0, OnNightStart, OnWin, null);
+        nightActivity[1] = new timedActivity(420000, 1, OnNightStart, OnWin, null);
         nightActivity[2] = new timedActivity(420000, 2, OnNightStart, OnWin, null);
 
         deathTrigger = new timedActivity(10000, 0, null, OnDeath, null);
@@ -251,7 +258,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnPetDoorActivityStart(int activityIndex)
     {
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerStart();
-        uiManager.ShowIcon(iconPrefab, petdoorEventObject.gameObj.transform.position, 0);
+        IconManager.Instance.RegisterIcon(0, petdoorEventObject.gameObj.transform.position);
         HintManager.Instance.DisplayGameHint(HintType.PetDoor);
     }
 
@@ -263,7 +270,7 @@ public class ActivityDirector : MonoBehaviour
         {
             petdoorEventObject.eventTime.Deactivate(activeActivites);
             petdoorEventObject.eventTime.Reset();
-            uiManager.HideIcon(0);
+            IconManager.Instance.UnregisterIcon(0);
         }
     }
 
@@ -283,7 +290,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnBasementHatchActivityStart(int activityIndex)
     {
         basementHatchEventObject.gameObj.GetComponent<BasementHatch>().ActivityTriggerStart();
-        uiManager.ShowIcon(iconPrefab, basementHatchEventObject.gameObj.transform.position, 1);
+        IconManager.Instance.RegisterIcon(1, basementHatchEventObject.gameObj.transform.position);
         HintManager.Instance.DisplayGameHint(HintType.BasementHatch);
     }
 
@@ -295,7 +302,7 @@ public class ActivityDirector : MonoBehaviour
         {
             basementHatchEventObject.eventTime.Deactivate(activeActivites);
             basementHatchEventObject.eventTime.Reset();
-            uiManager.HideIcon(1);
+            IconManager.Instance.UnregisterIcon(1);
         }
     }
 
@@ -315,7 +322,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnWindowActivityStart(int activityIndex)
     {
         windowEventObjects[activityIndex].gameObj.GetComponent<WindowsActivity>().ActivityTriggerStart();
-        uiManager.ShowIcon(iconPrefab, windowEventObjects[activityIndex].gameObj.transform.position, activityIndex);
+        IconManager.Instance.RegisterIcon(activityIndex, windowEventObjects[activityIndex].gameObj.transform.position);
         HintManager.Instance.DisplayGameHint(HintType.Window);
     }
 
@@ -328,7 +335,7 @@ public class ActivityDirector : MonoBehaviour
         {
             activityObject.eventTime.Deactivate(activeActivites);
             activityObject.eventTime.Reset();
-            uiManager.HideIcon(activityIndex);
+            IconManager.Instance.UnregisterIcon(activityIndex);
         }
     }
 
@@ -349,7 +356,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnFireplaceActivityStart(int activityIndex)
     {
         fireplaceEventObject.gameObj.GetComponent<FireplaceActivity>().ActivityTriggerStart(fireplaceEventObject.eventTime);
-        uiManager.ShowIcon(iconPrefab, fireplaceEventObject.gameObj.transform.position, 2);
+        IconManager.Instance.RegisterIcon(2, fireplaceEventObject.gameObj.transform.position);
     }
 
     private void OnFireplaceActivityUpdate(int activityIndex)
@@ -359,7 +366,7 @@ public class ActivityDirector : MonoBehaviour
         {
             fireplaceEventObject.eventTime.Deactivate(activeActivites);
             fireplaceEventObject.eventTime.Reset();
-            uiManager.HideIcon(2);
+            IconManager.Instance.UnregisterIcon(2);
         }
     }
     private void OnFireplaceActivityFinished(int activityIndex)
@@ -378,7 +385,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnSkylightActivityStart(int activityIndex)
     {
         skylightEventObject.gameObj.GetComponent<SkylightActivity>().ActivityTriggerStart();
-        uiManager.ShowIcon(iconPrefab, skylightEventObject.gameObj.transform.position, 3);
+        IconManager.Instance.RegisterIcon(3, skylightEventObject.gameObj.transform.position);
         HintManager.Instance.DisplayGameHint(HintType.Skylight);
     }
     private void OnSkylightActivityUpdate(int activityIndex)
@@ -388,7 +395,7 @@ public class ActivityDirector : MonoBehaviour
         {
             skylightEventObject.eventTime.Deactivate(activeActivites);
             skylightEventObject.eventTime.Reset();
-            uiManager.HideIcon(3);
+            IconManager.Instance.UnregisterIcon(3);
         }
     }
     private void OnSkylightActivityFinished(int activityIndex)
@@ -407,7 +414,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnToiletActivityStart(int activityIndex)
     {
         toiletEventObject.gameObj.GetComponent<ToiletActivity>().ActivityTriggerStart();
-        uiManager.ShowIcon(iconPrefab, toiletEventObject.gameObj.transform.position, 4);
+        IconManager.Instance.RegisterIcon(4, toiletEventObject.gameObj.transform.position);
         HintManager.Instance.DisplayGameHint(HintType.Toilet);
     }
 
@@ -418,7 +425,7 @@ public class ActivityDirector : MonoBehaviour
         {
             toiletEventObject.eventTime.Deactivate(activeActivites);
             toiletEventObject.eventTime.Reset();
-            uiManager.HideIcon(4);
+            IconManager.Instance.UnregisterIcon(4);
         }
     }
     private void OnToiletActivityFinished(int activityIndex)
@@ -557,8 +564,14 @@ public class ActivityDirector : MonoBehaviour
     }
 
     private bool stopActivityDirector = false;
+
     private void OnWin(int activityIndex)
     {
+        if (ProgressManager.Instance != null)
+        {
+            ProgressManager.Instance.CompleteNight(activeNight);
+        }
+
         uiManager.WinGame();
         stopActivityDirector = true;
     }
@@ -577,57 +590,28 @@ public class ActivityDirector : MonoBehaviour
 
         foreach (var window in windowEventObjects)
         {
-            //  if (window.eventTime.IsActive())
-            //   {
-            if (Physics.Raycast(playerController.transform.position, window.gameObj.transform.position - playerController.transform.position, out RaycastHit hit_a, 1000))
-            {
-                if (hit_a.collider.gameObject == window.gameObj && hit_a.distance < last_distance)
-                {
-                    last_distance = hit_a.distance;
-                    closestOpeningPoint = window.gameObj;
-                    break;
-                }
-            }
-            //  }
+            AudioSource audioSource = window.gameObj.GetComponent<AudioSource>();
+
+            if (window.eventTime.IsActive())
+                audioSource.volume =  soundManager.musicVolume;
+            else
+                audioSource.volume = 0.5f * soundManager.musicVolume;
+
         }
 
-        // if (petdoorEventObject.eventTime.IsActive())
-        // {
-        //compare with a trigger collider instead of petdoor
-        if (Physics.Raycast(playerController.transform.position, petdoorEventObject.gameObj.transform.position - playerController.transform.position, out RaycastHit hit_b, 1000))
-        {
-            if (hit_b.collider.gameObject == petdoorEventObject.gameObj && hit_b.distance < last_distance)
-            {
-                last_distance = hit_b.distance;
-                closestOpeningPoint = petdoorEventObject.gameObj;
-            }
-        }
-        //  }
+        AudioSource audioSourcePetDoor = petdoorEventObject.gameObj.GetComponent<AudioSource>();
 
-
-        // if (skylightEventObject.eventTime.IsActive())
-        // {
-        if (Physics.Raycast(playerController.transform.position, skylightEventObject.gameObj.transform.position - playerController.transform.position, out RaycastHit hit_c, 1000))
-        {
-            if (hit_c.collider.gameObject == skylightEventObject.gameObj && hit_c.distance < last_distance)
-            {
-                last_distance = hit_c.distance;
-                closestOpeningPoint = skylightEventObject.gameObj;
-            }
-        }
-   // }
-
-        if (closestOpeningPoint != null)
-        {
-            //rainAndThunderAudioSource.local_position = closestOpeningPoint != null ? closestOpeningPoint.transform.localPosition : playerController.transform.localPosition;
-
-            //change 2d to 3d audio
-        }
+        if (petdoorEventObject.eventTime.IsActive())
+            audioSourcePetDoor.volume = soundManager.musicVolume;
         else
-        {
-          //  rainAndThunderAudioSource.local_position = playerController.transform.localPosition;
-            //change 3d to 2d audio
-        }
+            audioSourcePetDoor.volume = 0.5f * soundManager.musicVolume;
+
+        AudioSource audioSourceSkylight = skylightEventObject.gameObj.GetComponent<AudioSource>();
+
+        if (skylightEventObject.eventTime.IsActive())
+            audioSourceSkylight.volume = soundManager.musicVolume;
+        else
+            audioSourceSkylight.volume = 0.5f * soundManager.musicVolume;
 
     }
 
@@ -657,5 +641,10 @@ public class ActivityDirector : MonoBehaviour
 
         for (int currentIndex = 0; currentIndex < activeActivites.Count; currentIndex++)
             activeActivites[currentIndex].OnUpdate();
+    }
+
+    public int GetActiveNight()
+    {
+        return activeNight;
     }
 }

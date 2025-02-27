@@ -37,6 +37,21 @@ public class InteractionManager : MonoBehaviour
        playerController = targetController;
        playerCamera = targetCamera;
     }
+
+    public void ApplyMotionOnInteractable(Rigidbody rigidBody)
+    {
+        Vector3 endPoint = playerCamera.transform.position + (playerCamera.transform.forward * objectLockDistance);
+        Vector3 direction = (endPoint - rigidBody.position).normalized;
+        float distance = Vector3.Distance(rigidBody.position, endPoint);
+
+        if (!Physics.Raycast(playerCamera.transform.position, direction, distance, obstacleLayer))
+        {
+            Vector3 targetVelocity = direction * (distance * interactableMovementSpeed);
+            rigidBody.velocity = Vector3.Lerp(rigidBody.velocity, targetVelocity, Time.deltaTime * interactableMovementSpeed);
+            rigidBody.velocity *= 0.95f;
+            rigidBody.angularVelocity *= 0.9f;
+        }
+    }    
     public void OnLocalPlayerUpdate()
     {
 
@@ -58,18 +73,60 @@ public class InteractionManager : MonoBehaviour
             }
             else if (!playerController.playerControlActions.Player.Interact.IsPressed())
             {
-                interactableObject = null;
                 if (interactableObjRigidBody)
                 {
                     interactableObjRigidBody.useGravity = true;
                     interactableObjRigidBody.constraints = RigidbodyConstraints.None;
                     interactableObjRigidBody = null;
+
+                    if (interactableObject.tag == "Interactable_Blocks")
+                    {
+                        GameObject parent = interactableObject.transform.parent.gameObject;
+
+                        if (parent)
+                        {
+                            Rigidbody[] blocks = parent.GetComponentsInChildren<Rigidbody>();
+
+                            for (int i = 0; i < blocks.Length; i++)
+                            {
+                                Rigidbody blockRigidBody = blocks[i];
+                                if (blockRigidBody)
+                                {
+                                    blockRigidBody.useGravity = true;
+                                    blockRigidBody.constraints = RigidbodyConstraints.None;
+                                }
+                            }
+                        }
+                    }
                 }
+
+                interactableObject = null;
             }
             else
             {
                 if (interactableObjRigidBody)
                 {
+                    if (interactableObject.tag == "Interactable_Blocks")
+                    {
+                        GameObject parent = interactableObject.transform.parent.gameObject;
+
+                        if (parent)
+                        {
+                            Rigidbody[] blocks = parent.GetComponentsInChildren<Rigidbody>();
+
+                            for (int i = 0; i < blocks.Length; i++)
+                            {
+                                Rigidbody blockRigidBody = blocks[i];
+                                if (blockRigidBody)
+                                {
+                                    ApplyMotionOnInteractable(blockRigidBody);
+                                }
+                            }
+                        }
+                    }
+
+                    ApplyMotionOnInteractable(interactableObjRigidBody);
+                    /*
                     Vector3 endPoint = playerCamera.transform.position + (playerCamera.transform.forward * objectLockDistance);
                     Vector3 direction = (endPoint - interactableObjRigidBody.position).normalized;
                     float distance = Vector3.Distance(interactableObjRigidBody.position, endPoint);
@@ -80,10 +137,7 @@ public class InteractionManager : MonoBehaviour
                         interactableObjRigidBody.velocity = Vector3.Lerp(interactableObjRigidBody.velocity, targetVelocity, Time.deltaTime * interactableMovementSpeed);
                         interactableObjRigidBody.velocity *= 0.95f;
                         interactableObjRigidBody.angularVelocity *= 0.9f;
-                    }
-                    else
-                        Debug.Log("Failed to hold object");
-
+                    }*/
                 }
                 else
                     interactableObject.transform.position = playerCamera.transform.position + playerCamera.transform.forward;
@@ -98,13 +152,35 @@ public class InteractionManager : MonoBehaviour
         {
             if (interactTriggered)
             {
-                Debug.Log("Interactable Object Found: " + gameObj.name);
                 interactableObject = gameObj;
                 interactableObjRigidBody = interactableObject.GetComponent<Rigidbody>();
                 interactableObjRigidBody.useGravity = false;
                 interactableObjRigidBody.interpolation = RigidbodyInterpolation.Interpolate;
                 interactableObjRigidBody.constraints = RigidbodyConstraints.FreezeRotation;
                 interactableObjRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+
+                if (interactableObject.tag == "Interactable_Blocks")
+                {
+                    GameObject parent = interactableObject.transform.parent.gameObject;
+
+                    if (parent)
+                    {
+                        Rigidbody[] blocks = parent.GetComponentsInChildren<Rigidbody>();
+
+                        for (int i = 0; i < blocks.Length; i++)
+                        {
+                            Rigidbody blockRigidBody = blocks[i];
+
+                            if (blockRigidBody)
+                            {
+                                blockRigidBody.useGravity = false;
+                                blockRigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+                                blockRigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+                                blockRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+                            }
+                        }
+                    }
+                }
             }
         }
 

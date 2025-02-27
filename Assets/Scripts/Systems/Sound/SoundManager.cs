@@ -68,7 +68,7 @@ public class SoundManager : MonoBehaviour
         musicSource.volume = musicVolume * masterVolume;
         masterVolume = 1f;
         sfxVolume = 1f;
-        musicVolume = 0.1f;
+        musicVolume = 0.3f;
     }
 
     private void Start()

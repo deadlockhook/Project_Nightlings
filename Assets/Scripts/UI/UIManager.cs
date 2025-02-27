@@ -12,8 +12,6 @@ using UnityEngine.Playables;
 public class UIManager : MonoBehaviour
 {
 	public static UIManager Instance { get; private set; }
-	public GameObject bellIconPrefab;
-	private Dictionary<int, GameObject> activeIcons = new Dictionary<int, GameObject>();
 	private Stack<UIState> uiStateHistory = new Stack<UIState>();
 	private List<GameObject> clocks;
 	private ActivityDirector activityDirector;
@@ -53,11 +51,15 @@ public class UIManager : MonoBehaviour
 	public GameObject blackScreen;
 	public TMP_Text deathCauseText;
 
+	[Header("Win Screen")]
+	public TMP_Text winText;
+
 	[Header("Night Picker and Info UI")]
 	public GameObject nightPickerUI;
 	public GameObject nightInfoUI;
 
-	private bool isPaused = false;
+
+    private bool isPaused = false;
 	private Toggle audioVisualToggle;
 	private Toggle motionBlurToggle;
 	private Toggle chromaticAbberationToggle;
@@ -73,14 +75,11 @@ public class UIManager : MonoBehaviour
 		}
 		Instance = this;
 		DontDestroyOnLoad(gameObject);
-	}
+    }
 
 	private void Start()
 	{
-		// This is cursed code really...
-
-		//activityDirector = FindObjectOfType<ActivityDirector>();
-		mainMenuUI = transform.Find("MainMenu").gameObject;
+        mainMenuUI = transform.Find("MainMenu").gameObject;
 		pauseMenuUI = transform.Find("Pause").gameObject;
 		gameplayUI = transform.Find("Gameplay").gameObject;
 		optionsUI = transform.Find("Options").gameObject;
@@ -100,9 +99,19 @@ public class UIManager : MonoBehaviour
 		clocks.AddRange(GameObject.FindGameObjectsWithTag("Clock"));
 
 		ChangeUIState(UIState.MainMenu);
-	}
 
-	private void DeactivateAllScreens()
+		if (nightPickerUI != null)
+		{
+			NightButton[] nightButtons = nightPickerUI.GetComponentsInChildren<NightButton>(true);
+			foreach (NightButton button in nightButtons)
+			{
+				button.UpdateButtonState();
+			}
+		}
+	}
+    
+
+    private void DeactivateAllScreens()
 	{
 		mainMenuUI.SetActive(false);
 		pauseMenuUI.SetActive(false);
@@ -236,21 +245,9 @@ public class UIManager : MonoBehaviour
 			return;
 
 		HandleEscapeInput();
+    }
 
-		if (!iconsEnabled)
-		{
-			foreach (var eventIndex in activeIcons.Keys.ToList())
-			{
-				DeactivateIcon(eventIndex);
-			}
-		}
-		else
-		{
-			ReactivateIcons();
-		}
-	}
-
-	public void OptionsBack()
+    public void OptionsBack()
 	{
 		if (uiStateHistory.Count > 1)
 		{
@@ -324,6 +321,32 @@ public class UIManager : MonoBehaviour
 
 	public void WinGame()
 	{
+		string nightName = "Friday Night";
+		ActivityDirector director = FindObjectOfType<ActivityDirector>();
+		if (director != null)
+		{
+			switch (director.GetActiveNight())
+			{
+				case 0:
+					nightName = "Friday Night";
+					break;
+				case 1:
+					nightName = "Saturday Night";
+					break;
+				case 2:
+					nightName = "Sunday Night";
+					break;
+				default:
+					nightName = "Friday Night";
+					break;
+			}
+		}
+
+		if (winText != null)
+		{
+			winText.text = "You Survived " + nightName;
+		}
+
 		isPaused = true;
 		ChangeUIState(UIState.Win);
 	}
@@ -384,51 +407,7 @@ public class UIManager : MonoBehaviour
 		ChangeUIState(UIState.NightPicker);
 	}
 
-	public void ShowIcon(GameObject iconPrefab, Vector3 position, int eventIndex)
-	{
-		if (!iconsEnabled)
-			return;
-		if (activeIcons.ContainsKey(eventIndex))
-			return;
-
-		GameObject icon = Instantiate(iconPrefab, position, Quaternion.identity);
-		activeIcons.Add(eventIndex, icon);
-	}
-
-	public void HideIcon(int eventIndex)
-	{
-		if (!activeIcons.ContainsKey(eventIndex))
-			return;
-
-		Destroy(activeIcons[eventIndex]);
-		activeIcons.Remove(eventIndex);
-	}
-
-	public void DeactivateIcon(int eventIndex)
-	{
-		if (!activeIcons.ContainsKey(eventIndex))
-			return;
-		if (activeIcons[eventIndex] != null)
-			activeIcons[eventIndex].SetActive(false);
-	}
-
-	private void ReactivateIcons()
-	{
-		foreach (var eventIndex in activeIcons.Keys.ToList())
-		{
-			GameObject icon = activeIcons[eventIndex];
-			if (icon == null)
-			{
-				activeIcons.Remove(eventIndex);
-			}
-			else if (!icon.activeSelf)
-			{
-				icon.SetActive(true);
-			}
-		}
-	}
-
-	private IEnumerator TransitionToState(UIState newState)
+    private IEnumerator TransitionToState(UIState newState)
 	{
 		loadingScreen.SetActive(true);
 		CanvasGroup canvasGroup = loadingScreen.GetComponent<CanvasGroup>();
@@ -463,13 +442,18 @@ public class UIManager : MonoBehaviour
 	{
 		if (winUI.activeSelf || loseUI.activeSelf)
 			return;
+
+		if (ProgressManager.Instance != null && !ProgressManager.Instance.IsNightUnlocked(night))
+		{
+			return;
+		}
+
 		StartCoroutine(LoadDylanScene(night));
 	}
 
 	private IEnumerator LoadDylanScene(int night)
 	{
 		Time.timeScale = 1f;
-		activeIcons.Clear();
 
 		SceneManager.LoadScene("Dylan_Test");
 		ChangeUIStateWithLoading(UIState.NightInfo);
@@ -486,13 +470,18 @@ public class UIManager : MonoBehaviour
 	{
 		if (winUI.activeSelf || loseUI.activeSelf)
 			return;
+
+		if (ProgressManager.Instance != null && !ProgressManager.Instance.IsNightUnlocked(night))
+		{
+			return;
+		}
+
 		StartCoroutine(LoadMainAndShowNightInfo(night));
 	}
 
 	private IEnumerator LoadMainAndShowNightInfo(int night)
 	{
 		Time.timeScale = 1f;
-		activeIcons.Clear();
 
 		SceneManager.LoadScene("Main");
 		ChangeUIStateWithLoading(UIState.NightInfo);
@@ -519,13 +508,13 @@ public class UIManager : MonoBehaviour
 		switch (night)
 		{
 			case 0:
-				nightInfoText.text = "Friday, 12:00AM";
+				nightInfoText.text = "Friday, 12:00am";
 				break;
 			case 1:
-				nightInfoText.text = "Saturday, 12:00AM";
+				nightInfoText.text = "Saturday, 12:00am";
 				break;
 			case 2:
-				nightInfoText.text = "Sunday, 12:00AM";
+				nightInfoText.text = "Sunday, 12:00am";
 				break;
 			default:
 				nightInfoText.text = "Bro what night are you on?";
@@ -537,9 +526,9 @@ public class UIManager : MonoBehaviour
 			cg = nightInfoUI.AddComponent<CanvasGroup>();
 		cg.alpha = 1f;
 
-		yield return new WaitForSeconds(5f);
+		yield return new WaitForSeconds(1f);
 
-		float fadeDuration = 2f;
+		float fadeDuration = 0.25f;
 		float timer = 0f;
 		while (timer < fadeDuration)
 		{
@@ -563,7 +552,6 @@ public class UIManager : MonoBehaviour
 	private Camera mainCamera;
 	private Volume volume;
 
-	[HideInInspector] public bool iconsEnabled = false;
 	private bool motionBlurEnabled = false;
 	private bool chromaticAbberationEnabled = false;
 	private bool bloomEnabled = false;
@@ -590,18 +578,7 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-	public void ToggleIconsEnabled(bool enabled)
-	{
-		enabled = audioVisualToggle.isOn;
-		iconsEnabled = enabled;
-
-		foreach (var icon in activeIcons.Values)
-		{
-			icon.SetActive(iconsEnabled);
-		}
-	}
-
-	public void ToggleMotionBlur(bool enabled)
+    public void ToggleMotionBlur(bool enabled)
 	{
 		enabled = motionBlurToggle.isOn;
 		motionBlurEnabled = enabled;
@@ -625,7 +602,7 @@ public class UIManager : MonoBehaviour
 	// This is for the jumpscare atm, need to find a better way to do this
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
-		if (loseTimeline == null)
+        if (loseTimeline == null)
 		{
 			GameObject timelineObject = GameObject.Find("TimeLineData");
 			if (timelineObject != null)
