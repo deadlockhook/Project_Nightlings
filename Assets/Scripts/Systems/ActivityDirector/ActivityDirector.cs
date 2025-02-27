@@ -322,7 +322,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnWindowActivityStart(int activityIndex)
     {
         windowEventObjects[activityIndex].gameObj.GetComponent<WindowsActivity>().ActivityTriggerStart();
-        IconManager.Instance.RegisterIcon(activityIndex, windowEventObjects[activityIndex].gameObj.transform.position);
+        IconManager.Instance.RegisterIcon(5, windowEventObjects[activityIndex].gameObj.transform.position);
         HintManager.Instance.DisplayGameHint(HintType.Window);
     }
 
@@ -335,7 +335,7 @@ public class ActivityDirector : MonoBehaviour
         {
             activityObject.eventTime.Deactivate(activeActivites);
             activityObject.eventTime.Reset();
-            IconManager.Instance.UnregisterIcon(activityIndex);
+            IconManager.Instance.UnregisterIcon(5);
         }
     }
 
