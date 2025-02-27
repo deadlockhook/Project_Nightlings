@@ -18,12 +18,6 @@ MonoBehaviour:
   - title: Cat
     videoClip: {fileID: 32900000, guid: 9463ceefa093a2a47aea574c293a2f53, type: 3}
     volume: 0
-  - title: Skeleton
-    videoClip: {fileID: 32900000, guid: 93984960c5b30fd4f86c99a472f1106f, type: 3}
-    volume: 0.5
-  - title: Zombie bruh
-    videoClip: {fileID: 32900000, guid: 19ec321c02569bb49acf10479b5ca9dd, type: 3}
-    volume: 0.5
   staticVideo: {fileID: 32900000, guid: 5593bf1bb2588254ba5f70adbfaf4e11, type: 3}
   staticDuration: 1
   staticVolume: 0.5
