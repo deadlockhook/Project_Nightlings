@@ -28,5 +28,5 @@ MonoBehaviour:
     videoClip: {fileID: 32900000, guid: dbd12edcf9d8c6f4ab20d0d508d3071a, type: 3}
     volume: 0
   staticVideo: {fileID: 32900000, guid: 5593bf1bb2588254ba5f70adbfaf4e11, type: 3}
-  staticDuration: 1
+  staticDuration: 0.5
   staticVolume: 0.5
