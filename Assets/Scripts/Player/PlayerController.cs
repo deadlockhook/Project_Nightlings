@@ -35,6 +35,14 @@ public class PlayerController : MonoBehaviour
 	public Image staminaBar;
 	public float staminaFadeSpeed = 1f;
 
+	[Header("Sugar Rush Settings")]
+	public float sugarRushDuration = 15f;
+	public float speedBoostMultiplier = 1.3f;
+	private bool isSugarRushActive = false;
+	private float sugarRushTimer = 0f;
+	private float originalWalkSpeed;
+	private float originalRunSpeed;
+
 	[Header("Head Bob Settings")]
 	public float headBobPower = 0.05f;
 	public float headBobSpeed = 5f;
@@ -146,6 +154,7 @@ public class PlayerController : MonoBehaviour
 		HandleHeadBob();
 		HandleFlashlight();
 		UpdateStamina();
+		UpdateSugarRush();
 		UpdateStaminaUI();
 
 		if (interactionManager != null)
@@ -175,6 +184,13 @@ public class PlayerController : MonoBehaviour
 	// Update stamina
 	private void UpdateStamina()
 	{
+		if (isSugarRushActive)
+		{
+			currentStamina = maxStamina;
+			staminaCoolDownTimer = 0f;
+			return;
+		}
+
 		if (isRunning)
 		{
 			staminaCoolDownTimer = 0f;
@@ -387,6 +403,36 @@ public class PlayerController : MonoBehaviour
 
 	public void EatCandy()
 	{
-		Debug.Log("Suger Rush");
+		if (isSugarRushActive)
+			return;
+
+		originalWalkSpeed = walkSpeed;
+		originalRunSpeed = runSpeed;
+		isSugarRushActive = true;
+		sugarRushTimer = 0f;
+		walkSpeed *= speedBoostMultiplier;
+		runSpeed *= speedBoostMultiplier;
+		currentStamina = maxStamina;
+	}
+
+	private void UpdateSugarRush()
+	{
+		if (playerControlActions.Player.CandyConsume.IsPressed() && !isSugarRushActive && !isDead)
+		{
+			EatCandy();
+		}
+
+		if (isSugarRushActive)
+		{
+			sugarRushTimer += Time.deltaTime;
+
+			if (sugarRushTimer >= sugarRushDuration)
+			{
+				walkSpeed = originalWalkSpeed;
+				runSpeed = originalRunSpeed;
+
+				isSugarRushActive = false;
+			}
+		}
 	}
 }

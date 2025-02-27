@@ -98,6 +98,15 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CandyConsume"",
+                    ""type"": ""Button"",
+                    ""id"": ""7766914d-95e1-4475-9cee-8d14612c00b5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -342,6 +351,17 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
                     ""action"": ""Crouch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""92b93c93-58b4-4a2e-94fa-1442e7a45161"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""CandyConsume"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -419,6 +439,7 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
         m_Player_FlashlightRecharge = m_Player.FindAction("FlashlightRecharge", throwIfNotFound: true);
         m_Player_FlashlightToggle = m_Player.FindAction("FlashlightToggle", throwIfNotFound: true);
         m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
+        m_Player_CandyConsume = m_Player.FindAction("CandyConsume", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -488,6 +509,7 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_FlashlightRecharge;
     private readonly InputAction m_Player_FlashlightToggle;
     private readonly InputAction m_Player_Crouch;
+    private readonly InputAction m_Player_CandyConsume;
     public struct PlayerActions
     {
         private @PlayerControlActions m_Wrapper;
@@ -500,6 +522,7 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
         public InputAction @FlashlightRecharge => m_Wrapper.m_Player_FlashlightRecharge;
         public InputAction @FlashlightToggle => m_Wrapper.m_Player_FlashlightToggle;
         public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
+        public InputAction @CandyConsume => m_Wrapper.m_Player_CandyConsume;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -533,6 +556,9 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
             @Crouch.started += instance.OnCrouch;
             @Crouch.performed += instance.OnCrouch;
             @Crouch.canceled += instance.OnCrouch;
+            @CandyConsume.started += instance.OnCandyConsume;
+            @CandyConsume.performed += instance.OnCandyConsume;
+            @CandyConsume.canceled += instance.OnCandyConsume;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -561,6 +587,9 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
             @Crouch.started -= instance.OnCrouch;
             @Crouch.performed -= instance.OnCrouch;
             @Crouch.canceled -= instance.OnCrouch;
+            @CandyConsume.started -= instance.OnCandyConsume;
+            @CandyConsume.performed -= instance.OnCandyConsume;
+            @CandyConsume.canceled -= instance.OnCandyConsume;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -633,5 +662,6 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
         void OnFlashlightRecharge(InputAction.CallbackContext context);
         void OnFlashlightToggle(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
+        void OnCandyConsume(InputAction.CallbackContext context);
     }
 }
