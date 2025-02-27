@@ -94,6 +94,7 @@ public class SkylightActivity : MonoBehaviour
         PlayTriggerAudio();
     }
 
+    private bool skylightShutPlayed = false;
     public void Update()
     {
         if (resetAnimBegin)
@@ -101,10 +102,17 @@ public class SkylightActivity : MonoBehaviour
             resetProgress += Time.deltaTime;
             resetProgress = Mathf.Clamp(resetProgress, 0.0f, 1.0f);
 
+            if (!skylightShutPlayed && resetProgress >= 0.9f)
+            {
+                skylightShutPlayed = true;
+                SoundManager.Instance.PlaySound("WindowShut", triggerAudio1);
+            }
+
             if (resetProgress >= 1.0f)
             {
                 resetProgress = 0.0f;
                 resetAnimBegin = false;
+                skylightShutPlayed = false;
                 transform.localPosition = new Vector3(transform.localPosition.x, startYPosition, transform.localPosition.z);
                 SoundManager.Instance.PlaySound("WindowShut", triggerAudio1);
             }

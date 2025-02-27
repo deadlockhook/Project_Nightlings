@@ -92,16 +92,25 @@ public class BasementHatch : MonoBehaviour
         activityFinished = true;
     }
 
+    private bool basementShutPlayed = false;
+
     public void Update()
     {
         if (resetAnimBegin)
         {
             resetProgress += Time.deltaTime;
 
+            if (!basementShutPlayed && resetProgress >= 0.9f)
+            {
+                basementShutPlayed = true;
+                SoundManager.Instance.PlaySound("BasementShut", triggerAudio1);
+            }
+
             if (resetProgress >= 1.0f)
             {
                 resetProgress = 0.0f;
                 resetAnimBegin = false;
+                basementShutPlayed = false;
                 leftDoor.localRotation = Quaternion.Euler(leftDoor.localRotation.eulerAngles.x, leftDoor.localRotation.eulerAngles.y, 0);
                 rightDoor.localRotation = Quaternion.Euler(rightDoor.localRotation.eulerAngles.x, rightDoor.localRotation.eulerAngles.y, 0);
                 SoundManager.Instance.PlaySound("BasementShut", triggerAudio1);
