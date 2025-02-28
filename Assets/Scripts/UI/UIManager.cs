@@ -29,7 +29,8 @@ public class UIManager : MonoBehaviour
 		Win,
 		Lose,
 		NightPicker,
-		NightInfo
+		NightInfo,
+		CreditsUI
 	}
 
 	[Header("UI Screens")]
@@ -41,6 +42,7 @@ public class UIManager : MonoBehaviour
 	private GameObject loseUI;
 	private GameObject soundOptionsUI;
 	private GameObject videoOptionsUI;
+	private GameObject creditsUI;
 
 	[Header("Loading Screen")]
 	public GameObject loadingScreen;
@@ -59,7 +61,7 @@ public class UIManager : MonoBehaviour
 	public GameObject nightInfoUI;
 
 
-    private bool isPaused = false;
+	private bool isPaused = false;
 	private Toggle audioVisualToggle;
 	private Toggle motionBlurToggle;
 	private Toggle chromaticAbberationToggle;
@@ -75,11 +77,11 @@ public class UIManager : MonoBehaviour
 		}
 		Instance = this;
 		DontDestroyOnLoad(gameObject);
-    }
+	}
 
 	private void Start()
 	{
-        mainMenuUI = transform.Find("MainMenu").gameObject;
+		mainMenuUI = transform.Find("MainMenu").gameObject;
 		pauseMenuUI = transform.Find("Pause").gameObject;
 		gameplayUI = transform.Find("Gameplay").gameObject;
 		optionsUI = transform.Find("Options").gameObject;
@@ -89,6 +91,7 @@ public class UIManager : MonoBehaviour
 		loseUI = transform.Find("Lose").gameObject;
 		nightPickerUI = transform.Find("NightPicker").gameObject;
 		nightInfoUI = transform.Find("NightInfo").gameObject;
+		creditsUI = transform.Find("Credits").gameObject;
 
 		audioVisualToggle = soundOptionsUI.transform.Find("AudioVisualToggle").GetComponent<Toggle>();
 		motionBlurToggle = videoOptionsUI.transform.Find("MotionBlurToggle").GetComponent<Toggle>();
@@ -109,9 +112,8 @@ public class UIManager : MonoBehaviour
 			}
 		}
 	}
-    
 
-    private void DeactivateAllScreens()
+	private void DeactivateAllScreens()
 	{
 		mainMenuUI.SetActive(false);
 		pauseMenuUI.SetActive(false);
@@ -121,6 +123,7 @@ public class UIManager : MonoBehaviour
 		videoOptionsUI.SetActive(false);
 		winUI.SetActive(false);
 		loseUI.SetActive(false);
+		creditsUI.SetActive(false);
 		if (nightPickerUI != null) nightPickerUI.SetActive(false);
 		if (nightInfoUI != null) nightInfoUI.SetActive(false);
 	}
@@ -188,6 +191,11 @@ public class UIManager : MonoBehaviour
 				Time.timeScale = 1f;
 				nightInfoUI.SetActive(true);
 				break;
+			case UIState.CreditsUI:
+				Cursor.lockState = CursorLockMode.None;
+				Time.timeScale = 0f;
+				creditsUI.SetActive(true);
+				break;
 		}
 		uiStateHistory.Push(state);
 	}
@@ -218,6 +226,10 @@ public class UIManager : MonoBehaviour
 			{
 				OptionsBack();
 			}
+			else if (creditsUI != null && creditsUI.activeSelf)
+			{
+				ChangeUIState(UIState.MainMenu);
+			}
 			else if (nightPickerUI != null && nightPickerUI.activeSelf)
 			{
 				ChangeUIState(UIState.MainMenu);
@@ -245,9 +257,9 @@ public class UIManager : MonoBehaviour
 			return;
 
 		HandleEscapeInput();
-    }
+	}
 
-    public void OptionsBack()
+	public void OptionsBack()
 	{
 		if (uiStateHistory.Count > 1)
 		{
@@ -311,6 +323,11 @@ public class UIManager : MonoBehaviour
 	public void GoToVideoOptions()
 	{
 		ChangeUIState(UIState.VideoOptions);
+	}
+
+	public void ShowCredits()
+	{
+		ChangeUIState(UIState.CreditsUI);
 	}
 
 	public void QuitGame()
@@ -407,7 +424,7 @@ public class UIManager : MonoBehaviour
 		ChangeUIState(UIState.NightPicker);
 	}
 
-    private IEnumerator TransitionToState(UIState newState)
+	private IEnumerator TransitionToState(UIState newState)
 	{
 		loadingScreen.SetActive(true);
 		CanvasGroup canvasGroup = loadingScreen.GetComponent<CanvasGroup>();
@@ -578,7 +595,7 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-    public void ToggleMotionBlur(bool enabled)
+	public void ToggleMotionBlur(bool enabled)
 	{
 		enabled = motionBlurToggle.isOn;
 		motionBlurEnabled = enabled;
@@ -602,7 +619,7 @@ public class UIManager : MonoBehaviour
 	// This is for the jumpscare atm, need to find a better way to do this
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
-        if (loseTimeline == null)
+		if (loseTimeline == null)
 		{
 			GameObject timelineObject = GameObject.Find("TimeLineData");
 			if (timelineObject != null)
