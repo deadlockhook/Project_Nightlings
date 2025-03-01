@@ -35,10 +35,10 @@ public class ActivityDirector : MonoBehaviour
     }
     public class timedActivity
     {
-        public timedActivity(float _triggerTimeMilliSeconds, int _triggerIndex, timedActivityTrigger _actionStart, timedActivityTrigger _actionEnd, timedActivityTrigger _actionOnUpdate)
+        public timedActivity(float _triggerTimeSeconds, int _triggerIndex, timedActivityTrigger _actionStart, timedActivityTrigger _actionEnd, timedActivityTrigger _actionOnUpdate)
         {
             currentTime = 0;
-            triggerTime = _triggerTimeMilliSeconds;
+            triggerTime = _triggerTimeSeconds;
             actionStart = _actionStart;
             actionEnd = _actionEnd;
             actionOnUpdate = _actionOnUpdate;
@@ -58,7 +58,7 @@ public class ActivityDirector : MonoBehaviour
             if (!active)
                 return;
 
-            currentTime += (Time.deltaTime * 1000f);
+            currentTime += Time.deltaTime;
 
             if (actionOnUpdate != null)
                 actionOnUpdate(triggerIndex);
@@ -112,10 +112,10 @@ public class ActivityDirector : MonoBehaviour
     }
     public class activityTrigger
     {
-        public activityTrigger(GameObject _gameObj, float triggerTimeMilliSeconds, int triggerIndex, timedActivityTrigger actionStart, timedActivityTrigger actionEnd, timedActivityTrigger actionOnUpdate)
+        public activityTrigger(GameObject _gameObj, float triggerTimeSeconds, int triggerIndex, timedActivityTrigger actionStart, timedActivityTrigger actionEnd, timedActivityTrigger actionOnUpdate)
         {
             gameObj = _gameObj;
-            eventTime = new timedActivity(triggerTimeMilliSeconds, triggerIndex, actionStart, actionEnd, actionOnUpdate);
+            eventTime = new timedActivity(triggerTimeSeconds, triggerIndex, actionStart, actionEnd, actionOnUpdate);
         }
 
         public GameObject gameObj;
@@ -135,34 +135,29 @@ public class ActivityDirector : MonoBehaviour
     [SerializeField] private int minToySpawnLocations = 12;
     [SerializeField] private int maxToySpawnLocations = 20;
 
-    private float triggerWindowsActivityLogicRangeStart = 35000.0f;
-    private float triggerWindowsActivityLogicRangeEnd = 45000.0f;
-    private float windowsActivityTimeLimit = 30000.0f;
+    private float triggerWindowsActivityLogicRangeStart = 30.0f;
+    private float triggerWindowsActivityLogicRangeEnd = 45.0f;
+    private float windowsActivityTimeLimit = 30.0f;
 
-    private float triggerPetdoorActivityLogicRangeStart = 45000.0f;
-    private float triggerPetdoorActivityLogicRangeEnd = 55000.0f;
-    private float petdoorActivityTimeLimit = 28000.0f;
+    private float triggerPetdoorActivityLogicRangeStart = 50.0f;
+    private float triggerPetdoorActivityLogicRangeEnd = 60.0f;
+    private float petdoorActivityTimeLimit = 35.0f;
 
-    private float triggerBasementActivityLogicRangeStart = 25000.0f;
-    private float triggerBasementActivityLogicRangeEnd = 33000.0f;
-    private float basementHatchActivityTimeLimit = 35000.0f;
+    private float triggerBasementActivityLogicRangeStart = 55.0f;
+    private float triggerBasementActivityLogicRangeEnd = 75.0f;
+    private float basementHatchActivityTimeLimit = 35.0f;
 
     private float triggerFireplaceActivityLogicRangeStart = 0.0f;
     private float triggerFireplaceActivityLogicRangeEnd = 0.0f;
-    private float fireplaceActivityTimeLimit = 60000.0f;
+    private float fireplaceActivityTimeLimit = 90.0f; // 1 minute 30 seconds
 
-    private float triggerSkylightActivityLogicRangeStart = 70000.0f;
-    private float triggerSkylightActivityLogicRangeEnd = 80000.0f;
-    private float skylightActivityTimeLimit = 20000.0f;
+    private float triggerSkylightActivityLogicRangeStart = 70.0f;
+    private float triggerSkylightActivityLogicRangeEnd = 80.0f;
+    private float skylightActivityTimeLimit = 30.0f;
 
-    private float toiletActivityLogicRangeStart = 50000.0f;
-    private float toiletActivityLogicRangeEnd = 60000.0f;
-    private float toiletActivityTimeLimit = 25000.0f;
-
-
-    //  private float toiletActivityLogicRangeStart = 500.0f;
-    //  private float toiletActivityLogicRangeEnd = 600.0f;
-    //  private float toiletActivityTimeLimit = 15000.0f;
+    private float toiletActivityLogicRangeStart = 50.0f;
+    private float toiletActivityLogicRangeEnd = 70.0f;
+    private float toiletActivityTimeLimit = 30.0f;
 
     private List<activityTrigger> windowEventObjects;
     private activityTrigger petdoorEventObject;
@@ -201,16 +196,16 @@ public class ActivityDirector : MonoBehaviour
         soundManager = FindObjectOfType<SoundManager>();
         activeActivites = new List<timedActivity>();
         windowEventObjects = new List<activityTrigger>();
-        lastDeltaTimeForWindowEvents = Time.deltaTime * 1000.0f;
+        lastDeltaTimeForWindowEvents = Time.deltaTime;
         lastDeltaTimeForPetDoorEvents = lastDeltaTimeForWindowEvents;
 
         nightActivity = new timedActivity[3];
-        //  420000
-        nightActivity[0] = new timedActivity(420000, 0, OnNightStart, OnWin, null);
-        nightActivity[1] = new timedActivity(420000, 1, OnNightStart, OnWin, null);
-        nightActivity[2] = new timedActivity(420000, 2, OnNightStart, OnWin, null);
+        //  420 seconds = 7 minutes
+        nightActivity[0] = new timedActivity(420.0f, 0, OnNightStart, OnWin, null);
+        nightActivity[1] = new timedActivity(420.0f, 1, OnNightStart, OnWin, null);
+        nightActivity[2] = new timedActivity(420.0f, 2, OnNightStart, OnWin, null);
 
-        deathTrigger = new timedActivity(10000, 0, null, OnDeath, null);
+        deathTrigger = new timedActivity(10.0f, 0, null, OnDeath, null);
 
         toySpawnLocations = new List<Vector3>();
 
@@ -620,7 +615,7 @@ public class ActivityDirector : MonoBehaviour
         if (stopActivityDirector)
             return;
 
-        currentDeltaTime += Time.deltaTime * 1000f;
+        currentDeltaTime += Time.deltaTime;
 
         DispatchWindowEvents();
         DispatchPetdoorEvent();
