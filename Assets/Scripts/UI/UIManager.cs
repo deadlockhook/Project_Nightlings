@@ -140,7 +140,7 @@ public class UIManager : MonoBehaviour
 					SoundManager.Instance.PlayMusic("MainMenu");
 				}
 				Cursor.lockState = CursorLockMode.None;
-				Time.timeScale = 0f;
+				Time.timeScale = 1f;
 				mainMenuUI.SetActive(true);
 				break;
 			case UIState.PauseMenu:
@@ -310,8 +310,15 @@ public class UIManager : MonoBehaviour
 
 	public void GoToMainMenu()
 	{
-		ChangeUIState(UIState.MainMenu);
+		StartCoroutine(LoadMainMenuWithLoading());
+	}
+
+	private IEnumerator LoadMainMenuWithLoading()
+	{
 		SceneManager.LoadScene("MainMenu");
+		ChangeUIStateWithLoading(UIState.MainMenu);
+
+		yield return new WaitForSecondsRealtime(loadingDisplayDuration + loadingFadeDuration);
 	}
 
 	public void GoToOptions()
