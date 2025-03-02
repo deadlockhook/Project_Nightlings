@@ -180,6 +180,8 @@ public class ActivityDirector : MonoBehaviour
     private timedActivity[] nightActivity;
     private int activeNight = 0;
 
+    private bool nightHasStarted = false;
+
     private timedActivity deathTrigger;
 
     public GameObject iconPrefab;
@@ -240,7 +242,7 @@ public class ActivityDirector : MonoBehaviour
         if (GameObject.FindObjectOfType<ToiletActivity>() != null)
             toiletEventObject = new activityTrigger(GameObject.FindObjectOfType<ToiletActivity>().gameObject, toiletActivityTimeLimit, 0, OnToiletActivityStart, OnToiletActivityFinished, OnToiletActivityUpdate);
 
-        nightActivity[0].Activate(activeActivites);
+        //nightActivity[0].Activate(activeActivites);
     }
 
     private bool petdoorActivityFinished = false;
@@ -554,6 +556,10 @@ public class ActivityDirector : MonoBehaviour
         nightActivity[1].Deactivate(activeActivites);
         nightActivity[2].Deactivate(activeActivites);
         nightActivity[0].Deactivate(activeActivites);
+
+        currentDeltaTime = 0f;
+        nightHasStarted = true;
+
         nightActivity[nightIndex].Activate(activeActivites);
         playerController.Respawn();
     }
@@ -591,7 +597,6 @@ public class ActivityDirector : MonoBehaviour
                 audioSource.volume =  soundManager.musicVolume;
             else
                 audioSource.volume = 0.5f * soundManager.musicVolume;
-
         }
 
         AudioSource audioSourcePetDoor = petdoorEventObject.gameObj.GetComponent<AudioSource>();
@@ -612,7 +617,7 @@ public class ActivityDirector : MonoBehaviour
 
     void Update()
     {
-        if (stopActivityDirector)
+        if (!nightHasStarted || stopActivityDirector)
             return;
 
         currentDeltaTime += Time.deltaTime;
@@ -634,8 +639,10 @@ public class ActivityDirector : MonoBehaviour
 
         ControlRainAndThunderSpatialAudio();
 
-        for (int currentIndex = 0; currentIndex < activeActivites.Count; currentIndex++)
-            activeActivites[currentIndex].OnUpdate();
+        for (int i = 0; i < activeActivites.Count; i++)
+        {
+            activeActivites[i].OnUpdate();
+        }
     }
 
     public int GetActiveNight()
