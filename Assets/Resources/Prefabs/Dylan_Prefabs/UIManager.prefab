@@ -6587,6 +6587,7 @@ MonoBehaviour:
   loadingFadeDuration: 1
   blackScreen: {fileID: 3060552939149046190}
   deathCauseText: {fileID: 1855220487392555890}
+  timeOfDeathText: {fileID: 7695506741533695673}
   winText: {fileID: 5806292664773683937}
   nightPickerUI: {fileID: 6303829692118610602}
   nightInfoUI: {fileID: 7354761026018449498}

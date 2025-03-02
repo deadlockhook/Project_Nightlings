@@ -187,6 +187,7 @@ public class ActivityDirector : MonoBehaviour
     public GameObject iconPrefab;
 
     private string deathCause = "Unknown";
+    public float DeathTime { get; private set; }
 
     void Start()
     {
@@ -579,6 +580,7 @@ public class ActivityDirector : MonoBehaviour
 
     void OnDeath(int activityIndex)
     {
+        DeathTime = currentDeltaTime;
         playerController.Die();
         uiManager.LoseGame(deathCause);
         stopActivityDirector = true;

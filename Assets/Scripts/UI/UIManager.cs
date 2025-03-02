@@ -52,6 +52,7 @@ public class UIManager : MonoBehaviour
 	[Header("Death Screen")]
 	public GameObject blackScreen;
 	public TMP_Text deathCauseText;
+	public TMP_Text timeOfDeathText;
 
 	[Header("Win Screen")]
 	public TMP_Text winText;
@@ -408,11 +409,29 @@ public class UIManager : MonoBehaviour
 			blackScreen.SetActive(false);
 		loseUI.SetActive(true);
 
+		ActivityDirector director = FindObjectOfType<ActivityDirector>();
+		float deathTime = director != null ? director.DeathTime : 0f;
+		string formattedTime = FormatTime(deathTime);
+
 		if (deathCauseText != null)
 			deathCauseText.text = "You were killed by: " + deathCause;
 
+		if (timeOfDeathText != null)
+			timeOfDeathText.text = "You died at " + formattedTime;
+
 		Cursor.lockState = CursorLockMode.None;
 		Time.timeScale = 0f;
+	}
+
+	public string FormatTime(float seconds)
+	{
+		int totalMinutes = Mathf.FloorToInt(seconds);
+		int hour = totalMinutes / 60;
+		int minute = totalMinutes % 60;
+		if (hour == 0)
+			hour = 12;
+		string period = "AM";
+		return string.Format("{0}:{1:00} {2}", hour, minute, period);
 	}
 
 	public bool IsPaused()
