@@ -188,6 +188,7 @@ public class UIManager : MonoBehaviour
 				break;
 			case UIState.NightInfo:
 				SoundManager.Instance.StopMusic();
+				Cursor.lockState = CursorLockMode.Locked;
 				Time.timeScale = 1f;
 				nightInfoUI.SetActive(true);
 				break;
@@ -214,6 +215,9 @@ public class UIManager : MonoBehaviour
 
 	private void HandleEscapeInput()
 	{
+		if (CutsceneManager.Instance != null && CutsceneManager.Instance.IsPlayingCutscene)
+			return;
+
 		bool canUseEscape = true;
 		if ((loadingScreen != null && loadingScreen.activeSelf) ||
 			(nightInfoUI != null && nightInfoUI.activeSelf))
@@ -543,9 +547,14 @@ public class UIManager : MonoBehaviour
 			cg = nightInfoUI.AddComponent<CanvasGroup>();
 		cg.alpha = 1f;
 
-		yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(3f);
 
-		float fadeDuration = 0.25f;
+		if (CutsceneManager.Instance != null)
+		{
+			CutsceneManager.Instance.PlayCutsceneWithIndex(night);
+		}
+
+		float fadeDuration = 0.5f;
 		float timer = 0f;
 		while (timer < fadeDuration)
 		{
@@ -553,8 +562,12 @@ public class UIManager : MonoBehaviour
 			cg.alpha = Mathf.Lerp(1f, 0f, timer / fadeDuration);
 			yield return null;
 		}
-
 		nightInfoUI.SetActive(false);
+
+		while (CutsceneManager.Instance != null && CutsceneManager.Instance.IsPlayingCutscene)
+		{
+			yield return null;
+		}
 
 		if (player != null)
 		{
