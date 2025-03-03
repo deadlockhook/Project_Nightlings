@@ -56,6 +56,7 @@ public class UIManager : MonoBehaviour
 
 	[Header("Win Screen")]
 	public TMP_Text winText;
+	public TMP_Text unlockedNightText;
 
 	[Header("Night Picker and Info UI")]
 	public GameObject nightPickerUI;
@@ -350,30 +351,42 @@ public class UIManager : MonoBehaviour
 
 	public void WinGame()
 	{
-		string nightName = "Friday Night";
+		//SoundManager.Instance.PlaySound("AlarmWin");
+
 		ActivityDirector director = FindObjectOfType<ActivityDirector>();
-		if (director != null)
+		int activeNight = director != null ? director.GetActiveNight() : 0;
+
+		string winMessage = "";
+		string unlockMessage = "";
+
+		if(activeNight == 0)
 		{
-			switch (director.GetActiveNight())
-			{
-				case 0:
-					nightName = "Friday Night";
-					break;
-				case 1:
-					nightName = "Saturday Night";
-					break;
-				case 2:
-					nightName = "Sunday Night";
-					break;
-				default:
-					nightName = "Friday Night";
-					break;
-			}
+			winMessage = "You Survived Friday Night!";
+			unlockMessage = "Saturday Night Unlocked!";
+		}
+		else if(activeNight == 1)
+		{
+			winMessage = "You Survived Saturday Night!";
+			unlockMessage = "Sunday Night Unlocked!";
+		}
+		else if(activeNight == 2)
+		{
+			winMessage = "You Survived Sunday Night!";
+			unlockMessage = "All Nights Completed!";
+		}
+		else
+		{
+			winMessage = "You Survived!";
+			unlockMessage = "";
 		}
 
-		if (winText != null)
+		if(winText != null)
 		{
-			winText.text = "You Survived " + nightName;
+			winText.text = winMessage;
+		}
+		if(unlockedNightText != null)
+		{
+			unlockedNightText.text = unlockMessage;
 		}
 
 		isPaused = true;

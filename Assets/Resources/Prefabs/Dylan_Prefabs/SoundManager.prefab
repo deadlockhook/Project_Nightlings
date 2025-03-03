@@ -96,6 +96,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: ab7771a43632c0c49a8dbad73aa20b31, type: 3}
   - name: WindowShut
     clip: {fileID: 8300000, guid: ee0bcb89643713844a47506e0239cd57, type: 3}
+  - name: AlarmWin
+    clip: {fileID: 8300000, guid: 4392aed04ecb1d142937ab201e7dc27f, type: 3}
   masterVolume: 1
   sfxVolume: 1
-  musicVolume: 1
+  musicVolume: 0.5
