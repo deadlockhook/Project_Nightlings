@@ -430,7 +430,7 @@ public class UIManager : MonoBehaviour
 			deathCauseText.text = "HINT: " + deathCause;
 
 		if (timeOfDeathText != null)
-			timeOfDeathText.text = "You died at " + formattedTime;
+			timeOfDeathText.text = "Killed at " + formattedTime;
 
 		Cursor.lockState = CursorLockMode.None;
 		Time.timeScale = 0f;
