@@ -69,8 +69,11 @@ public class UIManager : MonoBehaviour
 	private Toggle chromaticAbberationToggle;
 	private Toggle bloomToggle;
 
-	//Singleton
-	private void Awake()
+	[Header("UI AudioSource")]
+    public AudioSource audioSource;
+
+    //Singleton
+    private void Awake()
 	{
 		if (Instance != null && Instance != this)
 		{
@@ -287,6 +290,17 @@ public class UIManager : MonoBehaviour
 			ChangeUIState(UIState.MainMenu);
 		}
 	}
+
+	public void ButtonSFX()
+	{
+		if (audioSource.isPlaying)
+		{
+            audioSource.Stop();
+		}
+
+        SoundManager.Instance.PlaySound("Button", audioSource);
+		Debug.Log("Button SFX");
+    }
 
 	public void BackFromNightPicker()
 	{
