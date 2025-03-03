@@ -91,5 +91,10 @@ public class CutsceneManager : MonoBehaviour
 		isPlayingCutscene = false;
 		if (playerController != null)
 			playerController.enabled = true;
+
+		if (currentDirector == night1Cutscene)
+		{
+			ControlHintManager.Instance.ShowControlHints();
+		}
 	}
 }
