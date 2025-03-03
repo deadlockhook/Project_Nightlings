@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
+using TMPro;
 
 public class CutsceneManager : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class CutsceneManager : MonoBehaviour
 	public PlayableDirector night1Cutscene;
 	public PlayableDirector night2Cutscene;
 	public PlayableDirector night3Cutscene;
+
+	public TextMeshProUGUI skipText;
 
 	private PlayerController playerController;
 	private PlayableDirector currentDirector;
@@ -28,6 +31,9 @@ public class CutsceneManager : MonoBehaviour
 	private void Start()
 	{
 		playerController = FindObjectOfType<PlayerController>();
+
+		if(skipText != null)
+			skipText.gameObject.SetActive(false);
 	}
 
 	public void PlayCutsceneWithIndex(int nightIndex)
@@ -57,6 +63,9 @@ public class CutsceneManager : MonoBehaviour
 
 		isPlayingCutscene = true;
 		currentDirector.Play();
+
+		if(skipText != null)
+			skipText.gameObject.SetActive(true);
 	}
 
 	private void Update()
@@ -91,6 +100,9 @@ public class CutsceneManager : MonoBehaviour
 		isPlayingCutscene = false;
 		if (playerController != null)
 			playerController.enabled = true;
+
+		if(skipText != null)
+			skipText.gameObject.SetActive(false);
 
 		if (currentDirector == night1Cutscene)
 		{
