@@ -461,7 +461,7 @@ public class ActivityDirector : MonoBehaviour
 
         for (int i = 0; i < spawnLocations.Count; i++)
         {
-            Instantiate(toyPrefabs[Random.Range(0, toyPrefabs.Count)], spawnLocations[i], Quaternion.Euler(Random.Range(-90.0f, 90.0f), Random.Range(180, -180), Random.Range(180, -180)));
+            Instantiate(toyPrefabs[Random.Range(0, toyPrefabs.Count)], spawnLocations[i], Quaternion.Euler(0, Random.Range(0f, 360f), 0));
         }
     }
 
