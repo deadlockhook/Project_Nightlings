@@ -427,7 +427,7 @@ public class UIManager : MonoBehaviour
 		string formattedTime = FormatTime(deathTime);
 
 		if (deathCauseText != null)
-			deathCauseText.text = "You were killed by: " + deathCause;
+			deathCauseText.text = "HINT: " + deathCause;
 
 		if (timeOfDeathText != null)
 			timeOfDeathText.text = "You died at " + formattedTime;

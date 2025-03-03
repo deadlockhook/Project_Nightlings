@@ -1300,8 +1300,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 200}
-  m_SizeDelta: {x: 1000, y: 100}
+  m_AnchoredPosition: {x: 0, y: 100}
+  m_SizeDelta: {x: 1000, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8674361265715954594
 CanvasRenderer:
@@ -1331,7 +1331,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Cause Of Death: '
+  m_text: 'HINT:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
@@ -1341,8 +1341,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278228735
-  m_fontColor: {r: 1, g: 0.5882353, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1555,7 +1555,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -250}
   m_SizeDelta: {x: 291.1, y: 110.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6497853350875194523
@@ -6849,7 +6849,7 @@ MonoBehaviour:
   controlHintCanvasGroup: {fileID: 8277089696877723042}
   controlHintText: {fileID: 295884728054811582}
   fadeDuration: 0.5
-  displayDuration: 7.5
+  displayDuration: 5
   controlHintData: {fileID: 11400000, guid: 6bd537dcece0e4444bea160df43c2941, type: 2}
   staminaBar: {fileID: 8041291387355414545}
 --- !u!1 &4151398507986422690
@@ -9669,7 +9669,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 100}
+  m_AnchoredPosition: {x: 0, y: 250}
   m_SizeDelta: {x: 1000, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5998518846013277726

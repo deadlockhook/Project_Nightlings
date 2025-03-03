@@ -280,7 +280,7 @@ public class ActivityDirector : MonoBehaviour
 
         if (!deathTrigger.IsActive())
         {
-            deathCause = "Pet Door";
+            deathCause = "If you hear the door bell, find a toy and feed it through the pet door to repel the nightling!.";
             deathTrigger.Activate(activeActivites);
         }
     }
@@ -312,7 +312,7 @@ public class ActivityDirector : MonoBehaviour
 
         if (!deathTrigger.IsActive())
         {
-            deathCause = "Basement Hatch";
+            deathCause = "If you hear banging in the basement, rush down and close the hatch before they can open it!";
             deathTrigger.Activate(activeActivites);
         }
     }
@@ -346,7 +346,7 @@ public class ActivityDirector : MonoBehaviour
 
         if (!deathTrigger.IsActive())
         {
-            deathCause = "Window";
+            deathCause = "If you hear a window creaking open, find it and close it before they can open it!";
             deathTrigger.Activate(activeActivites);
         }
     }
@@ -375,7 +375,7 @@ public class ActivityDirector : MonoBehaviour
 
         if (!deathTrigger.IsActive())
         {
-            deathCause = "Fireplace";
+            deathCause = "If you see the fireplace is almost out, grab wood from the basement and throw it in to keep the fire going!";
             deathTrigger.Activate(activeActivites);
         }
     }
@@ -404,7 +404,7 @@ public class ActivityDirector : MonoBehaviour
 
         if (!deathTrigger.IsActive())
         {
-            deathCause = "Skylight";
+            deathCause = "If you hear tapping on the sky light, use the remote in the kitchen to close it before they can get in!";
             deathTrigger.Activate(activeActivites);
         }
     }
@@ -433,7 +433,7 @@ public class ActivityDirector : MonoBehaviour
 
         if (!deathTrigger.IsActive())
         {
-            deathCause = "Toilet";
+            deathCause = "If you hear splashing sounds coming from the bathroom, flush the toilet to send the nightling away!";
             deathTrigger.Activate(activeActivites);
         }
     }
