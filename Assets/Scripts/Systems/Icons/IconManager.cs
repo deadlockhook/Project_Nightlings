@@ -178,4 +178,16 @@ public class IconManager : MonoBehaviour
                 iconData.icon.SetActive(visible);
         }
     }
+
+    public void ClearAllIcons()
+    {
+        foreach (var kvp in activeIcons.ToList())
+        {
+            if (kvp.Value.icon != null)
+            {
+                Destroy(kvp.Value.icon);
+            }
+        }
+        activeIcons.Clear();
+    }
 }

@@ -563,6 +563,11 @@ public class ActivityDirector : MonoBehaviour
 
         nightActivity[nightIndex].Activate(activeActivites);
         playerController.Respawn();
+
+        if (IconManager.Instance != null)
+        {
+            IconManager.Instance.ClearAllIcons();
+        }
     }
 
     private bool stopActivityDirector = false;
@@ -574,12 +579,22 @@ public class ActivityDirector : MonoBehaviour
             ProgressManager.Instance.CompleteNight(activeNight);
         }
 
+        if (IconManager.Instance != null)
+        {
+            IconManager.Instance.ClearAllIcons();
+        }
+
         uiManager.WinGame();
         stopActivityDirector = true;
     }
 
     void OnDeath(int activityIndex)
     {
+        if (IconManager.Instance != null)
+        {
+            IconManager.Instance.ClearAllIcons();
+        }
+
         DeathTime = currentDeltaTime;
         playerController.Die();
         uiManager.LoseGame(deathCause);

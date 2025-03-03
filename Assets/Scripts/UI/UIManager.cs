@@ -326,6 +326,11 @@ public class UIManager : MonoBehaviour
 
 	public void GoToMainMenu()
 	{
+		if (IconManager.Instance != null)
+		{
+			IconManager.Instance.ClearAllIcons();
+		}
+
 		StartCoroutine(LoadMainMenuWithLoading());
 	}
 
