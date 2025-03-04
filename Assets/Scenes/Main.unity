@@ -14921,6 +14921,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fireplace
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fedd1c0767e81604cb5026bc5df94797,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1404345752955601644, guid: fedd1c0767e81604cb5026bc5df94797,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -17278,6 +17283,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Toilet
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fedd1c0767e81604cb5026bc5df94797,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1404345752955601644, guid: fedd1c0767e81604cb5026bc5df94797,
         type: 3}
@@ -30470,6 +30480,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PetDoor
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fedd1c0767e81604cb5026bc5df94797,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1404345752955601644, guid: fedd1c0767e81604cb5026bc5df94797,
         type: 3}
