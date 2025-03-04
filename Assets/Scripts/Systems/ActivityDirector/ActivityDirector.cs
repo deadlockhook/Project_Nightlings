@@ -128,9 +128,10 @@ public class ActivityDirector : MonoBehaviour
     private List<timedActivity> activeActivites;
 
 
-   // private AudioSource rainAndThunder;
-   // private Vector3 rainAndThunderInitialPosition;
-
+    // private AudioSource rainAndThunder;
+    // private Vector3 rainAndThunderInitialPosition;
+   
+    public GameObject[] powerControlGameObjects;
     public List<GameObject> toyPrefabs;
     [SerializeField] private int minToySpawnLocations = 12;
     [SerializeField] private int maxToySpawnLocations = 20;
@@ -159,12 +160,15 @@ public class ActivityDirector : MonoBehaviour
     private float toiletActivityLogicRangeEnd = 70.0f;
     private float toiletActivityTimeLimit = 30.0f;
 
+    private float powerOutageEventTriggerTime = 150.0f;
+
     private List<activityTrigger> windowEventObjects;
     private activityTrigger petdoorEventObject;
     private activityTrigger basementHatchEventObject;
     private activityTrigger fireplaceEventObject;
     private activityTrigger skylightEventObject;
     private activityTrigger toiletEventObject;
+    private timedActivity powerOutageEventObject;
 
     private List<Vector3> toySpawnLocations;
 
@@ -192,7 +196,7 @@ public class ActivityDirector : MonoBehaviour
     void Start()
     {
         //rainAndThunder = GameObject.Find("DynamicAimbienceSource").GetComponent<AudioSource>();
-       // rainAndThunderInitialPosition = rainAndThunder.transform.position;
+        // rainAndThunderInitialPosition = rainAndThunder.transform.position;
 
         uiManager = FindObjectOfType<UIManager>();
         playerController = FindObjectOfType<PlayerController>();
@@ -207,12 +211,16 @@ public class ActivityDirector : MonoBehaviour
         nightActivity[0] = new timedActivity(420.0f, 0, OnNightStart, OnWin, null);
         nightActivity[1] = new timedActivity(420.0f, 1, OnNightStart, OnWin, null);
         nightActivity[2] = new timedActivity(420.0f, 2, OnNightStart, OnWin, null);
+      
+        powerOutageEventObject = new timedActivity(powerOutageEventTriggerTime, 0, null, TriggerPowerOutage, null);
 
         deathTrigger = new timedActivity(10.0f, 0, null, OnDeath, null);
 
         toySpawnLocations = new List<Vector3>();
 
         GameObject[] toySpawns = GameObject.FindGameObjectsWithTag("ToySpawn");
+    
+        powerControlGameObjects = GameObject.FindGameObjectsWithTag("PowerControl");
 
         for (int i = 0; i < toySpawns.Length; i++)
         {
@@ -560,6 +568,7 @@ public class ActivityDirector : MonoBehaviour
     }
     private void OnNightStart(int activityIndex)
     {
+        powerOutageEventObject.Activate(activeActivites);
         SpawnToys();
         activeNight = activityIndex;
     }
@@ -629,7 +638,7 @@ public class ActivityDirector : MonoBehaviour
             AudioSource audioSource = window.gameObj.GetComponent<AudioSource>();
 
             if (window.eventTime.IsActive())
-                audioSource.volume =  soundManager.musicVolume;
+                audioSource.volume = soundManager.musicVolume;
             else
                 audioSource.volume = 0.5f * soundManager.musicVolume;
         }
@@ -649,6 +658,21 @@ public class ActivityDirector : MonoBehaviour
             audioSourceSkylight.volume = 0.5f * soundManager.musicVolume;
 
     }
+    void TriggerPowerOutage(int activityIndex)
+    {
+        for (int i = 0; i < powerControlGameObjects.Length; i++)
+            powerControlGameObjects[i].SetActive(false);
+
+        powerOutageEventObject.Deactivate(activeActivites);
+    }
+    public void RestorePower()
+    {
+        for (int i = 0; i < powerControlGameObjects.Length; i++)
+            powerControlGameObjects[i].SetActive(true);
+        
+        powerOutageEventObject.Activate(activeActivites);
+    }
+
 
     void Update()
     {

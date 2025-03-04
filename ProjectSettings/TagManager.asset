@@ -17,6 +17,8 @@ TagManager:
   - Toilet_Flush
   - Interactable_Blocks
   - Icon
+  - PowerControl
+  - PowerRestore
   layers:
   - Default
   - TransparentFX

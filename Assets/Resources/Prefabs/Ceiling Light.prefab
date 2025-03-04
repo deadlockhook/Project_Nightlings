@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4299043293695275733}
   m_Layer: 7
   m_Name: Point Light
-  m_TagString: Untagged
+  m_TagString: PowerControl
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 4327375653792765598}
   m_Layer: 7
   m_Name: Spot Light
-  m_TagString: Untagged
+  m_TagString: PowerControl
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
