@@ -102,6 +102,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 6c85329d1def4da40aab45d9ab4d34cc, type: 3}
   - name: PhoneRing
     clip: {fileID: 8300000, guid: e9a9bd935f5940a4b8bc3fb3ea91b3b0, type: 3}
+  - name: RadioMusic
+    clip: {fileID: 8300000, guid: df82034c28d7d814588f564feaa80558, type: 3}
   masterVolume: 1
   sfxVolume: 1
   musicVolume: 0.5
