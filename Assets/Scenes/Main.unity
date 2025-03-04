@@ -27682,6 +27682,7 @@ MonoBehaviour:
   playlist: {fileID: 11400000, guid: 6466b8002df3bc64a8b41580ac6a18e5, type: 2}
   playOnStart: 1
   audioSource: {fileID: 1304231865}
+  enableStatic: 0
 --- !u!64 &1304231867
 MeshCollider:
   m_ObjectHideFlags: 0

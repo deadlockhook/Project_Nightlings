@@ -11,6 +11,7 @@ public class TVVideoPlayer : MonoBehaviour
 
 	[Header("Other Settings")]
 	public AudioSource audioSource;
+	public bool enableStatic = true;
 
 	private VideoPlayer videoPlayer;
 	private int currentVideoIndex = 0;
@@ -60,14 +61,21 @@ public class TVVideoPlayer : MonoBehaviour
 		if (isTransitioning)
 			return;
 
-		if (isPlayingStatic)
+		if (enableStatic)
 		{
-			isPlayingStatic = false;
-			PlayNextContentVideo();
+			if (isPlayingStatic)
+			{
+				isPlayingStatic = false;
+				PlayNextContentVideo();
+			}
+			else
+			{
+				PlayStatic();
+			}
 		}
 		else
 		{
-			PlayStatic();
+			PlayNextContentVideo();
 		}
 	}
 
