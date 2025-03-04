@@ -699,6 +699,7 @@ public class ActivityDirector : MonoBehaviour
             audioSourceSkylight.volume = 0.5f * soundManager.musicVolume;
 
     }
+
     void TriggerPowerOutage(int activityIndex)
     {
         for (int i = 0; i < powerControlGameObjects.Length; i++)
@@ -708,6 +709,9 @@ public class ActivityDirector : MonoBehaviour
     }
     public void RestorePower()
     {
+        if (!powerOutageEventObject.IsActive())
+            return;
+
         for (int i = 0; i < powerControlGameObjects.Length; i++)
             powerControlGameObjects[i].SetActive(true);
         

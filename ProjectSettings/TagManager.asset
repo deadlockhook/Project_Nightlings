@@ -21,6 +21,7 @@ TagManager:
   - PowerRestore
   - CandySpawn
   - Candy
+  - Telephone
   layers:
   - Default
   - TransparentFX
