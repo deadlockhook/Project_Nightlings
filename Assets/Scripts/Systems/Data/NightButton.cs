@@ -28,7 +28,7 @@ public class NightButton : MonoBehaviour
 			button.interactable = isUnlocked;
 
 			if (nightText != null)
-				nightText.color = isUnlocked ? Color.blue : new Color(0.5f, 0.5f, 0.5f, 0.75f);
+				nightText.color = isUnlocked ? Color.green : new Color(1f, 0f, 0f, 0.75f);
 		}
 	}
 }
