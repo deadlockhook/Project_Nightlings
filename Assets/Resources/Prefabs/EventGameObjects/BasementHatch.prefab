@@ -62,26 +62,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: c014ce8676df0984781ecefa005cdebd, type: 2}
+      objectReference: {fileID: 2100000, guid: e668c7e76d5ffb146a3ecaadd92fd8dd, type: 2}
     - target: {fileID: -2587137855558375025, guid: 7ddfb8f6df68f2c4c8a8cb86c70428d4,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: c014ce8676df0984781ecefa005cdebd, type: 2}
+      objectReference: {fileID: 2100000, guid: e668c7e76d5ffb146a3ecaadd92fd8dd, type: 2}
     - target: {fileID: -90668064151305992, guid: 7ddfb8f6df68f2c4c8a8cb86c70428d4,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: c014ce8676df0984781ecefa005cdebd, type: 2}
+      objectReference: {fileID: 2100000, guid: e668c7e76d5ffb146a3ecaadd92fd8dd, type: 2}
     - target: {fileID: -80093741536578273, guid: 7ddfb8f6df68f2c4c8a8cb86c70428d4,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: c014ce8676df0984781ecefa005cdebd, type: 2}
+      objectReference: {fileID: 2100000, guid: e668c7e76d5ffb146a3ecaadd92fd8dd, type: 2}
     - target: {fileID: 919132149155446097, guid: 7ddfb8f6df68f2c4c8a8cb86c70428d4,
         type: 3}
       propertyPath: m_Name
-      value: Basement Hatch
+      value: BasementHatch
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7ddfb8f6df68f2c4c8a8cb86c70428d4,
         type: 3}
@@ -92,7 +92,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: c014ce8676df0984781ecefa005cdebd, type: 2}
+      objectReference: {fileID: 2100000, guid: e668c7e76d5ffb146a3ecaadd92fd8dd, type: 2}
     - target: {fileID: 2958219597199096320, guid: 7ddfb8f6df68f2c4c8a8cb86c70428d4,
         type: 3}
       propertyPath: m_TagString
