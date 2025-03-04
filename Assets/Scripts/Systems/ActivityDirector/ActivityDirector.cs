@@ -130,7 +130,7 @@ public class ActivityDirector : MonoBehaviour
 
     // private AudioSource rainAndThunder;
     // private Vector3 rainAndThunderInitialPosition;
-   
+
     public GameObject[] powerControlGameObjects;
     public List<GameObject> toyPrefabs;
     public List<GameObject> candyPrefabs;
@@ -219,7 +219,7 @@ public class ActivityDirector : MonoBehaviour
         nightActivity[0] = new timedActivity(420.0f, 0, OnNightStart, OnWin, null);
         nightActivity[1] = new timedActivity(420.0f, 1, OnNightStart, OnWin, null);
         nightActivity[2] = new timedActivity(420.0f, 2, OnNightStart, OnWin, null);
-      
+
         powerOutageEventObject = new timedActivity(powerOutageEventTriggerTime, 0, null, TriggerPowerOutage, null);
         phoneRingEventObject = new timedActivity(phoneRingEventTriggerTime, 0, null, TriggerPhoneRing, null);
 
@@ -230,7 +230,7 @@ public class ActivityDirector : MonoBehaviour
 
         telephoneAudioSource = GameObject.FindGameObjectWithTag("Telephone").GetComponent<AudioSource>();
         powerControlGameObjects = GameObject.FindGameObjectsWithTag("PowerControl");
-       
+
         GameObject[] toySpawns = GameObject.FindGameObjectsWithTag("ToySpawn");
 
         for (int i = 0; i < toySpawns.Length; i++)
@@ -385,8 +385,16 @@ public class ActivityDirector : MonoBehaviour
 
     private void OnFireplaceActivityUpdate(int activityIndex)
     {
-        lastDeltaTimeForFireplaceEvent = currentDeltaTime;
+        if (UIManager.Instance == null || !UIManager.Instance.IsInGame())
+        {
+            if (IconManager.Instance.IsIconRegistered(2))
+            {
+                IconManager.Instance.UnregisterIcon(2);
+            }
+            return;
+        }
 
+        lastDeltaTimeForFireplaceEvent = currentDeltaTime;
         float progress = fireplaceEventObject.eventTime.GetProgress();
 
         if (progress >= 0.5f)
@@ -720,7 +728,7 @@ public class ActivityDirector : MonoBehaviour
 
         for (int i = 0; i < powerControlGameObjects.Length; i++)
             powerControlGameObjects[i].SetActive(true);
-        
+
         powerOutageEventObject.Activate(activeActivites);
     }
 
