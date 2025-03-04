@@ -188,6 +188,11 @@ public class InteractionManager : MonoBehaviour
             if (gameObj.tag.Contains("Toilet_Flush"))
                  FindObjectOfType<ToiletActivity>().ResetActivity();
 
+            if (gameObj.tag.Contains("Telephone"))
+                FindObjectOfType<ActivityDirector>().StopPhoneRing();
+            
+            
+
             if (gameObj.tag.Contains("Candy"))
             {
                 if (FindObjectOfType<PlayerController>().EatCandy())

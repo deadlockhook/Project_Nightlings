@@ -163,7 +163,8 @@ public class ActivityDirector : MonoBehaviour
     private float toiletActivityLogicRangeEnd = 70.0f;
     private float toiletActivityTimeLimit = 30.0f;
 
-    private float powerOutageEventTriggerTime = 150.0f;
+    private float powerOutageEventTriggerTime = 200.0f;
+    private float phoneRingEventTriggerTime = 300.0f;
 
     private List<activityTrigger> windowEventObjects;
     private activityTrigger petdoorEventObject;
@@ -172,6 +173,7 @@ public class ActivityDirector : MonoBehaviour
     private activityTrigger skylightEventObject;
     private activityTrigger toiletEventObject;
     private timedActivity powerOutageEventObject;
+    private timedActivity phoneRingEventObject;
 
     private List<Vector3> toySpawnLocations;
     private List<Vector3> candySpawnLocations;
@@ -193,6 +195,8 @@ public class ActivityDirector : MonoBehaviour
     private timedActivity deathTrigger;
 
     public GameObject iconPrefab;
+    public AudioSource telephoneAudioSource;
+
 
     private string deathCause = "Unknown";
     public float DeathTime { get; private set; }
@@ -217,13 +221,14 @@ public class ActivityDirector : MonoBehaviour
         nightActivity[2] = new timedActivity(420.0f, 2, OnNightStart, OnWin, null);
       
         powerOutageEventObject = new timedActivity(powerOutageEventTriggerTime, 0, null, TriggerPowerOutage, null);
+        phoneRingEventObject = new timedActivity(phoneRingEventTriggerTime, 0, null, TriggerPhoneRing, null);
 
         deathTrigger = new timedActivity(10.0f, 0, null, OnDeath, null);
 
         toySpawnLocations = new List<Vector3>();
         candySpawnLocations = new List<Vector3>();
 
-   
+        telephoneAudioSource = GameObject.FindGameObjectWithTag("Telephone").GetComponent<AudioSource>();
         powerControlGameObjects = GameObject.FindGameObjectsWithTag("PowerControl");
        
         GameObject[] toySpawns = GameObject.FindGameObjectsWithTag("ToySpawn");
@@ -610,6 +615,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnNightStart(int activityIndex)
     {
         powerOutageEventObject.Activate(activeActivites);
+        phoneRingEventObject.Activate(activeActivites);
         SpawnToysAndCandys();
         activeNight = activityIndex;
     }
@@ -718,6 +724,19 @@ public class ActivityDirector : MonoBehaviour
         powerOutageEventObject.Activate(activeActivites);
     }
 
+    void TriggerPhoneRing(int activityIndex)
+    {
+        telephoneAudioSource.Play();
+        phoneRingEventObject.Deactivate(activeActivites);
+    }
+
+    public void StopPhoneRing()
+    {
+        if (!phoneRingEventObject.IsActive())
+            return;
+
+        telephoneAudioSource.Stop();
+    }
 
     void Update()
     {
