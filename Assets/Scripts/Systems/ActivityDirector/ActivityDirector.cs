@@ -256,7 +256,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnPetDoorActivityStart(int activityIndex)
     {
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerStart();
-        IconManager.Instance.RegisterIcon(0, petdoorEventObject.gameObj.transform.position);
+        IconManager.Instance.RegisterIcon(0, petdoorEventObject.gameObj.transform.position, IconType.Door);
         HintManager.Instance.DisplayGameHint(HintType.PetDoor);
     }
 
@@ -288,7 +288,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnBasementHatchActivityStart(int activityIndex)
     {
         basementHatchEventObject.gameObj.GetComponent<BasementHatch>().ActivityTriggerStart();
-        IconManager.Instance.RegisterIcon(1, basementHatchEventObject.gameObj.transform.position);
+        IconManager.Instance.RegisterIcon(1, basementHatchEventObject.gameObj.transform.position, IconType.Basement);
         HintManager.Instance.DisplayGameHint(HintType.BasementHatch);
     }
 
@@ -320,7 +320,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnWindowActivityStart(int activityIndex)
     {
         windowEventObjects[activityIndex].gameObj.GetComponent<WindowsActivity>().ActivityTriggerStart();
-        IconManager.Instance.RegisterIcon(5, windowEventObjects[activityIndex].gameObj.transform.position);
+        IconManager.Instance.RegisterIcon(5, windowEventObjects[activityIndex].gameObj.transform.position, IconType.Window);
         HintManager.Instance.DisplayGameHint(HintType.Window);
     }
 
@@ -354,19 +354,37 @@ public class ActivityDirector : MonoBehaviour
     private void OnFireplaceActivityStart(int activityIndex)
     {
         fireplaceEventObject.gameObj.GetComponent<FireplaceActivity>().ActivityTriggerStart(fireplaceEventObject.eventTime);
-        IconManager.Instance.RegisterIcon(2, fireplaceEventObject.gameObj.transform.position);
     }
 
     private void OnFireplaceActivityUpdate(int activityIndex)
     {
         lastDeltaTimeForFireplaceEvent = currentDeltaTime;
-        if (fireplaceEventObject.gameObj.GetComponent<FireplaceActivity>().OnActivityUpdate(fireplaceEventObject.eventTime.GetProgress()))
+
+        float progress = fireplaceEventObject.eventTime.GetProgress();
+
+        if (progress >= 0.5f)
+        {
+            if (!IconManager.Instance.IsIconRegistered(2))
+            {
+                IconManager.Instance.RegisterIcon(2, fireplaceEventObject.gameObj.transform.position, IconType.Fireplace);
+            }
+        }
+        else
+        {
+            if (IconManager.Instance.IsIconRegistered(2))
+            {
+                IconManager.Instance.UnregisterIcon(2);
+            }
+        }
+
+        if (fireplaceEventObject.gameObj.GetComponent<FireplaceActivity>().OnActivityUpdate(progress))
         {
             fireplaceEventObject.eventTime.Deactivate(activeActivites);
             fireplaceEventObject.eventTime.Reset();
             IconManager.Instance.UnregisterIcon(2);
         }
     }
+
     private void OnFireplaceActivityFinished(int activityIndex)
     {
         fireplaceEventObject.eventTime.Deactivate(activeActivites);
@@ -383,7 +401,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnSkylightActivityStart(int activityIndex)
     {
         skylightEventObject.gameObj.GetComponent<SkylightActivity>().ActivityTriggerStart();
-        IconManager.Instance.RegisterIcon(3, skylightEventObject.gameObj.transform.position);
+        IconManager.Instance.RegisterIcon(3, skylightEventObject.gameObj.transform.position, IconType.Window);
         HintManager.Instance.DisplayGameHint(HintType.Skylight);
     }
     private void OnSkylightActivityUpdate(int activityIndex)
@@ -412,7 +430,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnToiletActivityStart(int activityIndex)
     {
         toiletEventObject.gameObj.GetComponent<ToiletActivity>().ActivityTriggerStart();
-        IconManager.Instance.RegisterIcon(4, toiletEventObject.gameObj.transform.position);
+        IconManager.Instance.RegisterIcon(4, toiletEventObject.gameObj.transform.position, IconType.Toilet);
         HintManager.Instance.DisplayGameHint(HintType.Toilet);
     }
 

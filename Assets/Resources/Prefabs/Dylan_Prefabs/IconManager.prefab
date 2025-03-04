@@ -44,9 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54025f5b12fcbb14bb61d1a3f69b6076, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  iconPrefab: {fileID: 2531136830291740803, guid: 929d26b19b4cc01479717fe080c42539,
-    type: 3}
+  iconTypes: 000000000100000002000000030000000400000005000000
+  iconPrefabs:
+  - {fileID: 2531136830291740803, guid: 929d26b19b4cc01479717fe080c42539, type: 3}
+  - {fileID: 2531136830291740803, guid: 01d52cc0a802c7f43b2928ce6ccb3982, type: 3}
+  - {fileID: 2531136830291740803, guid: 511d77d44218132419737ef38061db3d, type: 3}
+  - {fileID: 2531136830291740803, guid: 4e95e5cdb74453447828b2ce023b5e80, type: 3}
+  - {fileID: 2531136830291740803, guid: 407ad5f20c1bd9f4ebd52da88c7618de, type: 3}
+  - {fileID: 2531136830291740803, guid: 3362963a23fc9df45889708f27e31319, type: 3}
   iconPadding: 50
-  occlusionLayers:
-    serializedVersion: 2
-    m_Bits: 0

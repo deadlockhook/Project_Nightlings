@@ -5513,6 +5513,41 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1743694115167396852, guid: 86061036eb34c8f47b5c44982d7bf9af,
+        type: 3}
+      propertyPath: iconTypes.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1743694115167396852, guid: 86061036eb34c8f47b5c44982d7bf9af,
+        type: 3}
+      propertyPath: iconPrefabs.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1743694115167396852, guid: 86061036eb34c8f47b5c44982d7bf9af,
+        type: 3}
+      propertyPath: iconTypes.Array.data[1]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1743694115167396852, guid: 86061036eb34c8f47b5c44982d7bf9af,
+        type: 3}
+      propertyPath: iconTypes.Array.data[2]
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1743694115167396852, guid: 86061036eb34c8f47b5c44982d7bf9af,
+        type: 3}
+      propertyPath: iconTypes.Array.data[3]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1743694115167396852, guid: 86061036eb34c8f47b5c44982d7bf9af,
+        type: 3}
+      propertyPath: iconTypes.Array.data[4]
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1743694115167396852, guid: 86061036eb34c8f47b5c44982d7bf9af,
+        type: 3}
+      propertyPath: iconTypes.Array.data[5]
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2628918720473370330, guid: 86061036eb34c8f47b5c44982d7bf9af,
         type: 3}
       propertyPath: m_Name

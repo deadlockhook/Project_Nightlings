@@ -3,19 +3,30 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 
+public enum IconType
+{
+    Default,
+    Window,
+    Door,
+    Basement,
+    Fireplace,
+    Toilet
+}
+
 public class IconManager : MonoBehaviour
 {
     public static IconManager Instance { get; private set; }
 
     [Header("Icon Settings")]
-    public GameObject iconPrefab;
+    public List<IconType> iconTypes = new List<IconType>();
+    public List<GameObject> iconPrefabs = new List<GameObject>();
     public float iconPadding = 50f;
 
     private Canvas iconCanvas;
-    private Camera iconCamera;
     private RectTransform canvasRect;
-    private Dictionary<int, (GameObject icon, Vector3 worldPos)> activeIcons =
-        new Dictionary<int, (GameObject, Vector3)>();
+    private Dictionary<IconType, GameObject> iconPrefabMap = new Dictionary<IconType, GameObject>();
+    private Dictionary<int, (GameObject icon, Vector3 worldPos, IconType iconType)> activeIcons =
+        new Dictionary<int, (GameObject, Vector3, IconType)>();
 
     private void Awake()
     {
@@ -27,11 +38,21 @@ public class IconManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
         InitializeIconSystem();
+        BuildIconMap();
     }
 
     void InitializeIconSystem()
     {
         CreateIconCanvas();
+    }
+
+    void BuildIconMap()
+    {
+        iconPrefabMap.Clear();
+        for (int i = 0; i < Mathf.Min(iconTypes.Count, iconPrefabs.Count); i++)
+        {
+            iconPrefabMap[iconTypes[i]] = iconPrefabs[i];
+        }
     }
 
     void CreateIconCanvas()
@@ -54,7 +75,7 @@ public class IconManager : MonoBehaviour
 
         foreach (var kvp in activeIcons.ToList())
         {
-            var (icon, worldPos) = kvp.Value;
+            var (icon, worldPos, _) = kvp.Value;
             if (!icon)
             {
                 activeIcons.Remove(kvp.Key);
@@ -145,13 +166,37 @@ public class IconManager : MonoBehaviour
         return screenPos;
     }
 
-    public void RegisterIcon(int id, Vector3 worldPosition)
+    public void RegisterIcon(int id, Vector3 worldPosition, IconType iconType = IconType.Default)
     {
         if (activeIcons.ContainsKey(id)) return;
 
-        GameObject newIcon = Instantiate(iconPrefab, iconCanvas.transform, false);
-        activeIcons[id] = (newIcon, worldPosition);
+        if (!iconPrefabMap.TryGetValue(iconType, out GameObject prefab))
+        {
+            Debug.LogWarning($"No prefab found for {iconType}, using default");
+            if (!iconPrefabMap.TryGetValue(IconType.Default, out prefab)) return;
+        }
+
+        GameObject newIcon = Instantiate(prefab, iconCanvas.transform, false);
+        activeIcons[id] = (newIcon, worldPosition, iconType);
         newIcon.SetActive(true);
+    }
+
+    public void UpdateIconType(int id, IconType newType)
+    {
+        if (!activeIcons.TryGetValue(id, out var iconData)) return;
+
+        if (iconData.iconType == newType) return;
+
+        if (!iconPrefabMap.TryGetValue(newType, out GameObject newPrefab))
+        {
+            Debug.LogWarning($"No prefab found for {newType}");
+            return;
+        }
+
+        Destroy(iconData.icon);
+        GameObject newIcon = Instantiate(newPrefab, iconCanvas.transform, false);
+        activeIcons[id] = (newIcon, iconData.worldPos, newType);
+        UpdateIconPosition(newIcon, iconData.worldPos);
     }
 
     public void UnregisterIcon(int id)
@@ -166,7 +211,7 @@ public class IconManager : MonoBehaviour
     {
         if (activeIcons.TryGetValue(id, out var iconData))
         {
-            activeIcons[id] = (iconData.icon, newWorldPosition);
+            activeIcons[id] = (iconData.icon, newWorldPosition, iconData.iconType);
         }
     }
 
@@ -189,5 +234,9 @@ public class IconManager : MonoBehaviour
             }
         }
         activeIcons.Clear();
+    }
+    public bool IsIconRegistered(int id)
+    {
+        return activeIcons.ContainsKey(id);
     }
 }
