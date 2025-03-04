@@ -418,11 +418,6 @@ public class PlayerController : MonoBehaviour
 
 	private void UpdateSugarRush()
 	{
-		if (playerControlActions.Player.CandyConsume.IsPressed() && !isSugarRushActive && !isDead)
-		{
-			EatCandy();
-		}
-
 		if (isSugarRushActive)
 		{
 			sugarRushTimer += Time.deltaTime;
