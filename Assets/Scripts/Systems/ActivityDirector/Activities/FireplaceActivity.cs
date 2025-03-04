@@ -10,6 +10,8 @@ public class FireplaceActivity : MonoBehaviour
     private bool activityFinished = false;
     private bool inActivity = false;
 
+    public GameObject fireVFX;
+
     private SoundManager soundManager;
     private AudioSource triggerAudio1;
     private AudioSource triggerAudio2;
@@ -95,6 +97,7 @@ public class FireplaceActivity : MonoBehaviour
         shouldReset = false;
         PlayTriggerAudio();
     }
+
     public bool OnActivityUpdate(float activityProgress)
     {
         triggerAudio1.volume = 1.0f - activityProgress;
@@ -118,10 +121,14 @@ public class FireplaceActivity : MonoBehaviour
             HintManager.Instance.DisplayGameHint(HintType.Fireplace);
         }
 
-        this.GetComponent<Renderer>().material.color = Color.Lerp(Color.white, Color.red, activityProgress);
+        if (fireVFX != null)
+        {
+            fireVFX.transform.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, activityProgress);
+        }
 
         return false;
     }
+
     public void ActivityTriggerEnd()
     {
         if (shouldReset)
