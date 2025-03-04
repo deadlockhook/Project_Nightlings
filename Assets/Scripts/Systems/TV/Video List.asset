@@ -27,6 +27,9 @@ MonoBehaviour:
   - title: Dance
     videoClip: {fileID: 32900000, guid: dbd12edcf9d8c6f4ab20d0d508d3071a, type: 3}
     volume: 0
-  staticVideo: {fileID: 32900000, guid: 5593bf1bb2588254ba5f70adbfaf4e11, type: 3}
+  - title: Pillow
+    videoClip: {fileID: 32900000, guid: 88d19160829a74c419ad075129de2faf, type: 3}
+    volume: 0
+  staticVideo: {fileID: 0}
   staticDuration: 0.5
   staticVolume: 0.5
