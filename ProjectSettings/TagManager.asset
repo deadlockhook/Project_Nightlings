@@ -19,6 +19,8 @@ TagManager:
   - Icon
   - PowerControl
   - PowerRestore
+  - CandySpawn
+  - Candy
   layers:
   - Default
   - TransparentFX

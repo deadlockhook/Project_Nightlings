@@ -133,8 +133,11 @@ public class ActivityDirector : MonoBehaviour
    
     public GameObject[] powerControlGameObjects;
     public List<GameObject> toyPrefabs;
+    public List<GameObject> candyPrefabs;
     [SerializeField] private int minToySpawnLocations = 12;
     [SerializeField] private int maxToySpawnLocations = 20;
+
+    [SerializeField] private int maxCandySpawns = 3;
 
     private float triggerWindowsActivityLogicRangeStart = 30.0f;
     private float triggerWindowsActivityLogicRangeEnd = 45.0f;
@@ -171,6 +174,7 @@ public class ActivityDirector : MonoBehaviour
     private timedActivity powerOutageEventObject;
 
     private List<Vector3> toySpawnLocations;
+    private List<Vector3> candySpawnLocations;
 
     private float currentDeltaTime = 0;
     private float lastDeltaTimeForWindowEvents = 0;
@@ -217,15 +221,25 @@ public class ActivityDirector : MonoBehaviour
         deathTrigger = new timedActivity(10.0f, 0, null, OnDeath, null);
 
         toySpawnLocations = new List<Vector3>();
+        candySpawnLocations = new List<Vector3>();
 
-        GameObject[] toySpawns = GameObject.FindGameObjectsWithTag("ToySpawn");
-    
+   
         powerControlGameObjects = GameObject.FindGameObjectsWithTag("PowerControl");
+       
+        GameObject[] toySpawns = GameObject.FindGameObjectsWithTag("ToySpawn");
 
         for (int i = 0; i < toySpawns.Length; i++)
         {
             toySpawnLocations.Add(toySpawns[i].transform.position);
             Destroy(toySpawns[i]);
+        }
+
+        GameObject[] candySpawns = GameObject.FindGameObjectsWithTag("CandySpawn");
+
+        for (int i = 0; i < candySpawns.Length; i++)
+        {
+            candySpawnLocations.Add(candySpawns[i].transform.position);
+            Destroy(candySpawns[i]);
         }
 
         WindowsActivity[] windows = GameObject.FindObjectsOfType<WindowsActivity>();
@@ -464,7 +478,7 @@ public class ActivityDirector : MonoBehaviour
         }
     }
 
-    public void SpawnToys()
+    public void SpawnToysAndCandys()
     {
         GameObject[] previousSpawnedToys = GameObject.FindGameObjectsWithTag("Interactable_Toy");
 
@@ -489,6 +503,33 @@ public class ActivityDirector : MonoBehaviour
         {
             Instantiate(toyPrefabs[Random.Range(0, toyPrefabs.Count)], spawnLocations[i], Quaternion.Euler(0, Random.Range(0f, 360f), 0));
         }
+
+        GameObject[] previousSpawnedCandys = GameObject.FindGameObjectsWithTag("Candy");
+
+      //  for (int current = 0; current < previousSpawnedCandys.Length; current++)
+       //     Destroy(previousSpawnedCandys[current]);
+
+        countToSelect = Mathf.Clamp(maxCandySpawns, 0, candySpawnLocations.Count);
+
+        shuffledLocations = new List<Vector3>(candySpawnLocations);
+
+        for (int i = shuffledLocations.Count - 1; i > 0; i--)
+        {
+            int randomIndex = Random.Range(0, i + 1);
+            Vector3 temp = shuffledLocations[i];
+            shuffledLocations[i] = shuffledLocations[randomIndex];
+            shuffledLocations[randomIndex] = temp;
+        }
+
+        spawnLocations = shuffledLocations.GetRange(0, countToSelect);
+
+        for (int i = 0; i < spawnLocations.Count; i++)
+        {
+            Instantiate(candyPrefabs[Random.Range(0, candyPrefabs.Count)], spawnLocations[i], Quaternion.Euler(0, Random.Range(0f, 360f), 0));
+        }
+
+
+
     }
 
     void DispatchWindowEvents()
@@ -569,7 +610,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnNightStart(int activityIndex)
     {
         powerOutageEventObject.Activate(activeActivites);
-        SpawnToys();
+        SpawnToysAndCandys();
         activeNight = activityIndex;
     }
     private void OnProgressToNextNight(int activityIndex)

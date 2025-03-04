@@ -401,10 +401,10 @@ public class PlayerController : MonoBehaviour
 		transform.localPosition = lastSpawnPosition;
 	}
 
-	public void EatCandy()
+	public bool EatCandy()
 	{
 		if (isSugarRushActive)
-			return;
+			return false;
 
 		originalWalkSpeed = walkSpeed;
 		originalRunSpeed = runSpeed;
@@ -413,6 +413,7 @@ public class PlayerController : MonoBehaviour
 		walkSpeed *= speedBoostMultiplier;
 		runSpeed *= speedBoostMultiplier;
 		currentStamina = maxStamina;
+		return true;
 	}
 
 	private void UpdateSugarRush()
