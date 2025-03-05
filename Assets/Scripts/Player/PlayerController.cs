@@ -59,6 +59,7 @@ public class PlayerController : MonoBehaviour
 	private float currentLightRange;
 	private float rangeDrainRate;
 	private bool isRecharging = false;
+	public TextMeshProUGUI rechargeFlashlightText;
 
 	private bool flashlightEnabled = true;
 	private Animation flashlightShake;
@@ -129,6 +130,9 @@ public class PlayerController : MonoBehaviour
 			interactionManager.OnLocalPlayerSetup(this, playerCamera);
 		}
 
+		if(rechargeFlashlightText != null)
+			rechargeFlashlightText.gameObject.SetActive(false);
+
 		if (flashlight != null)
 		{
 			currentLightIntensity = maxLightIntensity;
@@ -159,6 +163,19 @@ public class PlayerController : MonoBehaviour
 
 		if (interactionManager != null)
 			interactionManager.OnLocalPlayerUpdate();
+
+		if (rechargeFlashlightText != null)
+		{
+			if (currentLightIntensity < 0.5f && !isRecharging)
+			{
+				rechargeFlashlightText.text = "Press RMB to recharge flashlight!";
+				rechargeFlashlightText.gameObject.SetActive(true);
+			}
+			else
+			{
+				rechargeFlashlightText.gameObject.SetActive(false);
+			}
+		}
 	}
 
 	// flashlight toggle on/off
