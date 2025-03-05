@@ -19,7 +19,7 @@ public class InteractionManager : MonoBehaviour
         CloseBasementHatch,
     }
 
-    private float interactionDistance = 1.6f;
+    private float interactionDistance = 1.8f;
     private float objectLockDistance = 1.2f;
     private float interactableMovementSpeed = 20.0f;
 
@@ -135,6 +135,7 @@ public class InteractionManager : MonoBehaviour
 
     private void OnObjectTraceCollide(GameObject gameObj, RaycastHit hit)
     {
+        Debug.Log("Works" + gameObj.name);
         bool interactTriggered = playerController.playerControlActions.Player.Interact.triggered;
         if (gameObj.tag.Contains("Interactable_"))
         {
