@@ -60375,18 +60375,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1217817837871326073, guid: ce03ef8546922554bac845d278fc6994,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1217817837871326073, guid: ce03ef8546922554bac845d278fc6994,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1217817837871326073, guid: ce03ef8546922554bac845d278fc6994,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1217817837871326073, guid: ce03ef8546922554bac845d278fc6994,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.095
+      value: -6.2
       objectReference: {fileID: 0}
     - target: {fileID: 1217817837871326073, guid: ce03ef8546922554bac845d278fc6994,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.469
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 1217817837871326073, guid: ce03ef8546922554bac845d278fc6994,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 11.421
+      value: 11.435
       objectReference: {fileID: 0}
     - target: {fileID: 1217817837871326073, guid: ce03ef8546922554bac845d278fc6994,
         type: 3}
@@ -60423,6 +60438,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1217817837871326073, guid: ce03ef8546922554bac845d278fc6994,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2586152203138108180, guid: ce03ef8546922554bac845d278fc6994,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: fff3988c33dd2d3469bb3bc1b0267ab5, type: 2}
     - target: {fileID: 3488275878606963711, guid: ce03ef8546922554bac845d278fc6994,
         type: 3}
       propertyPath: m_IsTrigger
