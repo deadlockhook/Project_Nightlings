@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -9,6 +8,9 @@ public class FireplaceActivity : MonoBehaviour
     private bool shouldReset = false;
     private bool activityFinished = false;
     private bool inActivity = false;
+    private bool hintDisplayed = false;
+
+    public GameObject fireVFX;
 
     private SoundManager soundManager;
     private AudioSource triggerAudio1;
@@ -16,6 +18,7 @@ public class FireplaceActivity : MonoBehaviour
     private ActivityDirector.playedSoundAtTrigger[] soundTriggers;
 
     private ActivityDirector.timedActivity activityReference;
+
     private void Start()
     {
         soundManager = FindObjectOfType<SoundManager>();
@@ -38,6 +41,7 @@ public class FireplaceActivity : MonoBehaviour
     private void PlayTriggerAudio()
     {
     }
+
     private void OnTriggerEnter(Collider collision)
     {
         if (activityFinished || !inActivity)
@@ -62,15 +66,12 @@ public class FireplaceActivity : MonoBehaviour
             UpdateActivityProgress(0.25f);
 
             GameObject parent = collision.gameObject.transform.parent.gameObject;
-
             if (parent)
             {
                 Rigidbody[] blocks = parent.GetComponentsInChildren<Rigidbody>();
-
                 for (int i = 0; i < blocks.Length; i++)
                 {
                     Rigidbody blockRigidBody = blocks[i];
-
                     if (blockRigidBody)
                     {
                         Destroy(blockRigidBody.gameObject);
@@ -79,6 +80,7 @@ public class FireplaceActivity : MonoBehaviour
             }
         }
     }
+
     public void UpdateActivityProgress(float removeProgressPercentage)
     {
         activityReference.RemoveProgressPercentage(removeProgressPercentage);
@@ -87,14 +89,15 @@ public class FireplaceActivity : MonoBehaviour
     public void ActivityTriggerStart(ActivityDirector.timedActivity activity)
     {
         activityReference = activity;
-
         if (activityFinished)
             return;
 
         inActivity = true;
         shouldReset = false;
+        hintDisplayed = false;
         PlayTriggerAudio();
     }
+
     public bool OnActivityUpdate(float activityProgress)
     {
         triggerAudio1.volume = 1.0f - activityProgress;
@@ -113,15 +116,20 @@ public class FireplaceActivity : MonoBehaviour
                 PlayTriggerAudio();
         }
 
-        if (activityProgress >= 0.5f)
+        if (!hintDisplayed && activityProgress >= 0.5f)
         {
             HintManager.Instance.DisplayGameHint(HintType.Fireplace);
+            hintDisplayed = true;
         }
 
-        this.GetComponent<Renderer>().material.color = Color.Lerp(Color.white, Color.red, activityProgress);
+        if (fireVFX != null)
+        {
+            fireVFX.transform.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, activityProgress);
+        }
 
         return false;
     }
+
     public void ActivityTriggerEnd()
     {
         if (shouldReset)

@@ -7,11 +7,11 @@ public class TVVideoPlayer : MonoBehaviour
 {
 	[Header("Playlist Settings")]
 	public TVPlaylist playlist;
-
 	public bool playOnStart = true;
 
 	[Header("Other Settings")]
 	public AudioSource audioSource;
+	public bool enableStatic = true;
 
 	private VideoPlayer videoPlayer;
 	private int currentVideoIndex = 0;
@@ -22,24 +22,19 @@ public class TVVideoPlayer : MonoBehaviour
 	{
 		videoPlayer = GetComponent<VideoPlayer>();
 		if (videoPlayer == null)
-		{
 			videoPlayer = gameObject.AddComponent<VideoPlayer>();
-		}
 
 		videoPlayer.playOnAwake = false;
 		videoPlayer.isLooping = false;
 		videoPlayer.renderMode = VideoRenderMode.MaterialOverride;
+		videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
 
 		if (audioSource == null)
 		{
 			audioSource = GetComponent<AudioSource>();
 			if (audioSource == null)
-			{
 				audioSource = gameObject.AddComponent<AudioSource>();
-			}
 		}
-
-		videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
 		videoPlayer.SetTargetAudioSource(0, audioSource);
 
 		if (videoPlayer.targetMaterialRenderer == null)
@@ -50,10 +45,6 @@ public class TVVideoPlayer : MonoBehaviour
 				videoPlayer.targetMaterialRenderer = renderer;
 				videoPlayer.targetMaterialProperty = "_MainTex";
 			}
-			else
-			{
-				Debug.LogError("nope");
-			}
 		}
 	}
 
@@ -61,20 +52,8 @@ public class TVVideoPlayer : MonoBehaviour
 	{
 		videoPlayer.loopPointReached += OnVideoFinished;
 
-		if (playlist == null)
-		{
-			return;
-		}
-
-		if (playlist.videos.Count == 0)
-		{
-			return;
-		}
-
-		if (playOnStart)
-		{
+		if (playlist != null && playlist.videos.Count > 0 && playOnStart)
 			StartVideoSequence();
-		}
 	}
 
 	private void OnVideoFinished(VideoPlayer source)
@@ -82,15 +61,38 @@ public class TVVideoPlayer : MonoBehaviour
 		if (isTransitioning)
 			return;
 
-		if (isPlayingStatic)
+		if (enableStatic)
 		{
-			isPlayingStatic = false;
-			PlayNextContentVideo();
+			if (isPlayingStatic)
+			{
+				isPlayingStatic = false;
+				PlayNextContentVideo();
+			}
+			else
+			{
+				PlayStatic();
+			}
 		}
 		else
 		{
-			PlayStatic();
+			PlayNextContentVideo();
 		}
+	}
+
+	private void PlayClip(VideoClip clip, float volume, bool playStatic = false)
+	{
+		videoPlayer.Stop();
+		videoPlayer.clip = clip;
+		audioSource.volume = volume;
+		videoPlayer.SetTargetAudioSource(0, audioSource);
+		videoPlayer.enabled = true;
+		audioSource.enabled = true;
+
+		if (playStatic)
+			videoPlayer.time = 0;
+
+		videoPlayer.Play();
+		isPlayingStatic = playStatic;
 	}
 
 	private void PlayVideo(int index)
@@ -99,13 +101,8 @@ public class TVVideoPlayer : MonoBehaviour
 			return;
 
 		currentVideoIndex = index;
-		TVPlaylist.VideoEntry entry = playlist.videos[currentVideoIndex];
-
-		videoPlayer.clip = entry.videoClip;
-		audioSource.volume = entry.volume;
-
-		videoPlayer.Play();
-		isPlayingStatic = false;
+		var entry = playlist.videos[currentVideoIndex];
+		PlayClip(entry.videoClip, entry.volume, false);
 	}
 
 	private void PlayStatic()
@@ -116,27 +113,20 @@ public class TVVideoPlayer : MonoBehaviour
 			return;
 		}
 
-		isPlayingStatic = true;
 		isTransitioning = true;
-
-		videoPlayer.clip = playlist.staticVideo;
-		audioSource.volume = playlist.staticVolume;
-
-		videoPlayer.Play();
+		PlayClip(playlist.staticVideo, playlist.staticVolume, true);
 
 		if (playlist.staticVideo.length > playlist.staticDuration)
-		{
 			StartCoroutine(WaitAndPlayNext(playlist.staticDuration));
-		}
 		else
-		{
 			isTransitioning = false;
-		}
 	}
 
 	private IEnumerator WaitAndPlayNext(float delay)
 	{
 		yield return new WaitForSeconds(delay);
+		videoPlayer.Stop();
+		yield return new WaitForSeconds(0.1f);
 		isTransitioning = false;
 		PlayNextContentVideo();
 	}
@@ -191,12 +181,8 @@ public class TVVideoPlayer : MonoBehaviour
 	public void TogglePause()
 	{
 		if (videoPlayer.isPlaying)
-		{
 			videoPlayer.Pause();
-		}
 		else
-		{
 			videoPlayer.Play();
-		}
 	}
 }

@@ -17,6 +17,12 @@ TagManager:
   - Toilet_Flush
   - Interactable_Blocks
   - Icon
+  - PowerControl
+  - PowerRestore
+  - CandySpawn
+  - Candy
+  - Telephone
+  - ThunderControl
   layers:
   - Default
   - TransparentFX

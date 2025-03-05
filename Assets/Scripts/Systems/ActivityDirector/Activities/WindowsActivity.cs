@@ -97,6 +97,8 @@ public class WindowsActivity : MonoBehaviour
         PlayTriggerAudio();
     }
 
+    private bool windowShutPlayed = false;
+
     public void Update()
     {
         if (resetAnimBegin)
@@ -104,11 +106,18 @@ public class WindowsActivity : MonoBehaviour
             resetProgress += Time.deltaTime;
             resetProgress = Mathf.Clamp(resetProgress, 0.0f, 1.0f);
 
+            if (!windowShutPlayed && resetProgress >= 0.9f)
+            {
+                windowShutPlayed = true;
+                SoundManager.Instance.PlaySound("WindowShut", triggerAudio1);
+            }
+
             if (resetProgress >= 1.0f)
             {
                 resetProgress = 0.0f;
                 resetAnimBegin = false;
                 transform.position = new Vector3(transform.position.x, startYPosition, transform.position.z);
+                windowShutPlayed = false;
                 SoundManager.Instance.PlaySound("WindowShut", triggerAudio1);
             }
             else

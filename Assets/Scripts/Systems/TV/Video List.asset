@@ -13,17 +13,23 @@ MonoBehaviour:
   m_Name: Video List
   m_EditorClassIdentifier: 
   playlistName: Student Videos
-  description: Plays the list of videos in a loop
+  description: Loops the videos
   videos:
   - title: Cat
     videoClip: {fileID: 32900000, guid: 9463ceefa093a2a47aea574c293a2f53, type: 3}
     volume: 0
-  - title: Skeleton
-    videoClip: {fileID: 32900000, guid: 93984960c5b30fd4f86c99a472f1106f, type: 3}
-    volume: 0.5
-  - title: Zombie bruh
-    videoClip: {fileID: 32900000, guid: 19ec321c02569bb49acf10479b5ca9dd, type: 3}
-    volume: 0.5
-  staticVideo: {fileID: 32900000, guid: 5593bf1bb2588254ba5f70adbfaf4e11, type: 3}
-  staticDuration: 1
+  - title: 3D Island
+    videoClip: {fileID: 32900000, guid: 3bb92e08f36acca43b4b2d9b66a0c93d, type: 3}
+    volume: 0
+  - title: Ninja
+    videoClip: {fileID: 32900000, guid: 45c52d6b84ac403419ffe6df12e709cc, type: 3}
+    volume: 0
+  - title: Dance
+    videoClip: {fileID: 32900000, guid: dbd12edcf9d8c6f4ab20d0d508d3071a, type: 3}
+    volume: 0
+  - title: Pillow
+    videoClip: {fileID: 32900000, guid: 88d19160829a74c419ad075129de2faf, type: 3}
+    volume: 0
+  staticVideo: {fileID: 0}
+  staticDuration: 0.5
   staticVolume: 0.5

@@ -35,10 +35,10 @@ public class ActivityDirector : MonoBehaviour
     }
     public class timedActivity
     {
-        public timedActivity(float _triggerTimeMilliSeconds, int _triggerIndex, timedActivityTrigger _actionStart, timedActivityTrigger _actionEnd, timedActivityTrigger _actionOnUpdate)
+        public timedActivity(float _triggerTimeSeconds, int _triggerIndex, timedActivityTrigger _actionStart, timedActivityTrigger _actionEnd, timedActivityTrigger _actionOnUpdate)
         {
             currentTime = 0;
-            triggerTime = _triggerTimeMilliSeconds;
+            triggerTime = _triggerTimeSeconds;
             actionStart = _actionStart;
             actionEnd = _actionEnd;
             actionOnUpdate = _actionOnUpdate;
@@ -58,7 +58,7 @@ public class ActivityDirector : MonoBehaviour
             if (!active)
                 return;
 
-            currentTime += (Time.deltaTime * 1000f);
+            currentTime += Time.deltaTime;
 
             if (actionOnUpdate != null)
                 actionOnUpdate(triggerIndex);
@@ -112,10 +112,10 @@ public class ActivityDirector : MonoBehaviour
     }
     public class activityTrigger
     {
-        public activityTrigger(GameObject _gameObj, float triggerTimeMilliSeconds, int triggerIndex, timedActivityTrigger actionStart, timedActivityTrigger actionEnd, timedActivityTrigger actionOnUpdate)
+        public activityTrigger(GameObject _gameObj, float triggerTimeSeconds, int triggerIndex, timedActivityTrigger actionStart, timedActivityTrigger actionEnd, timedActivityTrigger actionOnUpdate)
         {
             gameObj = _gameObj;
-            eventTime = new timedActivity(triggerTimeMilliSeconds, triggerIndex, actionStart, actionEnd, actionOnUpdate);
+            eventTime = new timedActivity(triggerTimeSeconds, triggerIndex, actionStart, actionEnd, actionOnUpdate);
         }
 
         public GameObject gameObj;
@@ -127,42 +127,40 @@ public class ActivityDirector : MonoBehaviour
     private PlayerController playerController;
     private List<timedActivity> activeActivites;
 
-
-   // private AudioSource rainAndThunder;
-   // private Vector3 rainAndThunderInitialPosition;
-
+    public GameObject[] powerControlGameObjects;
     public List<GameObject> toyPrefabs;
+    public List<GameObject> candyPrefabs;
     [SerializeField] private int minToySpawnLocations = 12;
     [SerializeField] private int maxToySpawnLocations = 20;
 
-    private float triggerWindowsActivityLogicRangeStart = 35000.0f;
-    private float triggerWindowsActivityLogicRangeEnd = 45000.0f;
-    private float windowsActivityTimeLimit = 30000.0f;
+    [SerializeField] private int maxCandySpawns = 3;
 
-    private float triggerPetdoorActivityLogicRangeStart = 45000.0f;
-    private float triggerPetdoorActivityLogicRangeEnd = 55000.0f;
-    private float petdoorActivityTimeLimit = 28000.0f;
+    private float triggerWindowsActivityLogicRangeStart = 35.0f;
+    private float triggerWindowsActivityLogicRangeEnd = 40.0f;
+    private float windowsActivityTimeLimit = 30.0f;
 
-    private float triggerBasementActivityLogicRangeStart = 25000.0f;
-    private float triggerBasementActivityLogicRangeEnd = 33000.0f;
-    private float basementHatchActivityTimeLimit = 35000.0f;
+    private float triggerPetdoorActivityLogicRangeStart = 45.0f;
+    private float triggerPetdoorActivityLogicRangeEnd = 55.0f;
+    private float petdoorActivityTimeLimit = 35.0f;
+
+    private float triggerBasementActivityLogicRangeStart = 60.0f;
+    private float triggerBasementActivityLogicRangeEnd = 80.0f;
+    private float basementHatchActivityTimeLimit = 35.0f;
 
     private float triggerFireplaceActivityLogicRangeStart = 0.0f;
     private float triggerFireplaceActivityLogicRangeEnd = 0.0f;
-    private float fireplaceActivityTimeLimit = 60000.0f;
+    private float fireplaceActivityTimeLimit = 90.0f; // 1 minute 30 seconds
 
-    private float triggerSkylightActivityLogicRangeStart = 70000.0f;
-    private float triggerSkylightActivityLogicRangeEnd = 80000.0f;
-    private float skylightActivityTimeLimit = 20000.0f;
+    private float triggerSkylightActivityLogicRangeStart = 85.0f;
+    private float triggerSkylightActivityLogicRangeEnd = 90.0f;
+    private float skylightActivityTimeLimit = 30.0f;
 
-    private float toiletActivityLogicRangeStart = 50000.0f;
-    private float toiletActivityLogicRangeEnd = 60000.0f;
-    private float toiletActivityTimeLimit = 25000.0f;
+    private float toiletActivityLogicRangeStart = 60.0f;
+    private float toiletActivityLogicRangeEnd = 90.0f;
+    private float toiletActivityTimeLimit = 30.0f;
 
-
-    //  private float toiletActivityLogicRangeStart = 500.0f;
-    //  private float toiletActivityLogicRangeEnd = 600.0f;
-    //  private float toiletActivityTimeLimit = 15000.0f;
+    private float powerOutageEventTriggerTime = 200.0f;
+    private float phoneRingEventTriggerTime = 300.0f;
 
     private List<activityTrigger> windowEventObjects;
     private activityTrigger petdoorEventObject;
@@ -170,8 +168,11 @@ public class ActivityDirector : MonoBehaviour
     private activityTrigger fireplaceEventObject;
     private activityTrigger skylightEventObject;
     private activityTrigger toiletEventObject;
+    private timedActivity powerOutageEventObject;
+    private timedActivity phoneRingEventObject;
 
     private List<Vector3> toySpawnLocations;
+    private List<Vector3> candySpawnLocations;
 
     private float currentDeltaTime = 0;
     private float lastDeltaTimeForWindowEvents = 0;
@@ -185,34 +186,48 @@ public class ActivityDirector : MonoBehaviour
     private timedActivity[] nightActivity;
     private int activeNight = 0;
 
+    private bool nightHasStarted = false;
+
     private timedActivity deathTrigger;
 
     public GameObject iconPrefab;
+    public AudioSource telephoneAudioSource;
+
 
     private string deathCause = "Unknown";
+    public float DeathTime { get; private set; }
+
+    private GameObject[] thunderControlObjects;
 
     void Start()
     {
         //rainAndThunder = GameObject.Find("DynamicAimbienceSource").GetComponent<AudioSource>();
-       // rainAndThunderInitialPosition = rainAndThunder.transform.position;
+        // rainAndThunderInitialPosition = rainAndThunder.transform.position;
 
         uiManager = FindObjectOfType<UIManager>();
         playerController = FindObjectOfType<PlayerController>();
-        soundManager = FindObjectOfType<SoundManager>();
+        soundManager = SoundManager.Instance;
         activeActivites = new List<timedActivity>();
         windowEventObjects = new List<activityTrigger>();
-        lastDeltaTimeForWindowEvents = Time.deltaTime * 1000.0f;
+        lastDeltaTimeForWindowEvents = Time.deltaTime;
         lastDeltaTimeForPetDoorEvents = lastDeltaTimeForWindowEvents;
 
         nightActivity = new timedActivity[3];
-        //  420000
-        nightActivity[0] = new timedActivity(420000, 0, OnNightStart, OnWin, null);
-        nightActivity[1] = new timedActivity(420000, 1, OnNightStart, OnWin, null);
-        nightActivity[2] = new timedActivity(420000, 2, OnNightStart, OnWin, null);
+        //  420 seconds = 7 minutes
+        nightActivity[0] = new timedActivity(420.0f, 0, OnNightStart, OnWin, null);
+        nightActivity[1] = new timedActivity(420.0f, 1, OnNightStart, OnWin, null);
+        nightActivity[2] = new timedActivity(420.0f, 2, OnNightStart, OnWin, null);
 
-        deathTrigger = new timedActivity(10000, 0, null, OnDeath, null);
+        powerOutageEventObject = new timedActivity(powerOutageEventTriggerTime, 0, null, TriggerPowerOutage, null);
+        phoneRingEventObject = new timedActivity(phoneRingEventTriggerTime, 0, null, TriggerPhoneRing, null);
+
+        deathTrigger = new timedActivity(10.0f, 0, null, OnDeath, null);
 
         toySpawnLocations = new List<Vector3>();
+        candySpawnLocations = new List<Vector3>();
+
+        telephoneAudioSource = GameObject.FindGameObjectWithTag("Telephone").GetComponent<AudioSource>();
+        powerControlGameObjects = GameObject.FindGameObjectsWithTag("PowerControl");
 
         GameObject[] toySpawns = GameObject.FindGameObjectsWithTag("ToySpawn");
 
@@ -220,6 +235,14 @@ public class ActivityDirector : MonoBehaviour
         {
             toySpawnLocations.Add(toySpawns[i].transform.position);
             Destroy(toySpawns[i]);
+        }
+
+        GameObject[] candySpawns = GameObject.FindGameObjectsWithTag("CandySpawn");
+
+        for (int i = 0; i < candySpawns.Length; i++)
+        {
+            candySpawnLocations.Add(candySpawns[i].transform.position);
+            Destroy(candySpawns[i]);
         }
 
         WindowsActivity[] windows = GameObject.FindObjectsOfType<WindowsActivity>();
@@ -245,7 +268,9 @@ public class ActivityDirector : MonoBehaviour
         if (GameObject.FindObjectOfType<ToiletActivity>() != null)
             toiletEventObject = new activityTrigger(GameObject.FindObjectOfType<ToiletActivity>().gameObject, toiletActivityTimeLimit, 0, OnToiletActivityStart, OnToiletActivityFinished, OnToiletActivityUpdate);
 
-        nightActivity[0].Activate(activeActivites);
+        thunderControlObjects = GameObject.FindGameObjectsWithTag("ThunderControl");
+        //   staticAmbienceGameObject.GetComponentInParent<AudioSource>().volume = soundManager.musicVolume * soundManager.masterVolume;
+        //   staticAmbienceGameObject.GetComponentInParent<AudioSource>().Play();
     }
 
     private bool petdoorActivityFinished = false;
@@ -258,7 +283,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnPetDoorActivityStart(int activityIndex)
     {
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerStart();
-        IconManager.Instance.RegisterIcon(0, petdoorEventObject.gameObj.transform.position);
+        IconManager.Instance.RegisterIcon(0, petdoorEventObject.gameObj.transform.position, IconType.Door);
         HintManager.Instance.DisplayGameHint(HintType.PetDoor);
     }
 
@@ -282,7 +307,7 @@ public class ActivityDirector : MonoBehaviour
 
         if (!deathTrigger.IsActive())
         {
-            deathCause = "Pet Door";
+            deathCause = "If you hear the door bell, find a toy and feed it through the pet door to repel the nightling!.";
             deathTrigger.Activate(activeActivites);
         }
     }
@@ -290,7 +315,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnBasementHatchActivityStart(int activityIndex)
     {
         basementHatchEventObject.gameObj.GetComponent<BasementHatch>().ActivityTriggerStart();
-        IconManager.Instance.RegisterIcon(1, basementHatchEventObject.gameObj.transform.position);
+        IconManager.Instance.RegisterIcon(1, basementHatchEventObject.gameObj.transform.position, IconType.Basement);
         HintManager.Instance.DisplayGameHint(HintType.BasementHatch);
     }
 
@@ -314,7 +339,7 @@ public class ActivityDirector : MonoBehaviour
 
         if (!deathTrigger.IsActive())
         {
-            deathCause = "Basement Hatch";
+            deathCause = "If you hear banging in the basement, rush down and close the hatch before they can open it!";
             deathTrigger.Activate(activeActivites);
         }
     }
@@ -322,7 +347,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnWindowActivityStart(int activityIndex)
     {
         windowEventObjects[activityIndex].gameObj.GetComponent<WindowsActivity>().ActivityTriggerStart();
-        IconManager.Instance.RegisterIcon(activityIndex, windowEventObjects[activityIndex].gameObj.transform.position);
+        IconManager.Instance.RegisterIcon(5, windowEventObjects[activityIndex].gameObj.transform.position, IconType.Window);
         HintManager.Instance.DisplayGameHint(HintType.Window);
     }
 
@@ -335,7 +360,7 @@ public class ActivityDirector : MonoBehaviour
         {
             activityObject.eventTime.Deactivate(activeActivites);
             activityObject.eventTime.Reset();
-            IconManager.Instance.UnregisterIcon(activityIndex);
+            IconManager.Instance.UnregisterIcon(5);
         }
     }
 
@@ -348,7 +373,7 @@ public class ActivityDirector : MonoBehaviour
 
         if (!deathTrigger.IsActive())
         {
-            deathCause = "Window";
+            deathCause = "If you hear a window creaking open, find it and close it before they can open it!";
             deathTrigger.Activate(activeActivites);
         }
     }
@@ -356,19 +381,45 @@ public class ActivityDirector : MonoBehaviour
     private void OnFireplaceActivityStart(int activityIndex)
     {
         fireplaceEventObject.gameObj.GetComponent<FireplaceActivity>().ActivityTriggerStart(fireplaceEventObject.eventTime);
-        IconManager.Instance.RegisterIcon(2, fireplaceEventObject.gameObj.transform.position);
     }
 
     private void OnFireplaceActivityUpdate(int activityIndex)
     {
+        if (UIManager.Instance == null || !UIManager.Instance.IsInGame())
+        {
+            if (IconManager.Instance.IsIconRegistered(2))
+            {
+                IconManager.Instance.UnregisterIcon(2);
+            }
+            return;
+        }
+
         lastDeltaTimeForFireplaceEvent = currentDeltaTime;
-        if (fireplaceEventObject.gameObj.GetComponent<FireplaceActivity>().OnActivityUpdate(fireplaceEventObject.eventTime.GetProgress()))
+        float progress = fireplaceEventObject.eventTime.GetProgress();
+
+        if (progress >= 0.5f)
+        {
+            if (!IconManager.Instance.IsIconRegistered(2))
+            {
+                IconManager.Instance.RegisterIcon(2, fireplaceEventObject.gameObj.transform.position, IconType.Fireplace);
+            }
+        }
+        else
+        {
+            if (IconManager.Instance.IsIconRegistered(2))
+            {
+                IconManager.Instance.UnregisterIcon(2);
+            }
+        }
+
+        if (fireplaceEventObject.gameObj.GetComponent<FireplaceActivity>().OnActivityUpdate(progress))
         {
             fireplaceEventObject.eventTime.Deactivate(activeActivites);
             fireplaceEventObject.eventTime.Reset();
             IconManager.Instance.UnregisterIcon(2);
         }
     }
+
     private void OnFireplaceActivityFinished(int activityIndex)
     {
         fireplaceEventObject.eventTime.Deactivate(activeActivites);
@@ -377,7 +428,7 @@ public class ActivityDirector : MonoBehaviour
 
         if (!deathTrigger.IsActive())
         {
-            deathCause = "Fireplace";
+            deathCause = "If you see the fireplace is almost out, grab wood from the basement and throw it in to keep the fire going!";
             deathTrigger.Activate(activeActivites);
         }
     }
@@ -385,7 +436,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnSkylightActivityStart(int activityIndex)
     {
         skylightEventObject.gameObj.GetComponent<SkylightActivity>().ActivityTriggerStart();
-        IconManager.Instance.RegisterIcon(3, skylightEventObject.gameObj.transform.position);
+        IconManager.Instance.RegisterIcon(3, skylightEventObject.gameObj.transform.position, IconType.Window);
         HintManager.Instance.DisplayGameHint(HintType.Skylight);
     }
     private void OnSkylightActivityUpdate(int activityIndex)
@@ -406,7 +457,7 @@ public class ActivityDirector : MonoBehaviour
 
         if (!deathTrigger.IsActive())
         {
-            deathCause = "Skylight";
+            deathCause = "If you hear tapping on the sky light, use the remote in the kitchen to close it before they can get in!";
             deathTrigger.Activate(activeActivites);
         }
     }
@@ -414,7 +465,7 @@ public class ActivityDirector : MonoBehaviour
     private void OnToiletActivityStart(int activityIndex)
     {
         toiletEventObject.gameObj.GetComponent<ToiletActivity>().ActivityTriggerStart();
-        IconManager.Instance.RegisterIcon(4, toiletEventObject.gameObj.transform.position);
+        IconManager.Instance.RegisterIcon(4, toiletEventObject.gameObj.transform.position, IconType.Toilet);
         HintManager.Instance.DisplayGameHint(HintType.Toilet);
     }
 
@@ -435,12 +486,12 @@ public class ActivityDirector : MonoBehaviour
 
         if (!deathTrigger.IsActive())
         {
-            deathCause = "Toilet";
+            deathCause = "If you hear splashing sounds coming from the bathroom, flush the toilet to send the nightling away!";
             deathTrigger.Activate(activeActivites);
         }
     }
 
-    public void SpawnToys()
+    public void SpawnToysAndCandys()
     {
         GameObject[] previousSpawnedToys = GameObject.FindGameObjectsWithTag("Interactable_Toy");
 
@@ -463,8 +514,35 @@ public class ActivityDirector : MonoBehaviour
 
         for (int i = 0; i < spawnLocations.Count; i++)
         {
-            Instantiate(toyPrefabs[Random.Range(0, toyPrefabs.Count)], spawnLocations[i], Quaternion.Euler(Random.Range(-90.0f, 90.0f), Random.Range(180, -180), Random.Range(180, -180)));
+            Instantiate(toyPrefabs[Random.Range(0, toyPrefabs.Count)], spawnLocations[i], Quaternion.Euler(0, Random.Range(0f, 360f), 0));
         }
+
+        GameObject[] previousSpawnedCandys = GameObject.FindGameObjectsWithTag("Candy");
+
+      //  for (int current = 0; current < previousSpawnedCandys.Length; current++)
+       //     Destroy(previousSpawnedCandys[current]);
+
+        countToSelect = Mathf.Clamp(maxCandySpawns, 0, candySpawnLocations.Count);
+
+        shuffledLocations = new List<Vector3>(candySpawnLocations);
+
+        for (int i = shuffledLocations.Count - 1; i > 0; i--)
+        {
+            int randomIndex = Random.Range(0, i + 1);
+            Vector3 temp = shuffledLocations[i];
+            shuffledLocations[i] = shuffledLocations[randomIndex];
+            shuffledLocations[randomIndex] = temp;
+        }
+
+        spawnLocations = shuffledLocations.GetRange(0, countToSelect);
+
+        for (int i = 0; i < spawnLocations.Count; i++)
+        {
+            Instantiate(candyPrefabs[Random.Range(0, candyPrefabs.Count)], spawnLocations[i], Quaternion.Euler(0, Random.Range(0f, 360f), 0));
+        }
+
+
+
     }
 
     void DispatchWindowEvents()
@@ -544,7 +622,9 @@ public class ActivityDirector : MonoBehaviour
     }
     private void OnNightStart(int activityIndex)
     {
-        SpawnToys();
+        powerOutageEventObject.Activate(activeActivites);
+        phoneRingEventObject.Activate(activeActivites);
+        SpawnToysAndCandys();
         activeNight = activityIndex;
     }
     private void OnProgressToNextNight(int activityIndex)
@@ -559,8 +639,17 @@ public class ActivityDirector : MonoBehaviour
         nightActivity[1].Deactivate(activeActivites);
         nightActivity[2].Deactivate(activeActivites);
         nightActivity[0].Deactivate(activeActivites);
+
+        currentDeltaTime = 0f;
+        nightHasStarted = true;
+
         nightActivity[nightIndex].Activate(activeActivites);
         playerController.Respawn();
+
+        if (IconManager.Instance != null)
+        {
+            IconManager.Instance.ClearAllIcons();
+        }
     }
 
     private bool stopActivityDirector = false;
@@ -572,12 +661,23 @@ public class ActivityDirector : MonoBehaviour
             ProgressManager.Instance.CompleteNight(activeNight);
         }
 
+        if (IconManager.Instance != null)
+        {
+            IconManager.Instance.ClearAllIcons();
+        }
+
         uiManager.WinGame();
         stopActivityDirector = true;
     }
 
     void OnDeath(int activityIndex)
     {
+        if (IconManager.Instance != null)
+        {
+            IconManager.Instance.ClearAllIcons();
+        }
+
+        DeathTime = currentDeltaTime;
         playerController.Die();
         uiManager.LoseGame(deathCause);
         stopActivityDirector = true;
@@ -585,42 +685,58 @@ public class ActivityDirector : MonoBehaviour
 
     void ControlRainAndThunderSpatialAudio()
     {
-        GameObject closestOpeningPoint = null;
-        float last_distance = float.MaxValue;
-
-        foreach (var window in windowEventObjects)
+        for (int i = 0; i < thunderControlObjects.Length; i++)
         {
-            AudioSource audioSource = window.gameObj.GetComponent<AudioSource>();
-
-            if (window.eventTime.IsActive())
-                audioSource.volume =  soundManager.musicVolume;
+            AudioSource audioSource = thunderControlObjects[i].GetComponent<AudioSource>();
+            if (audioSource.isPlaying)
+            {
+                audioSource.volume = (soundManager.musicVolume * soundManager.masterVolume);
+            }
             else
-                audioSource.volume = 0.5f * soundManager.musicVolume;
-
+            {
+                audioSource.volume = 0.5f * (soundManager.musicVolume * soundManager.masterVolume);
+            }
         }
+    }
 
-        AudioSource audioSourcePetDoor = petdoorEventObject.gameObj.GetComponent<AudioSource>();
+    void TriggerPowerOutage(int activityIndex)
+    {
+        for (int i = 0; i < powerControlGameObjects.Length; i++)
+            powerControlGameObjects[i].SetActive(false);
 
-        if (petdoorEventObject.eventTime.IsActive())
-            audioSourcePetDoor.volume = soundManager.musicVolume;
-        else
-            audioSourcePetDoor.volume = 0.5f * soundManager.musicVolume;
+        powerOutageEventObject.Deactivate(activeActivites);
+    }
+    public void RestorePower()
+    {
+        if (!powerOutageEventObject.IsActive())
+            return;
 
-        AudioSource audioSourceSkylight = skylightEventObject.gameObj.GetComponent<AudioSource>();
+        for (int i = 0; i < powerControlGameObjects.Length; i++)
+            powerControlGameObjects[i].SetActive(true);
 
-        if (skylightEventObject.eventTime.IsActive())
-            audioSourceSkylight.volume = soundManager.musicVolume;
-        else
-            audioSourceSkylight.volume = 0.5f * soundManager.musicVolume;
+        powerOutageEventObject.Activate(activeActivites);
+    }
 
+    void TriggerPhoneRing(int activityIndex)
+    {
+        telephoneAudioSource.Play();
+        phoneRingEventObject.Deactivate(activeActivites);
+    }
+
+    public void StopPhoneRing()
+    {
+        if (!phoneRingEventObject.IsActive())
+            return;
+
+        telephoneAudioSource.Stop();
     }
 
     void Update()
     {
-        if (stopActivityDirector)
+        if (!nightHasStarted || stopActivityDirector)
             return;
 
-        currentDeltaTime += Time.deltaTime * 1000f;
+        currentDeltaTime += Time.deltaTime;
 
         DispatchWindowEvents();
         DispatchPetdoorEvent();
@@ -639,8 +755,10 @@ public class ActivityDirector : MonoBehaviour
 
         ControlRainAndThunderSpatialAudio();
 
-        for (int currentIndex = 0; currentIndex < activeActivites.Count; currentIndex++)
-            activeActivites[currentIndex].OnUpdate();
+        for (int i = 0; i < activeActivites.Count; i++)
+        {
+            activeActivites[i].OnUpdate();
+        }
     }
 
     public int GetActiveNight()

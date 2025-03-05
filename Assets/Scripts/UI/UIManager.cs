@@ -29,7 +29,8 @@ public class UIManager : MonoBehaviour
 		Win,
 		Lose,
 		NightPicker,
-		NightInfo
+		NightInfo,
+		CreditsUI
 	}
 
 	[Header("UI Screens")]
@@ -41,6 +42,7 @@ public class UIManager : MonoBehaviour
 	private GameObject loseUI;
 	private GameObject soundOptionsUI;
 	private GameObject videoOptionsUI;
+	private GameObject creditsUI;
 
 	[Header("Loading Screen")]
 	public GameObject loadingScreen;
@@ -50,23 +52,28 @@ public class UIManager : MonoBehaviour
 	[Header("Death Screen")]
 	public GameObject blackScreen;
 	public TMP_Text deathCauseText;
+	public TMP_Text timeOfDeathText;
 
 	[Header("Win Screen")]
 	public TMP_Text winText;
+	public TMP_Text unlockedNightText;
 
 	[Header("Night Picker and Info UI")]
 	public GameObject nightPickerUI;
 	public GameObject nightInfoUI;
 
 
-    private bool isPaused = false;
+	private bool isPaused = false;
 	private Toggle audioVisualToggle;
 	private Toggle motionBlurToggle;
 	private Toggle chromaticAbberationToggle;
 	private Toggle bloomToggle;
 
-	//Singleton
-	private void Awake()
+	[Header("UI AudioSource")]
+    public AudioSource audioSource;
+
+    //Singleton
+    private void Awake()
 	{
 		if (Instance != null && Instance != this)
 		{
@@ -75,11 +82,11 @@ public class UIManager : MonoBehaviour
 		}
 		Instance = this;
 		DontDestroyOnLoad(gameObject);
-    }
+	}
 
 	private void Start()
 	{
-        mainMenuUI = transform.Find("MainMenu").gameObject;
+		mainMenuUI = transform.Find("MainMenu").gameObject;
 		pauseMenuUI = transform.Find("Pause").gameObject;
 		gameplayUI = transform.Find("Gameplay").gameObject;
 		optionsUI = transform.Find("Options").gameObject;
@@ -89,6 +96,7 @@ public class UIManager : MonoBehaviour
 		loseUI = transform.Find("Lose").gameObject;
 		nightPickerUI = transform.Find("NightPicker").gameObject;
 		nightInfoUI = transform.Find("NightInfo").gameObject;
+		creditsUI = transform.Find("Credits").gameObject;
 
 		audioVisualToggle = soundOptionsUI.transform.Find("AudioVisualToggle").GetComponent<Toggle>();
 		motionBlurToggle = videoOptionsUI.transform.Find("MotionBlurToggle").GetComponent<Toggle>();
@@ -109,9 +117,8 @@ public class UIManager : MonoBehaviour
 			}
 		}
 	}
-    
 
-    private void DeactivateAllScreens()
+	private void DeactivateAllScreens()
 	{
 		mainMenuUI.SetActive(false);
 		pauseMenuUI.SetActive(false);
@@ -121,6 +128,7 @@ public class UIManager : MonoBehaviour
 		videoOptionsUI.SetActive(false);
 		winUI.SetActive(false);
 		loseUI.SetActive(false);
+		creditsUI.SetActive(false);
 		if (nightPickerUI != null) nightPickerUI.SetActive(false);
 		if (nightInfoUI != null) nightInfoUI.SetActive(false);
 	}
@@ -137,7 +145,7 @@ public class UIManager : MonoBehaviour
 					SoundManager.Instance.PlayMusic("MainMenu");
 				}
 				Cursor.lockState = CursorLockMode.None;
-				Time.timeScale = 0f;
+				Time.timeScale = 1f;
 				mainMenuUI.SetActive(true);
 				break;
 			case UIState.PauseMenu:
@@ -185,8 +193,14 @@ public class UIManager : MonoBehaviour
 				break;
 			case UIState.NightInfo:
 				SoundManager.Instance.StopMusic();
+				Cursor.lockState = CursorLockMode.Locked;
 				Time.timeScale = 1f;
 				nightInfoUI.SetActive(true);
+				break;
+			case UIState.CreditsUI:
+				Cursor.lockState = CursorLockMode.None;
+				Time.timeScale = 0f;
+				creditsUI.SetActive(true);
 				break;
 		}
 		uiStateHistory.Push(state);
@@ -206,6 +220,9 @@ public class UIManager : MonoBehaviour
 
 	private void HandleEscapeInput()
 	{
+		if (CutsceneManager.Instance != null && CutsceneManager.Instance.IsPlayingCutscene)
+			return;
+
 		bool canUseEscape = true;
 		if ((loadingScreen != null && loadingScreen.activeSelf) ||
 			(nightInfoUI != null && nightInfoUI.activeSelf))
@@ -217,6 +234,10 @@ public class UIManager : MonoBehaviour
 			if (optionsUI.activeSelf || soundOptionsUI.activeSelf || videoOptionsUI.activeSelf)
 			{
 				OptionsBack();
+			}
+			else if (creditsUI != null && creditsUI.activeSelf)
+			{
+				ChangeUIState(UIState.MainMenu);
 			}
 			else if (nightPickerUI != null && nightPickerUI.activeSelf)
 			{
@@ -245,9 +266,9 @@ public class UIManager : MonoBehaviour
 			return;
 
 		HandleEscapeInput();
-    }
+	}
 
-    public void OptionsBack()
+	public void OptionsBack()
 	{
 		if (uiStateHistory.Count > 1)
 		{
@@ -269,6 +290,17 @@ public class UIManager : MonoBehaviour
 			ChangeUIState(UIState.MainMenu);
 		}
 	}
+
+	public void ButtonSFX()
+	{
+		if (audioSource.isPlaying)
+		{
+            audioSource.Stop();
+		}
+
+        SoundManager.Instance.PlaySound("Button", audioSource);
+		Debug.Log("Button SFX");
+    }
 
 	public void BackFromNightPicker()
 	{
@@ -294,8 +326,20 @@ public class UIManager : MonoBehaviour
 
 	public void GoToMainMenu()
 	{
-		ChangeUIState(UIState.MainMenu);
+		if (IconManager.Instance != null)
+		{
+			IconManager.Instance.ClearAllIcons();
+		}
+
+		StartCoroutine(LoadMainMenuWithLoading());
+	}
+
+	private IEnumerator LoadMainMenuWithLoading()
+	{
 		SceneManager.LoadScene("MainMenu");
+		ChangeUIStateWithLoading(UIState.MainMenu);
+
+		yield return new WaitForSecondsRealtime(loadingDisplayDuration + loadingFadeDuration);
 	}
 
 	public void GoToOptions()
@@ -313,6 +357,11 @@ public class UIManager : MonoBehaviour
 		ChangeUIState(UIState.VideoOptions);
 	}
 
+	public void ShowCredits()
+	{
+		ChangeUIState(UIState.CreditsUI);
+	}
+
 	public void QuitGame()
 	{
 		Debug.Log("Quitting game");
@@ -321,30 +370,42 @@ public class UIManager : MonoBehaviour
 
 	public void WinGame()
 	{
-		string nightName = "Friday Night";
+		//SoundManager.Instance.PlaySound("AlarmWin");
+
 		ActivityDirector director = FindObjectOfType<ActivityDirector>();
-		if (director != null)
+		int activeNight = director != null ? director.GetActiveNight() : 0;
+
+		string winMessage = "";
+		string unlockMessage = "";
+
+		if(activeNight == 0)
 		{
-			switch (director.GetActiveNight())
-			{
-				case 0:
-					nightName = "Friday Night";
-					break;
-				case 1:
-					nightName = "Saturday Night";
-					break;
-				case 2:
-					nightName = "Sunday Night";
-					break;
-				default:
-					nightName = "Friday Night";
-					break;
-			}
+			winMessage = "You Survived Friday Night!";
+			unlockMessage = "Saturday Night Unlocked!";
+		}
+		else if(activeNight == 1)
+		{
+			winMessage = "You Survived Saturday Night!";
+			unlockMessage = "Sunday Night Unlocked!";
+		}
+		else if(activeNight == 2)
+		{
+			winMessage = "You Survived Sunday Night!";
+			unlockMessage = "All Nights Completed!";
+		}
+		else
+		{
+			winMessage = "You Survived!";
+			unlockMessage = "";
 		}
 
-		if (winText != null)
+		if(winText != null)
 		{
-			winText.text = "You Survived " + nightName;
+			winText.text = winMessage;
+		}
+		if(unlockedNightText != null)
+		{
+			unlockedNightText.text = unlockMessage;
 		}
 
 		isPaused = true;
@@ -380,11 +441,29 @@ public class UIManager : MonoBehaviour
 			blackScreen.SetActive(false);
 		loseUI.SetActive(true);
 
+		ActivityDirector director = FindObjectOfType<ActivityDirector>();
+		float deathTime = director != null ? director.DeathTime : 0f;
+		string formattedTime = FormatTime(deathTime);
+
 		if (deathCauseText != null)
-			deathCauseText.text = "You were killed by: " + deathCause;
+			deathCauseText.text = "HINT: " + deathCause;
+
+		if (timeOfDeathText != null)
+			timeOfDeathText.text = "Killed at " + formattedTime;
 
 		Cursor.lockState = CursorLockMode.None;
 		Time.timeScale = 0f;
+	}
+
+	public string FormatTime(float seconds)
+	{
+		int totalMinutes = Mathf.FloorToInt(seconds);
+		int hour = totalMinutes / 60;
+		int minute = totalMinutes % 60;
+		if (hour == 0)
+			hour = 12;
+		string period = "AM";
+		return string.Format("{0}:{1:00} {2}", hour, minute, period);
 	}
 
 	public bool IsPaused()
@@ -407,7 +486,7 @@ public class UIManager : MonoBehaviour
 		ChangeUIState(UIState.NightPicker);
 	}
 
-    private IEnumerator TransitionToState(UIState newState)
+	private IEnumerator TransitionToState(UIState newState)
 	{
 		loadingScreen.SetActive(true);
 		CanvasGroup canvasGroup = loadingScreen.GetComponent<CanvasGroup>();
@@ -526,9 +605,14 @@ public class UIManager : MonoBehaviour
 			cg = nightInfoUI.AddComponent<CanvasGroup>();
 		cg.alpha = 1f;
 
-		yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(3f);
 
-		float fadeDuration = 0.25f;
+		if (CutsceneManager.Instance != null)
+		{
+			CutsceneManager.Instance.PlayCutsceneWithIndex(night);
+		}
+
+		float fadeDuration = 0.5f;
 		float timer = 0f;
 		while (timer < fadeDuration)
 		{
@@ -536,8 +620,12 @@ public class UIManager : MonoBehaviour
 			cg.alpha = Mathf.Lerp(1f, 0f, timer / fadeDuration);
 			yield return null;
 		}
-
 		nightInfoUI.SetActive(false);
+
+		while (CutsceneManager.Instance != null && CutsceneManager.Instance.IsPlayingCutscene)
+		{
+			yield return null;
+		}
 
 		if (player != null)
 		{
@@ -578,7 +666,7 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-    public void ToggleMotionBlur(bool enabled)
+	public void ToggleMotionBlur(bool enabled)
 	{
 		enabled = motionBlurToggle.isOn;
 		motionBlurEnabled = enabled;
@@ -602,7 +690,7 @@ public class UIManager : MonoBehaviour
 	// This is for the jumpscare atm, need to find a better way to do this
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
-        if (loseTimeline == null)
+		if (loseTimeline == null)
 		{
 			GameObject timelineObject = GameObject.Find("TimeLineData");
 			if (timelineObject != null)

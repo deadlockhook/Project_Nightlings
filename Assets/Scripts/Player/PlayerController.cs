@@ -59,6 +59,7 @@ public class PlayerController : MonoBehaviour
 	private float currentLightRange;
 	private float rangeDrainRate;
 	private bool isRecharging = false;
+	public TextMeshProUGUI rechargeFlashlightText;
 
 	private bool flashlightEnabled = true;
 	private Animation flashlightShake;
@@ -129,6 +130,9 @@ public class PlayerController : MonoBehaviour
 			interactionManager.OnLocalPlayerSetup(this, playerCamera);
 		}
 
+		if(rechargeFlashlightText != null)
+			rechargeFlashlightText.gameObject.SetActive(false);
+
 		if (flashlight != null)
 		{
 			currentLightIntensity = maxLightIntensity;
@@ -136,6 +140,8 @@ public class PlayerController : MonoBehaviour
 			currentLightRange = maxLightRange;
 			flashlight.range = currentLightRange;
 			rangeDrainRate = maxLightIntensity != minLightIntensity ? drainRate * (maxLightRange - minLightRange) / (maxLightIntensity - minLightIntensity) : 0f;
+			flashlightEnabled = false;
+			flashlight.enabled = false;
 		}
 
 		lastSpawnPosition = transform.localPosition;
@@ -159,6 +165,19 @@ public class PlayerController : MonoBehaviour
 
 		if (interactionManager != null)
 			interactionManager.OnLocalPlayerUpdate();
+
+		if (rechargeFlashlightText != null)
+		{
+			if (currentLightIntensity < 0.5f && !isRecharging)
+			{
+				rechargeFlashlightText.text = "Press RMB to recharge flashlight!";
+				rechargeFlashlightText.gameObject.SetActive(true);
+			}
+			else
+			{
+				rechargeFlashlightText.gameObject.SetActive(false);
+			}
+		}
 	}
 
 	// flashlight toggle on/off
@@ -172,6 +191,13 @@ public class PlayerController : MonoBehaviour
 			if (flashlight != null)
 				flashlight.enabled = flashlightEnabled;
 		}
+	}
+
+	public void EnableFlashlight()
+	{
+		flashlightEnabled = true;
+		if (flashlight != null)
+			flashlight.enabled = true;
 	}
 
 	// Retrieve player input
@@ -401,10 +427,10 @@ public class PlayerController : MonoBehaviour
 		transform.localPosition = lastSpawnPosition;
 	}
 
-	public void EatCandy()
+	public bool EatCandy()
 	{
 		if (isSugarRushActive)
-			return;
+			return false;
 
 		originalWalkSpeed = walkSpeed;
 		originalRunSpeed = runSpeed;
@@ -413,15 +439,11 @@ public class PlayerController : MonoBehaviour
 		walkSpeed *= speedBoostMultiplier;
 		runSpeed *= speedBoostMultiplier;
 		currentStamina = maxStamina;
+		return true;
 	}
 
 	private void UpdateSugarRush()
 	{
-		if (playerControlActions.Player.CandyConsume.IsPressed() && !isSugarRushActive && !isDead)
-		{
-			EatCandy();
-		}
-
 		if (isSugarRushActive)
 		{
 			sugarRushTimer += Time.deltaTime;

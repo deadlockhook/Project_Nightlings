@@ -126,18 +126,6 @@ public class InteractionManager : MonoBehaviour
                     }
 
                     ApplyMotionOnInteractable(interactableObjRigidBody);
-                    /*
-                    Vector3 endPoint = playerCamera.transform.position + (playerCamera.transform.forward * objectLockDistance);
-                    Vector3 direction = (endPoint - interactableObjRigidBody.position).normalized;
-                    float distance = Vector3.Distance(interactableObjRigidBody.position, endPoint);
-
-                    if (!Physics.Raycast(playerCamera.transform.position, direction, distance, obstacleLayer))
-                    {
-                        Vector3 targetVelocity = direction * (distance * interactableMovementSpeed);
-                        interactableObjRigidBody.velocity = Vector3.Lerp(interactableObjRigidBody.velocity, targetVelocity, Time.deltaTime * interactableMovementSpeed);
-                        interactableObjRigidBody.velocity *= 0.95f;
-                        interactableObjRigidBody.angularVelocity *= 0.9f;
-                    }*/
                 }
                 else
                     interactableObject.transform.position = playerCamera.transform.position + playerCamera.transform.forward;
@@ -183,37 +171,34 @@ public class InteractionManager : MonoBehaviour
                 }
             }
         }
-
-        if (gameObj.GetComponent<WindowsActivity>() != null)
+        if (interactTriggered)
         {
-            if (interactTriggered)
-            {
-                gameObj.GetComponent<WindowsActivity>().ResetActivity();
-            }
-        }
+            if (gameObj.GetComponent<WindowsActivity>() != null)
+                 gameObj.GetComponent<WindowsActivity>().ResetActivity();
+       
+            if (gameObj.tag.Contains("BasementHatch_Door"))
+                 FindObjectOfType<BasementHatch>().ResetActivity();
+         
+            if (gameObj.tag.Contains("PowerRestore"))
+                  FindObjectOfType<ActivityDirector>().RestorePower();
 
-        if (gameObj.tag.Contains("BasementHatch_Door"))
-        {
-            if (interactTriggered)
-            {
-                FindObjectOfType<BasementHatch>().ResetActivity();
-            }
-        }
+            if (gameObj.tag.Contains("Skylight_Remote"))
+                 FindObjectOfType<SkylightActivity>().ResetActivity();
+             
+            if (gameObj.tag.Contains("Toilet_Flush"))
+                 FindObjectOfType<ToiletActivity>().ResetActivity();
 
-        if (gameObj.tag.Contains("Skylight_Remote"))
-        {
-            if (interactTriggered)
-            {
-                FindObjectOfType<SkylightActivity>().ResetActivity();
-            }
-        }
+            if (gameObj.tag.Contains("Telephone"))
+                FindObjectOfType<ActivityDirector>().StopPhoneRing();
+            
+            
 
-        if (gameObj.tag.Contains("Toilet_Flush"))
-        {
-            if (interactTriggered)
+            if (gameObj.tag.Contains("Candy"))
             {
-                FindObjectOfType<ToiletActivity>().ResetActivity();
+                if (FindObjectOfType<PlayerController>().EatCandy())
+                    Destroy(gameObj);
             }
+
         }
     }
 }

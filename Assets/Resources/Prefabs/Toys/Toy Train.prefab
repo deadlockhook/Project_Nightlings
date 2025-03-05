@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 2471757542088916423}
   - component: {fileID: 6306610969756470555}
   - component: {fileID: -4800264462775801516}
-  - component: {fileID: 4160337854845756978}
   - component: {fileID: 6171191616893599567}
   - component: {fileID: 5760399042702569414}
   m_Layer: 6
@@ -32,8 +31,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1785070581978917705}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.111803904, y: 0.097357325, z: -0.0000000033324}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -153,27 +152,6 @@ MonoBehaviour:
   m_EffectColor: {r: 1, g: 1, b: 1, a: 0.5}
   m_EffectDistance: {x: 1, y: -1}
   m_UseGraphicAlpha: 1
---- !u!65 &4160337854845756978
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1785070581978917705}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.24, y: 0.21, z: 0.24}
-  m_Center: {x: 0, y: 0.15, z: 0}
 --- !u!82 &6171191616893599567
 AudioSource:
   m_ObjectHideFlags: 0

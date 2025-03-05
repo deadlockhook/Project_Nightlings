@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 211f23711a0f6b74b9524c4d6461f7b0, type: 3}
+  m_Name: ControlHints
+  m_EditorClassIdentifier: 
+  hints:
+  - Use WASD to move!
+  - Hold LMB over toy's or wood to pickup and hold!
+  - Press SHIFT to run!
+  - Running will drain your stamina, indicated by your sprint meter in the middle
+    of the screen!
+  - Stamina recharges overtime when not running. Standing still will recharge it
+    faster!
+  - Press F to toggle flashlight on / off, Use RMB to recharge your flashlight!

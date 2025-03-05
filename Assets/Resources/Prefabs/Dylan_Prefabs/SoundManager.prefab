@@ -71,7 +71,7 @@ MonoBehaviour:
   - name: MainMenu
     clip: {fileID: 8300000, guid: bc043af8cc76de14aa43a91f13d45a73, type: 3}
   - name: InGame
-    clip: {fileID: 8300000, guid: 5559dfd61b6da7f4e9dc768e9637f89f, type: 3}
+    clip: {fileID: 8300000, guid: 9bddb78c191c39f48a54e66322053961, type: 3}
   - name: DoorBell
     clip: {fileID: 8300000, guid: 7e74c901c41faee48a5373a2eafbb5b1, type: 3}
   - name: BasementKnock
@@ -96,6 +96,14 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: ab7771a43632c0c49a8dbad73aa20b31, type: 3}
   - name: WindowShut
     clip: {fileID: 8300000, guid: ee0bcb89643713844a47506e0239cd57, type: 3}
+  - name: AlarmWin
+    clip: {fileID: 8300000, guid: 4392aed04ecb1d142937ab201e7dc27f, type: 3}
+  - name: Button
+    clip: {fileID: 8300000, guid: 6c85329d1def4da40aab45d9ab4d34cc, type: 3}
+  - name: PhoneRing
+    clip: {fileID: 8300000, guid: e9a9bd935f5940a4b8bc3fb3ea91b3b0, type: 3}
+  - name: RadioMusic
+    clip: {fileID: 8300000, guid: df82034c28d7d814588f564feaa80558, type: 3}
   masterVolume: 1
   sfxVolume: 1
-  musicVolume: 1
+  musicVolume: 0.5
