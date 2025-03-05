@@ -20,4 +20,4 @@ MonoBehaviour:
     of the screen!
   - Stamina recharges overtime when not running. Standing still will recharge it
     faster!
-  - Press RMB to recharge your flashlight!
+  - Press F to toggle flashlight on / off, Use RMB to recharge your flashlight!
