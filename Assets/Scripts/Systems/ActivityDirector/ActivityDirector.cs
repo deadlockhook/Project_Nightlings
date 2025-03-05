@@ -137,15 +137,15 @@ public class ActivityDirector : MonoBehaviour
 
     private float triggerWindowsActivityLogicRangeStart = 35.0f;
     private float triggerWindowsActivityLogicRangeEnd = 40.0f;
-    private float windowsActivityTimeLimit = 30.0f;
+    private float windowsActivityTimeLimit = 45.0f;
 
     private float triggerPetdoorActivityLogicRangeStart = 45.0f;
     private float triggerPetdoorActivityLogicRangeEnd = 55.0f;
-    private float petdoorActivityTimeLimit = 35.0f;
+    private float petdoorActivityTimeLimit = 45.0f;
 
     private float triggerBasementActivityLogicRangeStart = 60.0f;
     private float triggerBasementActivityLogicRangeEnd = 80.0f;
-    private float basementHatchActivityTimeLimit = 35.0f;
+    private float basementHatchActivityTimeLimit = 45.0f;
 
     private float triggerFireplaceActivityLogicRangeStart = 0.0f;
     private float triggerFireplaceActivityLogicRangeEnd = 0.0f;
@@ -153,11 +153,11 @@ public class ActivityDirector : MonoBehaviour
 
     private float triggerSkylightActivityLogicRangeStart = 85.0f;
     private float triggerSkylightActivityLogicRangeEnd = 90.0f;
-    private float skylightActivityTimeLimit = 30.0f;
+    private float skylightActivityTimeLimit = 45.0f;
 
     private float toiletActivityLogicRangeStart = 60.0f;
     private float toiletActivityLogicRangeEnd = 90.0f;
-    private float toiletActivityTimeLimit = 30.0f;
+    private float toiletActivityTimeLimit = 45.0f;
 
     private float powerOutageEventTriggerTime = 200.0f;
     private float phoneRingEventTriggerTime = 300.0f;
