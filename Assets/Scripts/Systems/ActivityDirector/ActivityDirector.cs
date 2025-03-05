@@ -197,6 +197,7 @@ public class ActivityDirector : MonoBehaviour
     private string deathCause = "Unknown";
     public float DeathTime { get; private set; }
 
+    private GameObject[] thunderControlObjects;
 
     void Start()
     {
@@ -267,8 +268,9 @@ public class ActivityDirector : MonoBehaviour
         if (GameObject.FindObjectOfType<ToiletActivity>() != null)
             toiletEventObject = new activityTrigger(GameObject.FindObjectOfType<ToiletActivity>().gameObject, toiletActivityTimeLimit, 0, OnToiletActivityStart, OnToiletActivityFinished, OnToiletActivityUpdate);
 
-     //   staticAmbienceGameObject.GetComponentInParent<AudioSource>().volume = soundManager.musicVolume * soundManager.masterVolume;
-     //   staticAmbienceGameObject.GetComponentInParent<AudioSource>().Play();
+        thunderControlObjects = GameObject.FindGameObjectsWithTag("ThunderControl");
+        //   staticAmbienceGameObject.GetComponentInParent<AudioSource>().volume = soundManager.musicVolume * soundManager.masterVolume;
+        //   staticAmbienceGameObject.GetComponentInParent<AudioSource>().Play();
     }
 
     private bool petdoorActivityFinished = false;
@@ -683,35 +685,18 @@ public class ActivityDirector : MonoBehaviour
 
     void ControlRainAndThunderSpatialAudio()
     {
-        GameObject closestOpeningPoint = null;
-        float last_distance = float.MaxValue;
-
-        Debug.Log( soundManager.musicVolume +" " +soundManager.masterVolume);
-
-        foreach (var window in windowEventObjects)
+        for (int i = 0; i < thunderControlObjects.Length; i++)
         {
-            AudioSource audioSource = window.gameObj.GetComponent<AudioSource>();
-
-            if (window.eventTime.IsActive())
+            AudioSource audioSource = thunderControlObjects[i].GetComponent<AudioSource>();
+            if (audioSource.isPlaying)
+            {
                 audioSource.volume = (soundManager.musicVolume * soundManager.masterVolume);
+            }
             else
+            {
                 audioSource.volume = 0.5f * (soundManager.musicVolume * soundManager.masterVolume);
+            }
         }
-
-        AudioSource audioSourcePetDoor = petdoorEventObject.gameObj.GetComponent<AudioSource>();
-
-        if (petdoorEventObject.eventTime.IsActive())
-            audioSourcePetDoor.volume = (soundManager.musicVolume * soundManager.masterVolume);
-        else
-            audioSourcePetDoor.volume = 0.5f * (soundManager.musicVolume * soundManager.masterVolume);
-
-        AudioSource audioSourceSkylight = skylightEventObject.gameObj.GetComponent<AudioSource>();
-
-        if (skylightEventObject.eventTime.IsActive())
-            audioSourceSkylight.volume = (soundManager.musicVolume * soundManager.masterVolume);
-        else
-            audioSourceSkylight.volume = 0.5f * (soundManager.musicVolume * soundManager.masterVolume);
-
     }
 
     void TriggerPowerOutage(int activityIndex)
