@@ -18,9 +18,11 @@ public class FireplaceActivity : MonoBehaviour
     private ActivityDirector.playedSoundAtTrigger[] soundTriggers;
 
     private ActivityDirector.timedActivity activityReference;
+    private FireplaceSoundHandler fireSoundHandler;
 
     private void Start()
     {
+        fireSoundHandler = GetComponent<FireplaceSoundHandler>();
         soundManager = FindObjectOfType<SoundManager>();
         AudioSource[] sources = GetComponents<AudioSource>();
         if (sources.Length >= 2)
@@ -35,7 +37,6 @@ public class FireplaceActivity : MonoBehaviour
         soundTriggers[0] = new ActivityDirector.playedSoundAtTrigger(0.25f, triggerAudio1);
         soundTriggers[1] = new ActivityDirector.playedSoundAtTrigger(0.50f, triggerAudio1);
         soundTriggers[2] = new ActivityDirector.playedSoundAtTrigger(0.75f, triggerAudio1);
-        SoundManager.Instance.PlaySound("FireBurning", triggerAudio1);
     }
 
     private void PlayTriggerAudio()
@@ -100,9 +101,10 @@ public class FireplaceActivity : MonoBehaviour
 
     public bool OnActivityUpdate(float activityProgress)
     {
-        triggerAudio1.volume = 1.0f - activityProgress;
         if (activityFinished)
             return true;
+
+        fireSoundHandler.SetFireIntensity(1.0f - activityProgress);
 
         if (shouldReset)
         {
