@@ -19,13 +19,25 @@ public class HintManager : MonoBehaviour
 	public GameHintData hintData;
 
 	private HashSet<HintType> shownHints = new HashSet<HintType>();
+
 	private bool isHintActive = false;
+
+	private Queue<HintQueueEntry> hintQueue = new Queue<HintQueueEntry>();
+
+	private class HintQueueEntry
+	{
+		public HintType type;
+		public string message;
+	}
 
 	private void Awake()
 	{
-		if(Instance == null) {
+		if (Instance == null)
+		{
 			Instance = this;
-		} else {
+		}
+		else
+		{
 			Destroy(gameObject);
 		}
 		if (hintCanvasGroup != null)
@@ -34,23 +46,38 @@ public class HintManager : MonoBehaviour
 
 	public void DisplayGameHint(HintType type)
 	{
-		if(isHintActive || shownHints.Contains(type))
+		if (shownHints.Contains(type))
 			return;
 
 		string message = hintData.GetRandomHint(type);
-		if(string.IsNullOrEmpty(message))
+		if (string.IsNullOrEmpty(message))
 			return;
 
-		StartCoroutine(ShowHint(message, type));
+		hintQueue.Enqueue(new HintQueueEntry { type = type, message = message });
+
+		if (!isHintActive)
+			StartCoroutine(ProcessQueue());
+	}
+
+	private IEnumerator ProcessQueue()
+	{
+		isHintActive = true;
+
+		while (hintQueue.Count > 0)
+		{
+			HintQueueEntry entry = hintQueue.Dequeue();
+			yield return StartCoroutine(ShowHint(entry.message, entry.type));
+		}
+		isHintActive = false;
 	}
 
 	private IEnumerator ShowHint(string message, HintType type)
 	{
-		isHintActive = true;
 		hintText.text = message;
 
 		float timer = 0f;
-		while(timer < fadeDuration) {
+		while (timer < fadeDuration)
+		{
 			timer += Time.deltaTime;
 			hintCanvasGroup.alpha = Mathf.Lerp(0f, 1f, timer / fadeDuration);
 			yield return null;
@@ -60,14 +87,14 @@ public class HintManager : MonoBehaviour
 		yield return new WaitForSeconds(displayDuration);
 
 		timer = 0f;
-		while(timer < fadeDuration) {
+		while (timer < fadeDuration)
+		{
 			timer += Time.deltaTime;
 			hintCanvasGroup.alpha = Mathf.Lerp(1f, 0f, timer / fadeDuration);
 			yield return null;
 		}
 		hintCanvasGroup.alpha = 0f;
 
-		isHintActive = false;
 		shownHints.Add(type);
 	}
 }
