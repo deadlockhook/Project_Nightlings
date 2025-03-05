@@ -685,32 +685,36 @@ public class ActivityDirector : MonoBehaviour
 
     void ControlRainAndThunderSpatialAudio()
     {
+        return;
+
         GameObject closestOpeningPoint = null;
         float last_distance = float.MaxValue;
+
+        Debug.Log( soundManager.musicVolume +" " +soundManager.masterVolume);
 
         foreach (var window in windowEventObjects)
         {
             AudioSource audioSource = window.gameObj.GetComponent<AudioSource>();
 
             if (window.eventTime.IsActive())
-                audioSource.volume = soundManager.musicVolume;
+                audioSource.volume = (soundManager.musicVolume * soundManager.masterVolume);
             else
-                audioSource.volume = 0.5f * soundManager.musicVolume;
+                audioSource.volume = 0.5f * (soundManager.musicVolume * soundManager.masterVolume);
         }
 
         AudioSource audioSourcePetDoor = petdoorEventObject.gameObj.GetComponent<AudioSource>();
 
         if (petdoorEventObject.eventTime.IsActive())
-            audioSourcePetDoor.volume = soundManager.musicVolume;
+            audioSourcePetDoor.volume = (soundManager.musicVolume * soundManager.masterVolume);
         else
-            audioSourcePetDoor.volume = 0.5f * soundManager.musicVolume;
+            audioSourcePetDoor.volume = 0.5f * (soundManager.musicVolume * soundManager.masterVolume);
 
         AudioSource audioSourceSkylight = skylightEventObject.gameObj.GetComponent<AudioSource>();
 
         if (skylightEventObject.eventTime.IsActive())
-            audioSourceSkylight.volume = soundManager.musicVolume;
+            audioSourceSkylight.volume = (soundManager.musicVolume * soundManager.masterVolume);
         else
-            audioSourceSkylight.volume = 0.5f * soundManager.musicVolume;
+            audioSourceSkylight.volume = 0.5f * (soundManager.musicVolume * soundManager.masterVolume);
 
     }
 
