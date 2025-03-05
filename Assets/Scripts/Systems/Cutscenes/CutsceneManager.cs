@@ -99,9 +99,12 @@ public class CutsceneManager : MonoBehaviour
 	{
 		isPlayingCutscene = false;
 		if (playerController != null)
+		{
 			playerController.enabled = true;
+			playerController.EnableFlashlight();
+		}
 
-		if(skipText != null)
+		if (skipText != null)
 			skipText.gameObject.SetActive(false);
 
 		if (currentDirector == night1Cutscene)

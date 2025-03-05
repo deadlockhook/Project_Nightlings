@@ -140,6 +140,8 @@ public class PlayerController : MonoBehaviour
 			currentLightRange = maxLightRange;
 			flashlight.range = currentLightRange;
 			rangeDrainRate = maxLightIntensity != minLightIntensity ? drainRate * (maxLightRange - minLightRange) / (maxLightIntensity - minLightIntensity) : 0f;
+			flashlightEnabled = false;
+			flashlight.enabled = false;
 		}
 
 		lastSpawnPosition = transform.localPosition;
@@ -189,6 +191,13 @@ public class PlayerController : MonoBehaviour
 			if (flashlight != null)
 				flashlight.enabled = flashlightEnabled;
 		}
+	}
+
+	public void EnableFlashlight()
+	{
+		flashlightEnabled = true;
+		if (flashlight != null)
+			flashlight.enabled = true;
 	}
 
 	// Retrieve player input
