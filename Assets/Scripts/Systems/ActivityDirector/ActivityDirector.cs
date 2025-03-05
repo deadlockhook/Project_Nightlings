@@ -139,28 +139,28 @@ public class ActivityDirector : MonoBehaviour
 
     [SerializeField] private int maxCandySpawns = 3;
 
-    private float triggerWindowsActivityLogicRangeStart = 30.0f;
-    private float triggerWindowsActivityLogicRangeEnd = 45.0f;
+    private float triggerWindowsActivityLogicRangeStart = 35.0f;
+    private float triggerWindowsActivityLogicRangeEnd = 40.0f;
     private float windowsActivityTimeLimit = 30.0f;
 
-    private float triggerPetdoorActivityLogicRangeStart = 50.0f;
-    private float triggerPetdoorActivityLogicRangeEnd = 60.0f;
+    private float triggerPetdoorActivityLogicRangeStart = 45.0f;
+    private float triggerPetdoorActivityLogicRangeEnd = 55.0f;
     private float petdoorActivityTimeLimit = 35.0f;
 
-    private float triggerBasementActivityLogicRangeStart = 55.0f;
-    private float triggerBasementActivityLogicRangeEnd = 75.0f;
+    private float triggerBasementActivityLogicRangeStart = 60.0f;
+    private float triggerBasementActivityLogicRangeEnd = 80.0f;
     private float basementHatchActivityTimeLimit = 35.0f;
 
     private float triggerFireplaceActivityLogicRangeStart = 0.0f;
     private float triggerFireplaceActivityLogicRangeEnd = 0.0f;
     private float fireplaceActivityTimeLimit = 90.0f; // 1 minute 30 seconds
 
-    private float triggerSkylightActivityLogicRangeStart = 70.0f;
-    private float triggerSkylightActivityLogicRangeEnd = 80.0f;
+    private float triggerSkylightActivityLogicRangeStart = 85.0f;
+    private float triggerSkylightActivityLogicRangeEnd = 90.0f;
     private float skylightActivityTimeLimit = 30.0f;
 
-    private float toiletActivityLogicRangeStart = 50.0f;
-    private float toiletActivityLogicRangeEnd = 70.0f;
+    private float toiletActivityLogicRangeStart = 60.0f;
+    private float toiletActivityLogicRangeEnd = 90.0f;
     private float toiletActivityTimeLimit = 30.0f;
 
     private float powerOutageEventTriggerTime = 200.0f;
