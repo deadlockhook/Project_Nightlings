@@ -71,7 +71,7 @@ MonoBehaviour:
   - name: MainMenu
     clip: {fileID: 8300000, guid: bc043af8cc76de14aa43a91f13d45a73, type: 3}
   - name: InGame
-    clip: {fileID: 8300000, guid: 5559dfd61b6da7f4e9dc768e9637f89f, type: 3}
+    clip: {fileID: 8300000, guid: 9bddb78c191c39f48a54e66322053961, type: 3}
   - name: DoorBell
     clip: {fileID: 8300000, guid: 7e74c901c41faee48a5373a2eafbb5b1, type: 3}
   - name: BasementKnock

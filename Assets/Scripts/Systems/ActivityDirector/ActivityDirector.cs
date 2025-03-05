@@ -127,10 +127,6 @@ public class ActivityDirector : MonoBehaviour
     private PlayerController playerController;
     private List<timedActivity> activeActivites;
 
-
-    // private AudioSource rainAndThunder;
-    // private Vector3 rainAndThunderInitialPosition;
-
     public GameObject[] powerControlGameObjects;
     public List<GameObject> toyPrefabs;
     public List<GameObject> candyPrefabs;
@@ -201,6 +197,7 @@ public class ActivityDirector : MonoBehaviour
     private string deathCause = "Unknown";
     public float DeathTime { get; private set; }
 
+
     void Start()
     {
         //rainAndThunder = GameObject.Find("DynamicAimbienceSource").GetComponent<AudioSource>();
@@ -208,7 +205,7 @@ public class ActivityDirector : MonoBehaviour
 
         uiManager = FindObjectOfType<UIManager>();
         playerController = FindObjectOfType<PlayerController>();
-        soundManager = FindObjectOfType<SoundManager>();
+        soundManager = SoundManager.Instance;
         activeActivites = new List<timedActivity>();
         windowEventObjects = new List<activityTrigger>();
         lastDeltaTimeForWindowEvents = Time.deltaTime;
@@ -270,7 +267,8 @@ public class ActivityDirector : MonoBehaviour
         if (GameObject.FindObjectOfType<ToiletActivity>() != null)
             toiletEventObject = new activityTrigger(GameObject.FindObjectOfType<ToiletActivity>().gameObject, toiletActivityTimeLimit, 0, OnToiletActivityStart, OnToiletActivityFinished, OnToiletActivityUpdate);
 
-        //nightActivity[0].Activate(activeActivites);
+     //   staticAmbienceGameObject.GetComponentInParent<AudioSource>().volume = soundManager.musicVolume * soundManager.masterVolume;
+     //   staticAmbienceGameObject.GetComponentInParent<AudioSource>().Play();
     }
 
     private bool petdoorActivityFinished = false;
@@ -685,8 +683,6 @@ public class ActivityDirector : MonoBehaviour
 
     void ControlRainAndThunderSpatialAudio()
     {
-        return;
-
         GameObject closestOpeningPoint = null;
         float last_distance = float.MaxValue;
 
