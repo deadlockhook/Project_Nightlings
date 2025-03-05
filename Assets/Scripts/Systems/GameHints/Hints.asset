@@ -36,3 +36,7 @@ MonoBehaviour:
   - hintType: 5
     hints:
     - A Nightling is trying to crawl up the toilet! Flush it to send it away!
+  - hintType: 6
+    hints:
+    - You can eat the candy bars located on the dinner table for a temporary speed
+      boost!

@@ -7,7 +7,8 @@ public enum HintType {
 	BasementHatch,
 	Fireplace,
 	Skylight,
-	Toilet
+	Toilet,
+	CandyBar
 }
 
 [System.Serializable]
