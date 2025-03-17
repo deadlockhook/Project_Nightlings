@@ -49,6 +49,7 @@ public class PlayerController : MonoBehaviour
 
 	[Header("Flashlight Settings")]
 	public GameObject flashlightGameObject;
+	public GameObject flashlightCameraGameObject;
 	public Light flashlight;
 	public float maxLightIntensity = 5f;
 	public float minLightIntensity = 0f;
@@ -197,7 +198,10 @@ public class PlayerController : MonoBehaviour
 	{
 		flashlightEnabled = true;
 		if (flashlight != null)
+		{
+			flashlightCameraGameObject.gameObject.SetActive(true);
 			flashlight.enabled = true;
+		}
 	}
 
 	// Retrieve player input
