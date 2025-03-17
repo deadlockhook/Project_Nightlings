@@ -283,7 +283,7 @@ public class UIManager : MonoBehaviour
 		{
 			UIState previousState = uiStateHistory.Peek();
 
-			while (previousState == UIState.Options || previousState == UIState.SoundOptions || previousState == UIState.VideoOptions)
+			while (previousState == UIState.Options || previousState == UIState.SoundOptions || previousState == UIState.VideoOptions || previousState == UIState.Controls)
 			{
 				uiStateHistory.Pop();
 				if (uiStateHistory.Count == 0)
