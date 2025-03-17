@@ -8,8 +8,9 @@ OcclusionCullingSettings:
     smallestOccluder: 5
     smallestHole: 0.25
     backfaceThreshold: 100
-  m_SceneGUID: 00000000000000000000000000000000
-  m_OcclusionCullingData: {fileID: 0}
+  m_SceneGUID: 174108c7d9144bd4794f2f009a9d0aec
+  m_OcclusionCullingData: {fileID: 36300000, guid: 8da54cc659cbc104299f30885f0cee1d,
+    type: 2}
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
@@ -44952,7 +44953,7 @@ LightingSettings:
   m_AlbedoBoost: 1
   m_IndirectOutputScale: 1
   m_UsingShadowmask: 1
-  m_BakeBackend: 1
+  m_BakeBackend: 2
   m_LightmapMaxSize: 1024
   m_BakeResolution: 40
   m_Padding: 2
@@ -68432,6 +68433,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Skylight_Remote
+      objectReference: {fileID: 0}
+    - target: {fileID: 952866045211351834, guid: ce03ef8546922554bac845d278fc6994,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 1217817837871326073, guid: ce03ef8546922554bac845d278fc6994,
         type: 3}
