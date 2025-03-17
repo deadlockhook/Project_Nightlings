@@ -30,7 +30,8 @@ public class UIManager : MonoBehaviour
 		Lose,
 		NightPicker,
 		NightInfo,
-		CreditsUI
+		CreditsUI,
+		Controls
 	}
 
 	[Header("UI Screens")]
@@ -43,6 +44,7 @@ public class UIManager : MonoBehaviour
 	private GameObject soundOptionsUI;
 	private GameObject videoOptionsUI;
 	private GameObject creditsUI;
+	private GameObject controlsUI;
 
 	[Header("Loading Screen")]
 	public GameObject loadingScreen;
@@ -97,6 +99,7 @@ public class UIManager : MonoBehaviour
 		nightPickerUI = transform.Find("NightPicker").gameObject;
 		nightInfoUI = transform.Find("NightInfo").gameObject;
 		creditsUI = transform.Find("Credits").gameObject;
+		controlsUI = transform.Find("Controls").gameObject;
 
 		audioVisualToggle = soundOptionsUI.transform.Find("AudioVisualToggle").GetComponent<Toggle>();
 		motionBlurToggle = videoOptionsUI.transform.Find("MotionBlurToggle").GetComponent<Toggle>();
@@ -129,6 +132,7 @@ public class UIManager : MonoBehaviour
 		winUI.SetActive(false);
 		loseUI.SetActive(false);
 		creditsUI.SetActive(false);
+		controlsUI.SetActive(false);
 		if (nightPickerUI != null) nightPickerUI.SetActive(false);
 		if (nightInfoUI != null) nightInfoUI.SetActive(false);
 	}
@@ -201,6 +205,11 @@ public class UIManager : MonoBehaviour
 				Cursor.lockState = CursorLockMode.None;
 				Time.timeScale = 0f;
 				creditsUI.SetActive(true);
+				break;
+			case UIState.Controls:
+				Cursor.lockState = CursorLockMode.None;
+				Time.timeScale = 0f;
+				controlsUI.SetActive(true);
 				break;
 		}
 		uiStateHistory.Push(state);
@@ -355,6 +364,11 @@ public class UIManager : MonoBehaviour
 	public void GoToVideoOptions()
 	{
 		ChangeUIState(UIState.VideoOptions);
+	}
+
+	public void GoToControls()
+	{
+		ChangeUIState(UIState.Controls);
 	}
 
 	public void ShowCredits()
