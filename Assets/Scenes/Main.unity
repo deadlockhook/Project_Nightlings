@@ -27024,6 +27024,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1020120704}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1024932007 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8358715284856207315, guid: 5d52bbcb50c3c8c4888b09350fc20b71,
+    type: 3}
+  m_PrefabInstance: {fileID: 154429339918080314}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &1025375029
 Mesh:
   m_ObjectHideFlags: 0
@@ -46574,6 +46580,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1550931442}
     m_Modifications:
+    - target: {fileID: 67984241483503443, guid: 5d52bbcb50c3c8c4888b09350fc20b71,
+        type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 284112092488049908, guid: 5d52bbcb50c3c8c4888b09350fc20b71,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -46664,10 +46675,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Toilet
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8358715284856207315, guid: 5d52bbcb50c3c8c4888b09350fc20b71,
+        type: 3}
+      propertyPath: m_TagString
+      value: Toilet_Flush
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 3231936263693045268, guid: 5d52bbcb50c3c8c4888b09350fc20b71, type: 3}
+    - {fileID: 6130939661979630869, guid: 5d52bbcb50c3c8c4888b09350fc20b71, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8358715284856207315, guid: 5d52bbcb50c3c8c4888b09350fc20b71,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 727074479806522808}
   m_SourcePrefab: {fileID: 100100000, guid: 5d52bbcb50c3c8c4888b09350fc20b71, type: 3}
 --- !u!1 &312633663866548608
 GameObject:
@@ -46706,6 +46728,28 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 154429339918080314}
   m_PrefabAsset: {fileID: 0}
+--- !u!64 &727074479806522808
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1024932007}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -1223221734073648100, guid: a222ddd19708cca44ad2d52030fcad6c, type: 3}
 --- !u!1 &843280059601675857
 GameObject:
   m_ObjectHideFlags: 0
@@ -51915,11 +51959,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2016884422145525075, guid: 9cd28fbef222abc4b81fee8c0d362a2e,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2280564821923116648, guid: 9cd28fbef222abc4b81fee8c0d362a2e,
         type: 3}

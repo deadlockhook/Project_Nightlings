@@ -135,7 +135,7 @@ public class InteractionManager : MonoBehaviour
 
     private void OnObjectTraceCollide(GameObject gameObj, RaycastHit hit)
     {
-        Debug.Log("Works" + gameObj.name);
+        //Debug.Log("Works" + gameObj.name);
         bool interactTriggered = playerController.playerControlActions.Player.Interact.triggered;
         if (gameObj.tag.Contains("Interactable_"))
         {
