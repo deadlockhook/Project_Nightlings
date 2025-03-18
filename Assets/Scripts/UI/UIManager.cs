@@ -240,7 +240,7 @@ public class UIManager : MonoBehaviour
 		}
 		if (Input.GetKeyDown(KeyCode.Escape) && canUseEscape)
 		{
-			if (optionsUI.activeSelf || soundOptionsUI.activeSelf || videoOptionsUI.activeSelf)
+			if (optionsUI.activeSelf || soundOptionsUI.activeSelf || videoOptionsUI.activeSelf || controlsUI.activeSelf)
 			{
 				OptionsBack();
 			}
