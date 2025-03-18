@@ -3982,11 +3982,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: UIManager
       objectReference: {fileID: 0}
-    - target: {fileID: 5089195628594181535, guid: 6769968cd7103954bae9d9072bab020f,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7105901297801089620, guid: 6769968cd7103954bae9d9072bab020f,
         type: 3}
       propertyPath: m_Pivot.x
