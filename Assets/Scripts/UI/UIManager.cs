@@ -533,31 +533,31 @@ public class UIManager : MonoBehaviour
 
 	public void DylanButton(int night)
 	{
-		if (winUI.activeSelf || loseUI.activeSelf)
-			return;
+        if (winUI.activeSelf || loseUI.activeSelf)
+            return;
 
-		if (ProgressManager.Instance != null && !ProgressManager.Instance.IsNightUnlocked(night))
-		{
-			return;
-		}
+        if (ProgressManager.Instance != null && !ProgressManager.Instance.IsNightUnlocked(night))
+        {
+            return;
+        }
 
-		StartCoroutine(LoadDylanScene(night));
-	}
+        StartCoroutine(LoadDylanScene(night));
+    }
 
 	private IEnumerator LoadDylanScene(int night)
 	{
-		Time.timeScale = 1f;
+        Time.timeScale = 1f;
 
-		SceneManager.LoadScene("Dylan_Test");
-		ChangeUIStateWithLoading(UIState.NightInfo);
+        SceneManager.LoadScene("Dylan_Test");
+        ChangeUIStateWithLoading(UIState.NightInfo);
 
-		yield return null;
+        yield return null;
 
-		activityDirector = FindObjectOfType<ActivityDirector>();
-		yield return StartCoroutine(ShowNightInfo(night));
+        activityDirector = FindObjectOfType<ActivityDirector>();
+        yield return StartCoroutine(ShowNightInfo(night));
 
-		activityDirector.StartNight(night);
-	}
+        activityDirector.StartNight(night);
+    }
 
 	public void NightButton(int night)
 	{

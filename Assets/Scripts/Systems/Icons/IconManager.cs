@@ -181,6 +181,15 @@ public class IconManager : MonoBehaviour
         newIcon.SetActive(true);
     }
 
+    public GameObject GetIcon(int id)
+    {
+        if (activeIcons.TryGetValue(id, out (GameObject icon, Vector3 worldPosition, IconType type) iconData))
+        {
+            return iconData.icon;
+        }
+        return null;
+    }
+
     public void UpdateIconType(int id, IconType newType)
     {
         if (!activeIcons.TryGetValue(id, out var iconData)) return;

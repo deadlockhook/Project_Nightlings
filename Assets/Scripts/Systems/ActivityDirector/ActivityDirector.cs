@@ -280,16 +280,30 @@ public class ActivityDirector : MonoBehaviour
     private bool skylightActivityFinished = false;
     private bool toiletActivityFinished = false;
 
+    private GameObject petDoorIcon;
+    private GameObject basementHatchIcon;
+    private GameObject windowIcon;
+    private GameObject fireplaceIcon;
+    private GameObject skylightIcon;
+    private GameObject toiletIcon;
+
     private void OnPetDoorActivityStart(int activityIndex)
     {
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerStart();
         IconManager.Instance.RegisterIcon(0, petdoorEventObject.gameObj.transform.position, IconType.Door);
+        petDoorIcon = IconManager.Instance.GetIcon(0);
         HintManager.Instance.DisplayGameHint(HintType.PetDoor);
     }
 
     private void OnPetDoorActivityUpdate(int activityIndex)
     {
         lastDeltaTimeForPetDoorEvents = currentDeltaTime;
+
+        if (petDoorIcon != null)
+        {
+            IconFill iconFill = petDoorIcon.GetComponent<IconFill>();
+            iconFill.Fill(petdoorEventObject.eventTime.GetProgress());
+        }
 
         if (petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().OnActivityUpdate(petdoorEventObject.eventTime.GetProgress()))
         {
@@ -307,7 +321,7 @@ public class ActivityDirector : MonoBehaviour
 
         if (!deathTrigger.IsActive())
         {
-            deathCause = "If you hear the door bell, find a toy and feed it through the pet door to repel the nightling!.";
+            deathCause = "If you hear the door bell, find a toy and feed it through the pet door to repel the nightling!";
             deathTrigger.Activate(activeActivites);
         }
     }
@@ -316,12 +330,19 @@ public class ActivityDirector : MonoBehaviour
     {
         basementHatchEventObject.gameObj.GetComponent<BasementHatch>().ActivityTriggerStart();
         IconManager.Instance.RegisterIcon(1, basementHatchEventObject.gameObj.transform.position, IconType.Basement);
+        basementHatchIcon = IconManager.Instance.GetIcon(1);
         HintManager.Instance.DisplayGameHint(HintType.BasementHatch);
     }
 
     private void OnBasementHatchActivityUpdate(int activityIndex)
     {
         lastDeltaTimeForBasementHatchEvent = currentDeltaTime;
+
+        if (basementHatchIcon != null)
+        {
+            IconFill iconFill = basementHatchIcon.GetComponent<IconFill>();
+            iconFill.Fill(basementHatchEventObject.eventTime.GetProgress());
+        }
 
         if (basementHatchEventObject.gameObj.GetComponent<BasementHatch>().OnActivityUpdate(basementHatchEventObject.eventTime.GetProgress()))
         {
@@ -348,14 +369,21 @@ public class ActivityDirector : MonoBehaviour
     {
         windowEventObjects[activityIndex].gameObj.GetComponent<WindowsActivity>().ActivityTriggerStart();
         IconManager.Instance.RegisterIcon(5, windowEventObjects[activityIndex].gameObj.transform.position, IconType.Window);
+        windowIcon = IconManager.Instance.GetIcon(5);
         HintManager.Instance.DisplayGameHint(HintType.Window);
     }
 
     private void OnWindowActivityUpdate(int activityIndex)
     {
         lastDeltaTimeForWindowEvents = currentDeltaTime;
-
         activityTrigger activityObject = windowEventObjects[activityIndex];
+
+        if (windowIcon != null)
+        {
+            IconFill iconFill = windowIcon.GetComponent<IconFill>();
+            iconFill.Fill(activityObject.eventTime.GetProgress());
+        }
+
         if (activityObject.gameObj.GetComponent<WindowsActivity>().OnActivityUpdate(activityObject.eventTime.GetProgress()))
         {
             activityObject.eventTime.Deactivate(activeActivites);
@@ -397,11 +425,18 @@ public class ActivityDirector : MonoBehaviour
         lastDeltaTimeForFireplaceEvent = currentDeltaTime;
         float progress = fireplaceEventObject.eventTime.GetProgress();
 
+        if (fireplaceIcon != null)
+        {
+            IconFill iconFill = fireplaceIcon.GetComponent<IconFill>();
+            iconFill.Fill(progress);
+        }
+
         if (progress >= 0.5f)
         {
             if (!IconManager.Instance.IsIconRegistered(2))
             {
                 IconManager.Instance.RegisterIcon(2, fireplaceEventObject.gameObj.transform.position, IconType.Fireplace);
+                fireplaceIcon = IconManager.Instance.GetIcon(2);
             }
         }
         else
@@ -437,11 +472,20 @@ public class ActivityDirector : MonoBehaviour
     {
         skylightEventObject.gameObj.GetComponent<SkylightActivity>().ActivityTriggerStart();
         IconManager.Instance.RegisterIcon(3, skylightEventObject.gameObj.transform.position, IconType.Window);
+        skylightIcon = IconManager.Instance.GetIcon(3);
         HintManager.Instance.DisplayGameHint(HintType.Skylight);
     }
+
     private void OnSkylightActivityUpdate(int activityIndex)
     {
         lastDeltaTimeForSkylightEvent = currentDeltaTime;
+
+        if (skylightIcon != null)
+        {
+            IconFill iconFill = skylightIcon.GetComponent<IconFill>();
+            iconFill.Fill(skylightEventObject.eventTime.GetProgress());
+        }
+
         if (skylightEventObject.gameObj.GetComponent<SkylightActivity>().OnActivityUpdate(skylightEventObject.eventTime.GetProgress()))
         {
             skylightEventObject.eventTime.Deactivate(activeActivites);
@@ -449,6 +493,7 @@ public class ActivityDirector : MonoBehaviour
             IconManager.Instance.UnregisterIcon(3);
         }
     }
+
     private void OnSkylightActivityFinished(int activityIndex)
     {
         skylightEventObject.eventTime.Deactivate(activeActivites);
@@ -466,12 +511,20 @@ public class ActivityDirector : MonoBehaviour
     {
         toiletEventObject.gameObj.GetComponent<ToiletActivity>().ActivityTriggerStart();
         IconManager.Instance.RegisterIcon(4, toiletEventObject.gameObj.transform.position, IconType.Toilet);
+        toiletIcon = IconManager.Instance.GetIcon(4);
         HintManager.Instance.DisplayGameHint(HintType.Toilet);
     }
 
     private void OnToiletActivityUpdate(int activityIndex)
     {
         lastDeltaTimeForToiletEvent = currentDeltaTime;
+
+        if (toiletIcon != null)
+        {
+            IconFill iconFill = toiletIcon.GetComponent<IconFill>();
+            iconFill.Fill(toiletEventObject.eventTime.GetProgress());
+        }
+
         if (toiletEventObject.gameObj.GetComponent<ToiletActivity>().OnActivityUpdate(toiletEventObject.eventTime.GetProgress()))
         {
             toiletEventObject.eventTime.Deactivate(activeActivites);
@@ -479,6 +532,7 @@ public class ActivityDirector : MonoBehaviour
             IconManager.Instance.UnregisterIcon(4);
         }
     }
+
     private void OnToiletActivityFinished(int activityIndex)
     {
         toiletEventObject.eventTime.Deactivate(activeActivites);

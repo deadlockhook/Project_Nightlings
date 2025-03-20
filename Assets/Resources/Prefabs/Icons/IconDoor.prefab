@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8493386305697063093}
   - component: {fileID: 7743610122621611576}
+  - component: {fileID: 1215776055060907552}
   - component: {fileID: 4429839418406453034}
   m_Layer: 5
   m_Name: IconDoor
@@ -46,6 +47,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2531136830291740803}
   m_CullTransparentMesh: 1
+--- !u!114 &1215776055060907552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2531136830291740803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e5daa4eae2255548b2c436c5f558447, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fillImage: {fileID: 4429839418406453034}
 --- !u!114 &4429839418406453034
 MonoBehaviour:
   m_ObjectHideFlags: 0
