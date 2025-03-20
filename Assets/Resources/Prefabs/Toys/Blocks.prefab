@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 6859748123612749193}
   - component: {fileID: 861306016651083098}
   - component: {fileID: 5455002089537060664}
+  - component: {fileID: 3728110520166836888}
   m_Layer: 6
   m_Name: Blocks (2)
   m_TagString: Interactable_Blocks
@@ -461,6 +462,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3728110520166836888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 306622583453496818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 0, g: 1, b: 0, a: 1}
+  outlineWidth: 5
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &2945269986806838612
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,6 +496,7 @@ GameObject:
   - component: {fileID: 3450747873839911251}
   - component: {fileID: 932413622457730162}
   - component: {fileID: 8897508000517524298}
+  - component: {fileID: 196755587166214863}
   m_Layer: 6
   m_Name: Blocks (3)
   m_TagString: Interactable_Blocks
@@ -922,6 +942,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &196755587166214863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2945269986806838612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 0, g: 1, b: 0, a: 1}
+  outlineWidth: 5
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &3772015145641057494
 GameObject:
   m_ObjectHideFlags: 0
@@ -974,6 +1012,7 @@ GameObject:
   - component: {fileID: 5735471324587787908}
   - component: {fileID: 5033965896921252154}
   - component: {fileID: 6257762704121555722}
+  - component: {fileID: 8697628424938247765}
   m_Layer: 6
   m_Name: Blocks (1)
   m_TagString: Interactable_Blocks
@@ -1419,6 +1458,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8697628424938247765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5029084816112151702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 0, g: 1, b: 0, a: 1}
+  outlineWidth: 5
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &7149506805144110731
 GameObject:
   m_ObjectHideFlags: 0
@@ -1435,6 +1492,7 @@ GameObject:
   - component: {fileID: 5022985861584467693}
   - component: {fileID: 7561277982370441315}
   - component: {fileID: 2662730947415946982}
+  - component: {fileID: 6312667756490053766}
   m_Layer: 6
   m_Name: Blocks (4)
   m_TagString: Interactable_Blocks
@@ -1880,6 +1938,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6312667756490053766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7149506805144110731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 0, g: 1, b: 0, a: 1}
+  outlineWidth: 5
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &8706320560043101742
 GameObject:
   m_ObjectHideFlags: 0
@@ -1896,6 +1972,7 @@ GameObject:
   - component: {fileID: 6355818300703625088}
   - component: {fileID: 3205430080829537253}
   - component: {fileID: 1786643276571244257}
+  - component: {fileID: 732863942050004212}
   m_Layer: 6
   m_Name: Blocks (5)
   m_TagString: Interactable_Blocks
@@ -2341,3 +2418,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &732863942050004212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8706320560043101742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 0, g: 1, b: 0, a: 1}
+  outlineWidth: 5
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []

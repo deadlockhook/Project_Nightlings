@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -4800264462775801516}
   - component: {fileID: 6171191616893599567}
   - component: {fileID: 5760399042702569414}
+  - component: {fileID: 8064761262952915594}
   m_Layer: 6
   m_Name: Toy Train
   m_TagString: Interactable_Toy
@@ -260,3 +261,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49647353b148bb54cb99f226620644f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8064761262952915594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785070581978917705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 0, g: 1, b: 0, a: 1}
+  outlineWidth: 5
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
