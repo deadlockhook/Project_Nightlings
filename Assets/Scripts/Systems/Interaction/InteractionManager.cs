@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
-using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class InteractionManager : MonoBehaviour
 {
@@ -32,10 +31,12 @@ public class InteractionManager : MonoBehaviour
     private GameObject interactableObject;
     private Rigidbody interactableObjRigidBody;
 
+    private Outline currentOutline;
+
     public void OnLocalPlayerSetup(PlayerController targetController, Camera targetCamera)
     {
-       playerController = targetController;
-       playerCamera = targetCamera;
+        playerController = targetController;
+        playerCamera = targetCamera;
     }
 
     public void ApplyMotionOnInteractable(Rigidbody rigidBody)
@@ -51,17 +52,47 @@ public class InteractionManager : MonoBehaviour
             rigidBody.velocity *= 0.95f;
             rigidBody.angularVelocity *= 0.9f;
         }
-    }    
+    }
+
     public void OnLocalPlayerUpdate()
     {
+        Ray outlineRay = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+        if (Physics.Raycast(outlineRay, out RaycastHit outlineHit, interactionDistance))
+        {
+            Outline outline = outlineHit.collider.GetComponentInChildren<Outline>();
+            if (outline != null)
+            {
+                if (currentOutline != outline)
+                {
+                    if (currentOutline != null)
+                        currentOutline.enabled = false;
+                    currentOutline = outline;
+                }
+                currentOutline.enabled = true;
+            }
+            else
+            {
+                if (currentOutline != null)
+                {
+                    currentOutline.enabled = false;
+                    currentOutline = null;
+                }
+            }
+        }
+        else
+        {
+            if (currentOutline != null)
+            {
+                currentOutline.enabled = false;
+                currentOutline = null;
+            }
+        }
 
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, interactionDistance))
+        if (Physics.Raycast(ray, out RaycastHit hit, interactionDistance))
         {
             if (hit.collider != null)
-                 OnObjectTraceCollide(hit.transform.gameObject, hit);
+                OnObjectTraceCollide(hit.transform.gameObject, hit);
         }
 
         if (interactableObject != null)
@@ -82,11 +113,9 @@ public class InteractionManager : MonoBehaviour
                     if (interactableObject.tag == "Interactable_Blocks")
                     {
                         GameObject parent = interactableObject.transform.parent.gameObject;
-
                         if (parent)
                         {
                             Rigidbody[] blocks = parent.GetComponentsInChildren<Rigidbody>();
-
                             for (int i = 0; i < blocks.Length; i++)
                             {
                                 Rigidbody blockRigidBody = blocks[i];
@@ -99,7 +128,6 @@ public class InteractionManager : MonoBehaviour
                         }
                     }
                 }
-
                 interactableObject = null;
             }
             else
@@ -109,11 +137,9 @@ public class InteractionManager : MonoBehaviour
                     if (interactableObject.tag == "Interactable_Blocks")
                     {
                         GameObject parent = interactableObject.transform.parent.gameObject;
-
                         if (parent)
                         {
                             Rigidbody[] blocks = parent.GetComponentsInChildren<Rigidbody>();
-
                             for (int i = 0; i < blocks.Length; i++)
                             {
                                 Rigidbody blockRigidBody = blocks[i];
@@ -124,18 +150,18 @@ public class InteractionManager : MonoBehaviour
                             }
                         }
                     }
-
                     ApplyMotionOnInteractable(interactableObjRigidBody);
                 }
                 else
+                {
                     interactableObject.transform.position = playerCamera.transform.position + playerCamera.transform.forward;
+                }
             }
         }
     }
 
     private void OnObjectTraceCollide(GameObject gameObj, RaycastHit hit)
     {
-        //Debug.Log("Works" + gameObj.name);
         bool interactTriggered = playerController.playerControlActions.Player.Interact.triggered;
         if (gameObj.tag.Contains("Interactable_"))
         {
@@ -151,15 +177,12 @@ public class InteractionManager : MonoBehaviour
                 if (interactableObject.tag == "Interactable_Blocks")
                 {
                     GameObject parent = interactableObject.transform.parent.gameObject;
-
                     if (parent)
                     {
                         Rigidbody[] blocks = parent.GetComponentsInChildren<Rigidbody>();
-
                         for (int i = 0; i < blocks.Length; i++)
                         {
                             Rigidbody blockRigidBody = blocks[i];
-
                             if (blockRigidBody)
                             {
                                 blockRigidBody.useGravity = false;
@@ -175,31 +198,28 @@ public class InteractionManager : MonoBehaviour
         if (interactTriggered)
         {
             if (gameObj.GetComponent<WindowsActivity>() != null)
-                 gameObj.GetComponent<WindowsActivity>().ResetActivity();
-       
+                gameObj.GetComponent<WindowsActivity>().ResetActivity();
+
             if (gameObj.tag.Contains("BasementHatch_Door"))
-                 FindObjectOfType<BasementHatch>().ResetActivity();
-         
+                FindObjectOfType<BasementHatch>().ResetActivity();
+
             if (gameObj.tag.Contains("PowerRestore"))
-                  FindObjectOfType<ActivityDirector>().RestorePower();
+                FindObjectOfType<ActivityDirector>().RestorePower();
 
             if (gameObj.tag.Contains("Skylight_Remote"))
-                 FindObjectOfType<SkylightActivity>().ResetActivity();
-             
+                FindObjectOfType<SkylightActivity>().ResetActivity();
+
             if (gameObj.tag.Contains("Toilet_Flush"))
-                 FindObjectOfType<ToiletActivity>().ResetActivity();
+                FindObjectOfType<ToiletActivity>().ResetActivity();
 
             if (gameObj.tag.Contains("Telephone"))
                 FindObjectOfType<ActivityDirector>().StopPhoneRing();
-            
-            
 
             if (gameObj.tag.Contains("Candy"))
             {
                 if (FindObjectOfType<PlayerController>().EatCandy())
                     Destroy(gameObj);
             }
-
         }
     }
 }
