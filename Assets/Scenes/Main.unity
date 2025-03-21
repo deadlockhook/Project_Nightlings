@@ -21040,6 +21040,11 @@ MonoBehaviour:
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 4294967295
+  interactionIcon: {fileID: 0}
+  defaultCrosshairSprite: {fileID: 21300000, guid: 1a4c33fa620dd16459ab95e9fcb227f8,
+    type: 3}
+  handIconSprite: {fileID: 21300000, guid: 52f7b18f554fbd5409e902e884328824, type: 3}
+  handGrabIconSprite: {fileID: 21300000, guid: 79c4dee6b5864a74d9acbbf6a0cdf90e, type: 3}
 --- !u!114 &834248501
 MonoBehaviour:
   m_ObjectHideFlags: 0

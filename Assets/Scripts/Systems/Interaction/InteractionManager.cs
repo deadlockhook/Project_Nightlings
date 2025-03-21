@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
+using System.Linq;
 
 public class InteractionManager : MonoBehaviour
 {
@@ -32,6 +34,27 @@ public class InteractionManager : MonoBehaviour
 	private Rigidbody interactableObjRigidBody;
 
 	private Outline currentOutline;
+
+	public Image interactionIcon;
+	public Sprite defaultCrosshairSprite;
+	public Sprite handIconSprite;
+	public Sprite handGrabIconSprite;
+
+	private void Awake()
+	{
+		if (interactionIcon == null)
+		{
+			interactionIcon = GameObject.Find("InteractionIcon")?.GetComponent<Image>();
+			if (interactionIcon == null)
+			{
+				interactionIcon = FindObjectsOfType<Image>(true).FirstOrDefault(img => img.gameObject.name == "InteractionIcon");
+			}
+			if (interactionIcon == null)
+			{
+				Debug.LogError("No icon");
+			}
+		}
+	}
 
 	public void OnLocalPlayerSetup(PlayerController targetController, Camera targetCamera)
 	{
@@ -172,6 +195,31 @@ public class InteractionManager : MonoBehaviour
 				{
 					interactableObject.transform.position = playerCamera.transform.position + playerCamera.transform.forward;
 				}
+			}
+		}
+
+		bool isLookingAtInteractable = false;
+		if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit iconHit, interactionDistance))
+		{
+			if (iconHit.collider != null && iconHit.collider.gameObject.tag.Contains("Interactable_"))
+			{
+				isLookingAtInteractable = true;
+			}
+		}
+
+		if (interactionIcon != null)
+		{
+			if (interactableObject != null)
+			{
+				interactionIcon.sprite = handGrabIconSprite;
+			}
+			else if (isLookingAtInteractable)
+			{
+				interactionIcon.sprite = handIconSprite;
+			}
+			else
+			{
+				interactionIcon.sprite = defaultCrosshairSprite;
 			}
 		}
 	}
