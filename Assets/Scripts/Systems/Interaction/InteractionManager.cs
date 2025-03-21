@@ -137,6 +137,13 @@ public class InteractionManager : MonoBehaviour
 						}
 					}
 				}
+
+				Outline heldOutline = interactableObject.GetComponentInChildren<Outline>();
+				if (heldOutline != null)
+				{
+					heldOutline.enabled = false;
+				}
+
 				interactableObject = null;
 			}
 			else
