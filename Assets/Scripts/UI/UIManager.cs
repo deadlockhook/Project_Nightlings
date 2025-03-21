@@ -143,7 +143,8 @@ public class UIManager : MonoBehaviour
 		switch (state)
 		{
 			case UIState.MainMenu:
-				if (SoundManager.Instance.currentMusic != "MainMenu")
+                LoadSettings();
+                if (SoundManager.Instance.currentMusic != "MainMenu")
 				{
 					SoundManager.Instance.StopMusic();
 					SoundManager.Instance.PlayMusic("MainMenu");
@@ -159,7 +160,8 @@ public class UIManager : MonoBehaviour
 				isPaused = true;
 				break;
 			case UIState.Gameplay:
-				SoundManager.Instance.StopMusic();
+				LoadSettings();
+                SoundManager.Instance.StopMusic();
 				Time.timeScale = 1f;
 				gameplayUI.SetActive(true);
 				Cursor.lockState = CursorLockMode.Locked;
@@ -196,7 +198,8 @@ public class UIManager : MonoBehaviour
 				nightPickerUI.SetActive(true);
 				break;
 			case UIState.NightInfo:
-				SoundManager.Instance.StopMusic();
+                LoadSettings();
+                SoundManager.Instance.StopMusic();
 				Cursor.lockState = CursorLockMode.Locked;
 				Time.timeScale = 1f;
 				nightInfoUI.SetActive(true);
@@ -649,60 +652,81 @@ public class UIManager : MonoBehaviour
 		ChangeUIState(UIState.Gameplay);
 	}
 
-	// OPTIONS SECTION
-	private GameObject mainCam;
-	private Camera mainCamera;
-	private Volume volume;
+    // OPTIONS SECTION
+    private GameObject mainCam;
+    private Camera mainCamera;
+    private Volume volume;
 
-	private bool motionBlurEnabled = false;
-	private bool chromaticAbberationEnabled = false;
-	private bool bloomEnabled = false;
+    private bool motionBlurEnabled = false;
+    private bool chromaticAbberationEnabled = false;
+    private bool bloomEnabled = false;
 
-	private void SetupMainCamera()
-	{
-		if (mainCam == null)
-		{
-			mainCam = GameObject.Find("Main Camera");
-			if (mainCam != null)
-			{
-				mainCamera = mainCam.GetComponent<Camera>();
-				volume = mainCam.GetComponent<Volume>();
-			}
-		}
-	}
+    private void SetupMainCamera()
+    {
+        if (mainCam == null)
+        {
+            mainCam = GameObject.Find("Main Camera");
+            if (mainCam != null)
+            {
+                mainCamera = mainCam.GetComponent<Camera>();
+                volume = mainCam.GetComponent<Volume>();
+            }
+        }
+    }
 
-	private void ToggleEffect<T>(bool enabled) where T : VolumeComponent
-	{
-		SetupMainCamera();
-		if (volume != null && volume.profile.TryGet<T>(out T effect))
-		{
-			effect.active = enabled;
-		}
-	}
+    private void ToggleEffect<T>(bool enabled) where T : VolumeComponent
+    {
+        SetupMainCamera();
+        if (volume != null && volume.profile.TryGet<T>(out T effect))
+        {
+            effect.active = enabled;
+        }
+    }
 
-	public void ToggleMotionBlur(bool enabled)
-	{
-		enabled = motionBlurToggle.isOn;
-		motionBlurEnabled = enabled;
-		ToggleEffect<MotionBlur>(enabled);
-	}
+    public void ToggleMotionBlur(bool enabled)
+    {
+        enabled = motionBlurToggle.isOn;
+        motionBlurEnabled = enabled;
+        PlayerPrefs.SetInt("MotionBlur", enabled ? 1 : 0);
+        ToggleEffect<MotionBlur>(enabled);
+    }
 
-	public void ToggleChromaticAbberation(bool enabled)
-	{
-		enabled = chromaticAbberationToggle.isOn;
-		chromaticAbberationEnabled = enabled;
-		ToggleEffect<ChromaticAberration>(enabled);
-	}
+    public void ToggleChromaticAbberation(bool enabled)
+    {
+        enabled = chromaticAbberationToggle.isOn;
+        chromaticAbberationEnabled = enabled;
+        PlayerPrefs.SetInt("ChromaticAbberation", enabled ? 1 : 0);
+        ToggleEffect<ChromaticAberration>(enabled);
+    }
 
-	public void ToggleBloom(bool enabled)
-	{
-		enabled = bloomToggle.isOn;
-		bloomEnabled = enabled;
-		ToggleEffect<Bloom>(enabled);
-	}
+    public void ToggleBloom(bool enabled)
+    {
+        enabled = bloomToggle.isOn;
+        bloomEnabled = enabled;
+        PlayerPrefs.SetInt("Bloom", enabled ? 1 : 0);
+        ToggleEffect<Bloom>(enabled);
+    }
 
-	// This is for the jumpscare atm, need to find a better way to do this
-	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void LoadSettings()
+    {
+        motionBlurEnabled = PlayerPrefs.GetInt("MotionBlur", 0) == 1;
+        chromaticAbberationEnabled = PlayerPrefs.GetInt("ChromaticAbberation", 0) == 1;
+        bloomEnabled = PlayerPrefs.GetInt("Bloom", 0) == 1;
+
+        // Update toggle UI states (if needed)
+        motionBlurToggle.isOn = motionBlurEnabled;
+        chromaticAbberationToggle.isOn = chromaticAbberationEnabled;
+        bloomToggle.isOn = bloomEnabled;
+
+        // Apply effects
+        ToggleEffect<MotionBlur>(motionBlurEnabled);
+        ToggleEffect<ChromaticAberration>(chromaticAbberationEnabled);
+        ToggleEffect<Bloom>(bloomEnabled);
+    }
+
+
+    // This is for the jumpscare atm, need to find a better way to do this
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
 		if (loseTimeline == null)
 		{
