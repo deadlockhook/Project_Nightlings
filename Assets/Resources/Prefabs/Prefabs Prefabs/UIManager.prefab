@@ -10628,7 +10628,7 @@ MonoBehaviour:
   fadeDuration: 0.5
   displayDuration: 5
   controlHintData: {fileID: 11400000, guid: 6bd537dcece0e4444bea160df43c2941, type: 2}
-  staminaBar: {fileID: 0}
+  staminaBar: {fileID: 1990928917582686385}
 --- !u!1 &4087756317505664326
 GameObject:
   m_ObjectHideFlags: 0
