@@ -32,7 +32,8 @@ public class PlayerController : MonoBehaviour
 	private float currentStamina;
 
 	[Header("Stamina UI")]
-	public Image staminaBar;
+	private Image staminaBar;
+	private CanvasGroup staminaCanvasGroup;
 	public float staminaFadeSpeed = 1f;
 
 	[Header("Sugar Rush Settings")]
@@ -90,15 +91,6 @@ public class PlayerController : MonoBehaviour
 	private void Awake()
 	{
 		playerControlActions = new PlayerControlActions();
-		staminaBar = GameObject.Find("StaminaBar")?.GetComponent<Image>();
-		if (staminaBar == null)
-		{
-			staminaBar = FindObjectsOfType<Image>(true).FirstOrDefault(img => img.gameObject.name == "StaminaBar");
-		}
-		if (staminaBar == null)
-		{
-			Debug.LogError("No Stamina Bar");
-		}
 	}
 
 	private void OnEnable()
@@ -238,13 +230,38 @@ public class PlayerController : MonoBehaviour
 	private void UpdateStaminaUI()
 	{
 		if (staminaBar == null)
+		{
+			GameObject barObject = GameObject.Find("StaminaBar");
+			if (barObject != null)
+				staminaBar = barObject.GetComponent<Image>();
+			else
+				staminaBar = FindObjectsOfType<Image>(true).FirstOrDefault(img => img.gameObject.name == "StaminaBar");
+		}
+
+		if (staminaCanvasGroup == null)
+		{
+			GameObject panelObject = GameObject.Find("StaminaPanel");
+			if (panelObject != null)
+				staminaCanvasGroup = panelObject.GetComponent<CanvasGroup>();
+			else
+				staminaCanvasGroup = FindObjectsOfType<CanvasGroup>(true).FirstOrDefault(cg => cg.gameObject.name == "StaminaPanel");
+		}
+
+		if (staminaBar == null || staminaCanvasGroup == null)
 			return;
+
 		float ratio = currentStamina / maxStamina;
 		staminaBar.fillAmount = ratio;
-		Color baseColor = ratio < 0.25f ? Color.red : ratio < 0.5f ? Color.yellow : Color.white;
-		float targetAlpha = currentStamina >= maxStamina ? 0f : 1f;
-		baseColor.a = Mathf.Lerp(staminaBar.color.a, targetAlpha, Time.deltaTime * staminaFadeSpeed);
-		staminaBar.color = baseColor;
+
+		if (ratio < 0.25f)
+			staminaBar.color = Color.red;
+		else if (ratio < 0.5f)
+			staminaBar.color = Color.yellow;
+		else
+			staminaBar.color = Color.white;
+
+		float targetAlpha = (currentStamina >= maxStamina) ? 0f : 1f;
+		staminaCanvasGroup.alpha = Mathf.Lerp(staminaCanvasGroup.alpha, targetAlpha, Time.deltaTime * staminaFadeSpeed);
 	}
 
 	// Get player input direction

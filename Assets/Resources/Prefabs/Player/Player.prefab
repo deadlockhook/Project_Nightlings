@@ -535,8 +535,7 @@ MonoBehaviour:
   staminaRechargeRate: 8
   staminaCoolDown: 1
   staminaRechargeBoost: 2.5
-  staminaBar: {fileID: 0}
-  staminaFadeSpeed: 10
+  staminaFadeSpeed: 15
   sugarRushDuration: 15
   speedBoostMultiplier: 1.3
   headBobPower: 0.075
