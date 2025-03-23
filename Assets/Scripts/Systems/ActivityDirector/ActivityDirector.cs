@@ -159,7 +159,7 @@ public class ActivityDirector : MonoBehaviour
     private float toiletActivityLogicRangeEnd = 90.0f;
     private float toiletActivityTimeLimit = 45.0f;
 
-    private float powerOutageEventTriggerTime = 200.0f;
+    private float powerOutageEventTriggerTime = 15.0f;
     private float phoneRingEventTriggerTime = 300.0f;
 
     private List<activityTrigger> windowEventObjects;
@@ -753,22 +753,28 @@ public class ActivityDirector : MonoBehaviour
         }
     }
 
+    private bool powerOut = false;
     void TriggerPowerOutage(int activityIndex)
     {
+        //Trigger Power Outage Sound
         for (int i = 0; i < powerControlGameObjects.Length; i++)
             powerControlGameObjects[i].SetActive(false);
 
         powerOutageEventObject.Deactivate(activeActivites);
+        powerOut = true;
     }
     public void RestorePower()
     {
-        if (!powerOutageEventObject.IsActive())
+        if (!powerOut)
             return;
+
+        //Trigger Restore Power Sound
 
         for (int i = 0; i < powerControlGameObjects.Length; i++)
             powerControlGameObjects[i].SetActive(true);
 
         powerOutageEventObject.Activate(activeActivites);
+        powerOut = false;
     }
 
     void TriggerPhoneRing(int activityIndex)
