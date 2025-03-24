@@ -311,7 +311,7 @@ public class UIManager : MonoBehaviour
 		}
 
         SoundManager.Instance.PlaySound("Button", audioSource);
-		Debug.Log("Button SFX");
+		//Debug.Log("Button SFX");
     }
 
 	public void BackFromNightPicker()
