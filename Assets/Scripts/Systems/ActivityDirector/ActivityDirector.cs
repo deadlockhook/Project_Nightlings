@@ -159,7 +159,7 @@ public class ActivityDirector : MonoBehaviour
     private float toiletActivityLogicRangeEnd = 90.0f;
     private float toiletActivityTimeLimit = 45.0f;
 
-    private float powerOutageEventTriggerTime = 15.0f;
+    private float powerOutageEventTriggerTime = 300.0f;
     private float phoneRingEventTriggerTime = 300.0f;
 
     private List<activityTrigger> windowEventObjects;
