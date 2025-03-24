@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 using TMPro;
+using UnityEngine.UI;
 
 public class CutsceneManager : MonoBehaviour
 {
@@ -12,6 +13,14 @@ public class CutsceneManager : MonoBehaviour
 	public PlayableDirector night1Cutscene;
 	public PlayableDirector night2Cutscene;
 	public PlayableDirector night3Cutscene;
+
+	private float skipHoldTime = 3f;
+	private float currentHoldTime = 0f;
+	private bool isHoldingSkip = false;
+
+	[Header("Skip UI")]
+	public CanvasGroup skipPanel;
+	public Image skipProgressImage;
 
 	public TextMeshProUGUI skipText;
 
@@ -66,18 +75,52 @@ public class CutsceneManager : MonoBehaviour
 
 		if(skipText != null)
 			skipText.gameObject.SetActive(true);
+
+		if (skipPanel != null)
+			skipPanel.alpha = 0f;
+
+		if (skipProgressImage != null)
+			skipProgressImage.fillAmount = 0f;
 	}
 
 	private void Update()
 	{
 		if (isPlayingCutscene && currentDirector != null)
 		{
-			if (Input.GetKeyDown(KeyCode.Return))
+			if (Input.GetKey(KeyCode.Return))
 			{
-				SkipCutscene();
+				currentHoldTime += Time.deltaTime;
+
+				if (!isHoldingSkip)
+				{
+					isHoldingSkip = true;
+					if (skipPanel != null)
+						skipPanel.alpha = 1f;
+				}
+
+				if (skipProgressImage != null)
+				{
+					skipProgressImage.fillAmount = Mathf.Clamp01(currentHoldTime / skipHoldTime);
+				}
+
+				if (currentHoldTime >= skipHoldTime)
+				{
+					SkipCutscene();
+				}
+			}
+			else
+			{
+				currentHoldTime = 0f;
+				isHoldingSkip = false;
+
+				if (skipPanel != null)
+					skipPanel.alpha = 0f;
+
+				if (skipProgressImage != null)
+					skipProgressImage.fillAmount = 0f;
 			}
 
-			else if (currentDirector.state != PlayState.Playing)
+			if (currentDirector.state != PlayState.Playing)
 			{
 				EndCutscene();
 			}
@@ -111,5 +154,11 @@ public class CutsceneManager : MonoBehaviour
 		{
 			ControlHintManager.Instance.ShowControlHints();
 		}
+
+		if (skipPanel != null)
+			skipPanel.alpha = 0f;
+
+		if (skipProgressImage != null)
+			skipProgressImage.fillAmount = 0f;
 	}
 }
