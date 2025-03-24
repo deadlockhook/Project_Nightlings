@@ -6067,7 +6067,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -500, y: -400}
+  m_AnchoredPosition: {x: -650, y: -450}
   m_SizeDelta: {x: 600, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5072988977777628048
@@ -9504,7 +9504,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Alpha Build v0.2
+  m_text: 'Beta Build v0.3
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
