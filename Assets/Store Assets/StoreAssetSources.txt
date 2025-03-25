@@ -1,8 +1,22 @@
-https://assetstore.unity.com/packages/3d/props/interior/casual-light-pack-303168
-
 https://assetstore.unity.com/packages/3d/vegetation/casual-plants-lite-pack-303173
 
 https://assetstore.unity.com/packages/3d/props/interior/house-interior-free-258782
 
 https://assetstore.unity.com/packages/3d/props/interior/office-pack-free-258600
+
+https://assetstore.unity.com/packages/3d/props/interior/bedroom-interior-low-poly-assets-295074
+
+https://assetstore.unity.com/packages/3d/props/black-cherry-firewood-01-307298
+
+https://assetstore.unity.com/packages/3d/props/interior/free-house-interior-223416
+
+https://assetstore.unity.com/packages/3d/props/furniture/furniture-free-low-poly-3d-models-pack-260522
+
+https://assetstore.unity.com/packages/3d/props/low-poly-basic-items-pack-household-items-249507
+
+https://assetstore.unity.com/packages/3d/props/interior/low-poly-kitchen-set-303227
+
+https://assetstore.unity.com/packages/3d/props/interior/picture-frames-with-photos-106907
+
+https://assetstore.unity.com/packages/3d/props/interior/qa-books-115415
 
