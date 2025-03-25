@@ -20294,6 +20294,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: skylight
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a06518e9545b9ac48970a0b038957d25,
+        type: 3}
+      propertyPath: m_TagString
+      value: ThunderControl
+      objectReference: {fileID: 0}
     - target: {fileID: 8829678371859058545, guid: a06518e9545b9ac48970a0b038957d25,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
