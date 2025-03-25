@@ -4169,61 +4169,60 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Picture frames with photos by 3Dfrk
 
-    
 
-    Black Cherry Firewood
-    01 by Baldinoboy
 
-    
+    Black Cherry Firewood 01 by
+    Baldinoboy
 
-    Low Poly Basic Items Pack - Household Items by
-    Kabungus
 
-    
 
-    QA Books by QAtmo
+    Low Poly Basic Items Pack - Household Items by Kabungus
 
-    
 
-    Furniture FREE - Low Poly
-    3D Models Pack by ithappy
 
-    
+    QA
+    Books by QAtmo
 
-    Low Poly Kitchen Set by HunterCraft Creations
 
-    
 
-    Free:
-    House Interior by Studio Billion
+    Furniture FREE - Low Poly 3D Models Pack by ithappy
 
-    
+
+
+    Low
+    Poly Kitchen Set by HunterCraft Creations
+
+
+
+    Free: House Interior by Studio
+    Billion
+
+
 
     Wood Floor Texture: Polyhaven.com
 
-    
 
-    Furniture
-    FREE - Low Poly 3D Models Pack by ithappy
 
-    
+    Furniture FREE - Low
+    Poly 3D Models Pack by ithappy
 
-    Casual Plants Lite Pack
-    by GoGo Creator
 
-    
 
-    House Interior - Free by nappin
+    Casual Plants Lite Pack by GoGo Creator
 
-    
 
-    Office
-    Pack - Free by nappin
 
-    
+    House
+    Interior - Free by nappin
 
-    Bedroom / Interior - Low Poly assets by Fries
-    and Seagull
+
+
+    Office Pack - Free by nappin
+
+
+
+    Bedroom
+    / Interior - Low Poly assets by Fries and Seagull
 
 
     Wood Floor Texture: Polyhaven.com
@@ -4410,12 +4409,12 @@ PrefabInstance:
     - target: {fileID: 2120493461490013987, guid: f56bf910f078e4242a4f526ec9054236,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.09090909
       objectReference: {fileID: 0}
     - target: {fileID: 2120493461490013987, guid: f56bf910f078e4242a4f526ec9054236,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2418889961821973337, guid: f56bf910f078e4242a4f526ec9054236,
         type: 3}
@@ -4525,17 +4524,17 @@ PrefabInstance:
     - target: {fileID: 9087699175831026592, guid: f56bf910f078e4242a4f526ec9054236,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.09090909
       objectReference: {fileID: 0}
     - target: {fileID: 9087699175831026592, guid: f56bf910f078e4242a4f526ec9054236,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9087699175831026592, guid: f56bf910f078e4242a4f526ec9054236,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 0.09090909
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -20672,7 +20671,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &975853309890279075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23310,61 +23309,60 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Picture frames with photos by 3Dfrk
 
-    
 
-    Black Cherry Firewood
-    01 by Baldinoboy
 
-    
+    Black Cherry Firewood 01 by
+    Baldinoboy
 
-    Low Poly Basic Items Pack - Household Items by
-    Kabungus
 
-    
 
-    QA Books by QAtmo
+    Low Poly Basic Items Pack - Household Items by Kabungus
 
-    
 
-    Furniture FREE - Low Poly
-    3D Models Pack by ithappy
 
-    
+    QA
+    Books by QAtmo
 
-    Low Poly Kitchen Set by HunterCraft Creations
 
-    
 
-    Free:
-    House Interior by Studio Billion
+    Furniture FREE - Low Poly 3D Models Pack by ithappy
 
-    
+
+
+    Low
+    Poly Kitchen Set by HunterCraft Creations
+
+
+
+    Free: House Interior by Studio
+    Billion
+
+
 
     Wood Floor Texture: Polyhaven.com
 
-    
 
-    Furniture
-    FREE - Low Poly 3D Models Pack by ithappy
 
-    
+    Furniture FREE - Low
+    Poly 3D Models Pack by ithappy
 
-    Casual Plants Lite Pack
-    by GoGo Creator
 
-    
 
-    House Interior - Free by nappin
+    Casual Plants Lite Pack by GoGo Creator
 
-    
 
-    Office
-    Pack - Free by nappin
 
-    
+    House
+    Interior - Free by nappin
 
-    Bedroom / Interior - Low Poly assets by Fries
-    and Seagull
+
+
+    Office Pack - Free by nappin
+
+
+
+    Bedroom
+    / Interior - Low Poly assets by Fries and Seagull
 
 
     Wood Floor Texture: Polyhaven.com
@@ -33800,7 +33798,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6200720482075108758
 RectTransform:
   m_ObjectHideFlags: 0
@@ -36916,7 +36914,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &7585749394033196043
 MonoBehaviour:
   m_ObjectHideFlags: 0
