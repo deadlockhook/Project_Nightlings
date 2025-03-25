@@ -135,7 +135,7 @@ public class ActivityDirector : MonoBehaviour
 
     [SerializeField] private int maxCandySpawns = 3;
 
-    private float triggerWindowsActivityLogicRangeStart = 35.0f;
+    private float triggerWindowsActivityLogicRangeStart = 25.0f;
     private float triggerWindowsActivityLogicRangeEnd = 40.0f;
     private float windowsActivityTimeLimit = 45.0f;
 
@@ -373,6 +373,7 @@ public class ActivityDirector : MonoBehaviour
         windowIcon = IconManager.Instance.GetIcon(5);
         HintManager.Instance.DisplayGameHint(HintType.Window);
         lastDeltaTimeForWindowEvents = currentDeltaTime;
+        currentDeltaTime += (triggerWindowsActivityLogicRangeStart / 2);
     }
 
     private void OnWindowActivityUpdate(int activityIndex)
@@ -611,7 +612,6 @@ public class ActivityDirector : MonoBehaviour
 
             if (!activity.eventTime.IsActive())
             {
-                Debug.Log("Dispatched Window Event");
                 activity.eventTime.Activate(activeActivites);
             }
 
