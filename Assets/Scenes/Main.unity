@@ -15751,7 +15751,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1550931442}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: c924d0aedcb15ae428ce1faf3c3dafb1,
         type: 3}
@@ -15830,7 +15830,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1077921391}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c924d0aedcb15ae428ce1faf3c3dafb1,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 547205996}
   m_SourcePrefab: {fileID: 100100000, guid: c924d0aedcb15ae428ce1faf3c3dafb1, type: 3}
 --- !u!4 &547205994 stripped
 Transform:
@@ -15838,6 +15842,33 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 547205993}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &547205995 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c924d0aedcb15ae428ce1faf3c3dafb1,
+    type: 3}
+  m_PrefabInstance: {fileID: 547205993}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &547205996
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 547205995}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.23927237, y: 0.22409546, z: 0.24190848}
+  m_Center: {x: -0.00011802841, y: 0.11295642, z: 0.00007789213}
 --- !u!1001 &550643067
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -36599,6 +36630,7 @@ Transform:
   - {fileID: 825804856}
   - {fileID: 719860734}
   - {fileID: 2640095469335857548}
+  - {fileID: 547205994}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1555180126
@@ -76239,4 +76271,3 @@ SceneRoots:
   - {fileID: 2140529832}
   - {fileID: 63398373}
   - {fileID: 2038568613}
-  - {fileID: 547205993}
