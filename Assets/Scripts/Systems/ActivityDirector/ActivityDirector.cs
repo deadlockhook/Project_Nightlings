@@ -368,16 +368,17 @@ public class ActivityDirector : MonoBehaviour
     private void OnWindowActivityStart(int activityIndex)
     {
         windowEventObjects[activityIndex].gameObj.GetComponent<WindowsActivity>().ActivityTriggerStart();
+
         IconManager.Instance.RegisterIcon(5, windowEventObjects[activityIndex].gameObj.transform.position, IconType.Window);
         windowIcon = IconManager.Instance.GetIcon(5);
         HintManager.Instance.DisplayGameHint(HintType.Window);
+        lastDeltaTimeForWindowEvents = currentDeltaTime;
     }
 
     private void OnWindowActivityUpdate(int activityIndex)
     {
-        lastDeltaTimeForWindowEvents = currentDeltaTime;
         activityTrigger activityObject = windowEventObjects[activityIndex];
-
+     
         if (windowIcon != null)
         {
             IconFill iconFill = windowIcon.GetComponent<IconFill>();
@@ -609,7 +610,10 @@ public class ActivityDirector : MonoBehaviour
             activityTrigger activity = windowEventObjects[Mathf.Clamp(Random.Range(0, windowEventObjects.Count), 0, windowEventObjects.Count)];
 
             if (!activity.eventTime.IsActive())
+            {
+                Debug.Log("Dispatched Window Event");
                 activity.eventTime.Activate(activeActivites);
+            }
 
             lastDeltaTimeForWindowEvents = currentDeltaTime;
         }

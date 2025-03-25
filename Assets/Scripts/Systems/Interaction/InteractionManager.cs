@@ -227,6 +227,7 @@ public class InteractionManager : MonoBehaviour
 	private void OnObjectTraceCollide(GameObject gameObj, RaycastHit hit)
 	{
 		bool interactTriggered = playerController.playerControlActions.Player.Interact.triggered;
+		
 		if (gameObj.tag.Contains("Interactable_"))
 		{
 			if (interactTriggered)
@@ -259,6 +260,7 @@ public class InteractionManager : MonoBehaviour
 				}
 			}
 		}
+
 		if (interactTriggered)
 		{
 			if (gameObj.GetComponent<WindowsActivity>() != null)
