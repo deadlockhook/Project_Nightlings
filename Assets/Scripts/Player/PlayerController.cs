@@ -171,9 +171,13 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 	}
+    public void SetSensitivity(float newSensitivity)
+    {
+        lookSensitivity = newSensitivity;
+    }
 
-	// flashlight toggle on/off
-	private void ProcessFlashlightToggle()
+    // flashlight toggle on/off
+    private void ProcessFlashlightToggle()
 	{
 		var controls = playerControlActions.Player;
 		if (controls.FlashlightToggle.triggered && !isRecharging)
