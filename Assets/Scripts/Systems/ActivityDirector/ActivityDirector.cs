@@ -287,11 +287,14 @@ public class ActivityDirector : MonoBehaviour
     private GameObject skylightIcon;
     private GameObject toiletIcon;
 
+    private List<int> windowIconIDs = new List<int>();
+
     private void OnPetDoorActivityStart(int activityIndex)
     {
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerStart();
-        IconManager.Instance.RegisterIcon(0, petdoorEventObject.gameObj.transform.position, IconType.Door);
-        petDoorIcon = IconManager.Instance.GetIcon(0);
+        int iconID = 0;
+        IconManager.Instance.RegisterIcon(iconID, petdoorEventObject.gameObj.transform.position, IconType.Door);
+        petDoorIcon = IconManager.Instance.GetIcon(iconID);
         HintManager.Instance.DisplayGameHint(HintType.PetDoor);
     }
 
@@ -329,8 +332,9 @@ public class ActivityDirector : MonoBehaviour
     private void OnBasementHatchActivityStart(int activityIndex)
     {
         basementHatchEventObject.gameObj.GetComponent<BasementHatch>().ActivityTriggerStart();
-        IconManager.Instance.RegisterIcon(1, basementHatchEventObject.gameObj.transform.position, IconType.Basement);
-        basementHatchIcon = IconManager.Instance.GetIcon(1);
+        int iconID = 1;
+        IconManager.Instance.RegisterIcon(iconID, basementHatchEventObject.gameObj.transform.position, IconType.Basement);
+        basementHatchIcon = IconManager.Instance.GetIcon(iconID);
         HintManager.Instance.DisplayGameHint(HintType.BasementHatch);
     }
 
@@ -365,24 +369,48 @@ public class ActivityDirector : MonoBehaviour
         }
     }
 
+    private void EnsureWindowListsArePopulated(int activityIndex)
+    {
+        while (windowEventObjects.Count <= activityIndex)
+        {
+            GameObject _gameObj = new GameObject("WindowActivity_" + windowEventObjects.Count);
+            float triggerTimeSeconds = 15f;
+            int triggerIndex = windowEventObjects.Count;
+            windowEventObjects.Add(new activityTrigger(_gameObj, triggerTimeSeconds, triggerIndex, OnWindowActivityStart, OnWindowActivityFinished, OnWindowActivityUpdate));
+        }
+
+        while (windowIconIDs.Count <= activityIndex)
+        {
+            windowIconIDs.Add(-1);
+        }
+    }
+
     private void OnWindowActivityStart(int activityIndex)
     {
+        EnsureWindowListsArePopulated(activityIndex);
         windowEventObjects[activityIndex].gameObj.GetComponent<WindowsActivity>().ActivityTriggerStart();
 
-        IconManager.Instance.RegisterIcon(5, windowEventObjects[activityIndex].gameObj.transform.position, IconType.Window);
-        windowIcon = IconManager.Instance.GetIcon(5);
+        int iconID = 100 + activityIndex;
+        IconManager.Instance.RegisterIcon(iconID, windowEventObjects[activityIndex].gameObj.transform.position, IconType.Window);
+        windowIconIDs[activityIndex] = iconID;
+
         HintManager.Instance.DisplayGameHint(HintType.Window);
+
         lastDeltaTimeForWindowEvents = currentDeltaTime;
         currentDeltaTime += (triggerWindowsActivityLogicRangeStart / 2);
     }
 
     private void OnWindowActivityUpdate(int activityIndex)
     {
+        EnsureWindowListsArePopulated(activityIndex);
+
         activityTrigger activityObject = windowEventObjects[activityIndex];
-     
-        if (windowIcon != null)
+        int iconID = windowIconIDs[activityIndex];
+
+        if (IconManager.Instance.IsIconRegistered(iconID))
         {
-            IconFill iconFill = windowIcon.GetComponent<IconFill>();
+            GameObject icon = IconManager.Instance.GetIcon(iconID);
+            IconFill iconFill = icon.GetComponent<IconFill>();
             iconFill.Fill(activityObject.eventTime.GetProgress());
         }
 
@@ -390,15 +418,21 @@ public class ActivityDirector : MonoBehaviour
         {
             activityObject.eventTime.Deactivate(activeActivites);
             activityObject.eventTime.Reset();
-            IconManager.Instance.UnregisterIcon(5);
+            IconManager.Instance.UnregisterIcon(iconID);
         }
     }
 
     private void OnWindowActivityFinished(int activityIndex)
     {
+        EnsureWindowListsArePopulated(activityIndex);
+
         activityTrigger activityObject = windowEventObjects[activityIndex];
         activityObject.eventTime.Deactivate(activeActivites);
         activityObject.gameObj.GetComponent<WindowsActivity>().ActivityTriggerEnd();
+
+        int iconID = windowIconIDs[activityIndex];
+        IconManager.Instance.UnregisterIcon(iconID);
+
         windowActivityFinished = true;
 
         if (!deathTrigger.IsActive())
@@ -473,8 +507,9 @@ public class ActivityDirector : MonoBehaviour
     private void OnSkylightActivityStart(int activityIndex)
     {
         skylightEventObject.gameObj.GetComponent<SkylightActivity>().ActivityTriggerStart();
-        IconManager.Instance.RegisterIcon(3, skylightEventObject.gameObj.transform.position, IconType.Window);
-        skylightIcon = IconManager.Instance.GetIcon(3);
+        int iconID = 3;
+        IconManager.Instance.RegisterIcon(iconID, skylightEventObject.gameObj.transform.position, IconType.Window);
+        skylightIcon = IconManager.Instance.GetIcon(iconID);
         HintManager.Instance.DisplayGameHint(HintType.Skylight);
     }
 
@@ -504,7 +539,7 @@ public class ActivityDirector : MonoBehaviour
 
         if (!deathTrigger.IsActive())
         {
-            deathCause = "If you hear tapping on the sky light, use the remote in the kitchen to close it before they can get in!";
+            deathCause = "If you hear tapping on the skylight, use the remote in the kitchen to close it before they can get in!";
             deathTrigger.Activate(activeActivites);
         }
     }
@@ -512,8 +547,9 @@ public class ActivityDirector : MonoBehaviour
     private void OnToiletActivityStart(int activityIndex)
     {
         toiletEventObject.gameObj.GetComponent<ToiletActivity>().ActivityTriggerStart();
-        IconManager.Instance.RegisterIcon(4, toiletEventObject.gameObj.transform.position, IconType.Toilet);
-        toiletIcon = IconManager.Instance.GetIcon(4);
+        int iconID = 4;
+        IconManager.Instance.RegisterIcon(iconID, toiletEventObject.gameObj.transform.position, IconType.Toilet);
+        toiletIcon = IconManager.Instance.GetIcon(iconID);
         HintManager.Instance.DisplayGameHint(HintType.Toilet);
     }
 
