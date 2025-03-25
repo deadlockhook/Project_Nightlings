@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
 using TMPro;
 using UnityEngine.Playables;
+using static UnityEngine.Rendering.DebugUI;
 
 public class UIManager : MonoBehaviour
 {
@@ -70,8 +71,9 @@ public class UIManager : MonoBehaviour
 	private Toggle motionBlurToggle;
 	private Toggle chromaticAbberationToggle;
 	private Toggle bloomToggle;
+    [SerializeField] private Slider sensitivitySlider;
 
-	[Header("UI AudioSource")]
+    [Header("UI AudioSource")]
 	public AudioSource audioSource;
 
 	//Singleton
@@ -88,7 +90,7 @@ public class UIManager : MonoBehaviour
 
 	private void Start()
 	{
-		mainMenuUI = transform.Find("MainMenu").gameObject;
+        mainMenuUI = transform.Find("MainMenu").gameObject;
 		pauseMenuUI = transform.Find("Pause").gameObject;
 		gameplayUI = transform.Find("Gameplay").gameObject;
 		optionsUI = transform.Find("Options").gameObject;
@@ -100,8 +102,14 @@ public class UIManager : MonoBehaviour
 		nightInfoUI = transform.Find("NightInfo").gameObject;
 		creditsUI = transform.Find("Credits").gameObject;
 		controlsUI = transform.Find("Controls").gameObject;
+		sensitivitySlider = optionsUI.transform.Find("SensitivitySlider").GetComponent<Slider>();
+        
+		if (sensitivitySlider != null)
+        {
+            sensitivitySlider.onValueChanged.AddListener(SetSensitivity);
+        }
 
-		audioVisualToggle = soundOptionsUI.transform.Find("AudioVisualToggle").GetComponent<Toggle>();
+        audioVisualToggle = soundOptionsUI.transform.Find("AudioVisualToggle").GetComponent<Toggle>();
 		motionBlurToggle = videoOptionsUI.transform.Find("MotionBlurToggle").GetComponent<Toggle>();
 		chromaticAbberationToggle = videoOptionsUI.transform.Find("ChromaticAbberationToggle").GetComponent<Toggle>();
 		bloomToggle = videoOptionsUI.transform.Find("BloomToggle").GetComponent<Toggle>();
@@ -161,7 +169,12 @@ public class UIManager : MonoBehaviour
 				break;
 			case UIState.Gameplay:
 				LoadSettings();
-				SoundManager.Instance.StopMusic();
+                PlayerController playerController = FindObjectOfType<PlayerController>();
+                if (playerController != null)
+                {
+                    playerController.SetSensitivity(sensitivity);
+                }
+                SoundManager.Instance.StopMusic();
 				Time.timeScale = 1f;
 				gameplayUI.SetActive(true);
 				Cursor.lockState = CursorLockMode.Locked;
@@ -664,79 +677,103 @@ public class UIManager : MonoBehaviour
 		ChangeUIState(UIState.Gameplay);
 	}
 
-	// OPTIONS SECTION
-	private GameObject mainCam;
-	private Camera mainCamera;
-	private Volume volume;
+    // OPTIONS SECTION
+    private GameObject mainCam;
+    private Camera mainCamera;
+    private Volume volume;
 
-	private bool motionBlurEnabled = false;
-	private bool chromaticAbberationEnabled = false;
-	private bool bloomEnabled = false;
+    private bool motionBlurEnabled = false;
+    private bool chromaticAbberationEnabled = false;
+    private bool bloomEnabled = false;
 
-	private void SetupMainCamera()
-	{
-		if (mainCam == null)
-		{
-			mainCam = GameObject.Find("Main Camera");
-			if (mainCam != null)
-			{
-				mainCamera = mainCam.GetComponent<Camera>();
-				volume = mainCam.GetComponent<Volume>();
-			}
-		}
-	}
+    private float sensitivity = 1f;
 
-	private void ToggleEffect<T>(bool enabled) where T : VolumeComponent
-	{
-		SetupMainCamera();
-		if (volume != null && volume.profile.TryGet<T>(out T effect))
-		{
-			effect.active = enabled;
-		}
-	}
+    private void SetupMainCamera()
+    {
+        if (mainCam == null)
+        {
+            mainCam = GameObject.Find("Main Camera");
+            if (mainCam != null)
+            {
+                mainCamera = mainCam.GetComponent<Camera>();
+                volume = mainCam.GetComponent<Volume>();
+            }
+        }
+    }
 
-	public void ToggleMotionBlur(bool enabled)
-	{
-		enabled = motionBlurToggle.isOn;
-		motionBlurEnabled = enabled;
-		PlayerPrefs.SetInt("MotionBlur", enabled ? 1 : 0);
-		ToggleEffect<MotionBlur>(enabled);
-	}
+    private void ToggleEffect<T>(bool enabled) where T : VolumeComponent
+    {
+        SetupMainCamera();
+        if (volume != null && volume.profile.TryGet<T>(out T effect))
+        {
+            effect.active = enabled;
+        }
+    }
 
-	public void ToggleChromaticAbberation(bool enabled)
-	{
-		enabled = chromaticAbberationToggle.isOn;
-		chromaticAbberationEnabled = enabled;
-		PlayerPrefs.SetInt("ChromaticAbberation", enabled ? 1 : 0);
-		ToggleEffect<ChromaticAberration>(enabled);
-	}
+    public void ToggleMotionBlur(bool enabled)
+    {
+        enabled = motionBlurToggle.isOn;
+        motionBlurEnabled = enabled;
+        PlayerPrefs.SetInt("MotionBlur", enabled ? 1 : 0);
+        ToggleEffect<MotionBlur>(enabled);
+    }
 
-	public void ToggleBloom(bool enabled)
-	{
-		enabled = bloomToggle.isOn;
-		bloomEnabled = enabled;
-		PlayerPrefs.SetInt("Bloom", enabled ? 1 : 0);
-		ToggleEffect<Bloom>(enabled);
-	}
+    public void ToggleChromaticAbberation(bool enabled)
+    {
+        enabled = chromaticAbberationToggle.isOn;
+        chromaticAbberationEnabled = enabled;
+        PlayerPrefs.SetInt("ChromaticAbberation", enabled ? 1 : 0);
+        ToggleEffect<ChromaticAberration>(enabled);
+    }
 
-	private void LoadSettings()
-	{
-		motionBlurEnabled = PlayerPrefs.GetInt("MotionBlur", 0) == 1;
-		chromaticAbberationEnabled = PlayerPrefs.GetInt("ChromaticAbberation", 0) == 1;
-		bloomEnabled = PlayerPrefs.GetInt("Bloom", 0) == 1;
+    public void ToggleBloom(bool enabled)
+    {
+        enabled = bloomToggle.isOn;
+        bloomEnabled = enabled;
+        PlayerPrefs.SetInt("Bloom", enabled ? 1 : 0);
+        ToggleEffect<Bloom>(enabled);
+    }
 
-		motionBlurToggle.isOn = motionBlurEnabled;
-		chromaticAbberationToggle.isOn = chromaticAbberationEnabled;
-		bloomToggle.isOn = bloomEnabled;
+    public void SetSensitivity(float value)
+    {
+        sensitivity = value;
 
-		ToggleEffect<MotionBlur>(motionBlurEnabled);
-		ToggleEffect<ChromaticAberration>(chromaticAbberationEnabled);
-		ToggleEffect<Bloom>(bloomEnabled);
-	}
+        value = Mathf.Clamp(value, 0.01f, 1f);
+
+        PlayerPrefs.SetFloat("Sensitivity", value);
+
+        PlayerController playerController = FindObjectOfType<PlayerController>();
+        if (playerController != null)
+        {
+            playerController.SetSensitivity(value);
+        }
+    }
+
+    private void LoadSettings()
+    {
+        motionBlurEnabled = PlayerPrefs.GetInt("MotionBlur", 0) == 1;
+        chromaticAbberationEnabled = PlayerPrefs.GetInt("ChromaticAbberation", 0) == 1;
+        bloomEnabled = PlayerPrefs.GetInt("Bloom", 0) == 1;
+
+        motionBlurToggle.isOn = motionBlurEnabled;
+        chromaticAbberationToggle.isOn = chromaticAbberationEnabled;
+        bloomToggle.isOn = bloomEnabled;
+
+        ToggleEffect<MotionBlur>(motionBlurEnabled);
+        ToggleEffect<ChromaticAberration>(chromaticAbberationEnabled);
+        ToggleEffect<Bloom>(bloomEnabled);
+
+        sensitivity = PlayerPrefs.GetFloat("Sensitivity", 1f);
+        if (sensitivitySlider != null)
+        {
+            sensitivitySlider.value = sensitivity;
+        }
+    }
 
 
-	// This is for the jumpscare atm, need to find a better way to do this
-	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+
+    // This is for the jumpscare atm, need to find a better way to do this
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
 		if (loseTimeline == null)
 		{
