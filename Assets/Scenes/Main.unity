@@ -37846,6 +37846,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Desk (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3320400766194581496, guid: 5e6682d1a65bf7846bde496ef3c96d45,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8020492749066715962, guid: 5e6682d1a65bf7846bde496ef3c96d45,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -45901,6 +45906,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2300000, guid: 93d257f804ac4e94d8f56c97ac10397a, type: 3}
       propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 90840d9c025c17342871788d5c14fb48, type: 2}
+    - target: {fileID: 2300000, guid: 93d257f804ac4e94d8f56c97ac10397a, type: 3}
+      propertyPath: m_Materials.Array.data[1]
       value: 
       objectReference: {fileID: 2100000, guid: 90840d9c025c17342871788d5c14fb48, type: 2}
     m_RemovedComponents: []
