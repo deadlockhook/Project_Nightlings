@@ -106,4 +106,12 @@ public class ControlHintManager : MonoBehaviour {
 			}
 		}
 	}
+
+	public void ResetControlHints()
+	{
+		StopAllCoroutines();
+		hintsShown = false;
+		if (controlHintCanvasGroup != null)
+			controlHintCanvasGroup.alpha = 0f;
+	}
 }

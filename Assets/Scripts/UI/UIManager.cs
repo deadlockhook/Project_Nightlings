@@ -72,10 +72,10 @@ public class UIManager : MonoBehaviour
 	private Toggle bloomToggle;
 
 	[Header("UI AudioSource")]
-    public AudioSource audioSource;
+	public AudioSource audioSource;
 
-    //Singleton
-    private void Awake()
+	//Singleton
+	private void Awake()
 	{
 		if (Instance != null && Instance != this)
 		{
@@ -143,8 +143,8 @@ public class UIManager : MonoBehaviour
 		switch (state)
 		{
 			case UIState.MainMenu:
-                LoadSettings();
-                if (SoundManager.Instance.currentMusic != "MainMenu")
+				LoadSettings();
+				if (SoundManager.Instance.currentMusic != "MainMenu")
 				{
 					SoundManager.Instance.StopMusic();
 					SoundManager.Instance.PlayMusic("MainMenu");
@@ -161,7 +161,7 @@ public class UIManager : MonoBehaviour
 				break;
 			case UIState.Gameplay:
 				LoadSettings();
-                SoundManager.Instance.StopMusic();
+				SoundManager.Instance.StopMusic();
 				Time.timeScale = 1f;
 				gameplayUI.SetActive(true);
 				Cursor.lockState = CursorLockMode.Locked;
@@ -198,8 +198,8 @@ public class UIManager : MonoBehaviour
 				nightPickerUI.SetActive(true);
 				break;
 			case UIState.NightInfo:
-                LoadSettings();
-                SoundManager.Instance.StopMusic();
+				LoadSettings();
+				SoundManager.Instance.StopMusic();
 				Cursor.lockState = CursorLockMode.Locked;
 				Time.timeScale = 1f;
 				nightInfoUI.SetActive(true);
@@ -307,12 +307,12 @@ public class UIManager : MonoBehaviour
 	{
 		if (audioSource.isPlaying)
 		{
-            audioSource.Stop();
+			audioSource.Stop();
 		}
 
-        SoundManager.Instance.PlaySound("Button", audioSource);
+		SoundManager.Instance.PlaySound("Button", audioSource);
 		//Debug.Log("Button SFX");
-    }
+	}
 
 	public void BackFromNightPicker()
 	{
@@ -342,6 +342,8 @@ public class UIManager : MonoBehaviour
 		{
 			IconManager.Instance.ClearAllIcons();
 		}
+
+		ControlHintManager.Instance.ResetControlHints();
 
 		StartCoroutine(LoadMainMenuWithLoading());
 	}
@@ -536,31 +538,31 @@ public class UIManager : MonoBehaviour
 
 	public void DylanButton(int night)
 	{
-        if (winUI.activeSelf || loseUI.activeSelf)
-            return;
+		if (winUI.activeSelf || loseUI.activeSelf)
+			return;
 
-        if (ProgressManager.Instance != null && !ProgressManager.Instance.IsNightUnlocked(night))
-        {
-            return;
-        }
+		if (ProgressManager.Instance != null && !ProgressManager.Instance.IsNightUnlocked(night))
+		{
+			return;
+		}
 
-        StartCoroutine(LoadDylanScene(night));
-    }
+		StartCoroutine(LoadDylanScene(night));
+	}
 
 	private IEnumerator LoadDylanScene(int night)
 	{
-        Time.timeScale = 1f;
+		Time.timeScale = 1f;
 
-        SceneManager.LoadScene("Dylan_Test");
-        ChangeUIStateWithLoading(UIState.NightInfo);
+		SceneManager.LoadScene("Dylan_Test");
+		ChangeUIStateWithLoading(UIState.NightInfo);
 
-        yield return null;
+		yield return null;
 
-        activityDirector = FindObjectOfType<ActivityDirector>();
-        yield return StartCoroutine(ShowNightInfo(night));
+		activityDirector = FindObjectOfType<ActivityDirector>();
+		yield return StartCoroutine(ShowNightInfo(night));
 
-        activityDirector.StartNight(night);
-    }
+		activityDirector.StartNight(night);
+	}
 
 	public void NightButton(int night)
 	{
@@ -570,6 +572,16 @@ public class UIManager : MonoBehaviour
 		if (ProgressManager.Instance != null && !ProgressManager.Instance.IsNightUnlocked(night))
 		{
 			return;
+		}
+
+		if(night == 0 && ControlHintManager.Instance != null)
+		{
+			ControlHintManager.Instance.ResetControlHints();
+		}
+
+		if (HintManager.Instance != null)
+		{
+			HintManager.Instance.ResetGameHints();
 		}
 
 		StartCoroutine(LoadMainAndShowNightInfo(night));
@@ -652,81 +664,79 @@ public class UIManager : MonoBehaviour
 		ChangeUIState(UIState.Gameplay);
 	}
 
-    // OPTIONS SECTION
-    private GameObject mainCam;
-    private Camera mainCamera;
-    private Volume volume;
+	// OPTIONS SECTION
+	private GameObject mainCam;
+	private Camera mainCamera;
+	private Volume volume;
 
-    private bool motionBlurEnabled = false;
-    private bool chromaticAbberationEnabled = false;
-    private bool bloomEnabled = false;
+	private bool motionBlurEnabled = false;
+	private bool chromaticAbberationEnabled = false;
+	private bool bloomEnabled = false;
 
-    private void SetupMainCamera()
-    {
-        if (mainCam == null)
-        {
-            mainCam = GameObject.Find("Main Camera");
-            if (mainCam != null)
-            {
-                mainCamera = mainCam.GetComponent<Camera>();
-                volume = mainCam.GetComponent<Volume>();
-            }
-        }
-    }
+	private void SetupMainCamera()
+	{
+		if (mainCam == null)
+		{
+			mainCam = GameObject.Find("Main Camera");
+			if (mainCam != null)
+			{
+				mainCamera = mainCam.GetComponent<Camera>();
+				volume = mainCam.GetComponent<Volume>();
+			}
+		}
+	}
 
-    private void ToggleEffect<T>(bool enabled) where T : VolumeComponent
-    {
-        SetupMainCamera();
-        if (volume != null && volume.profile.TryGet<T>(out T effect))
-        {
-            effect.active = enabled;
-        }
-    }
+	private void ToggleEffect<T>(bool enabled) where T : VolumeComponent
+	{
+		SetupMainCamera();
+		if (volume != null && volume.profile.TryGet<T>(out T effect))
+		{
+			effect.active = enabled;
+		}
+	}
 
-    public void ToggleMotionBlur(bool enabled)
-    {
-        enabled = motionBlurToggle.isOn;
-        motionBlurEnabled = enabled;
-        PlayerPrefs.SetInt("MotionBlur", enabled ? 1 : 0);
-        ToggleEffect<MotionBlur>(enabled);
-    }
+	public void ToggleMotionBlur(bool enabled)
+	{
+		enabled = motionBlurToggle.isOn;
+		motionBlurEnabled = enabled;
+		PlayerPrefs.SetInt("MotionBlur", enabled ? 1 : 0);
+		ToggleEffect<MotionBlur>(enabled);
+	}
 
-    public void ToggleChromaticAbberation(bool enabled)
-    {
-        enabled = chromaticAbberationToggle.isOn;
-        chromaticAbberationEnabled = enabled;
-        PlayerPrefs.SetInt("ChromaticAbberation", enabled ? 1 : 0);
-        ToggleEffect<ChromaticAberration>(enabled);
-    }
+	public void ToggleChromaticAbberation(bool enabled)
+	{
+		enabled = chromaticAbberationToggle.isOn;
+		chromaticAbberationEnabled = enabled;
+		PlayerPrefs.SetInt("ChromaticAbberation", enabled ? 1 : 0);
+		ToggleEffect<ChromaticAberration>(enabled);
+	}
 
-    public void ToggleBloom(bool enabled)
-    {
-        enabled = bloomToggle.isOn;
-        bloomEnabled = enabled;
-        PlayerPrefs.SetInt("Bloom", enabled ? 1 : 0);
-        ToggleEffect<Bloom>(enabled);
-    }
+	public void ToggleBloom(bool enabled)
+	{
+		enabled = bloomToggle.isOn;
+		bloomEnabled = enabled;
+		PlayerPrefs.SetInt("Bloom", enabled ? 1 : 0);
+		ToggleEffect<Bloom>(enabled);
+	}
 
-    private void LoadSettings()
-    {
-        motionBlurEnabled = PlayerPrefs.GetInt("MotionBlur", 0) == 1;
-        chromaticAbberationEnabled = PlayerPrefs.GetInt("ChromaticAbberation", 0) == 1;
-        bloomEnabled = PlayerPrefs.GetInt("Bloom", 0) == 1;
+	private void LoadSettings()
+	{
+		motionBlurEnabled = PlayerPrefs.GetInt("MotionBlur", 0) == 1;
+		chromaticAbberationEnabled = PlayerPrefs.GetInt("ChromaticAbberation", 0) == 1;
+		bloomEnabled = PlayerPrefs.GetInt("Bloom", 0) == 1;
 
-        // Update toggle UI states (if needed)
-        motionBlurToggle.isOn = motionBlurEnabled;
-        chromaticAbberationToggle.isOn = chromaticAbberationEnabled;
-        bloomToggle.isOn = bloomEnabled;
+		motionBlurToggle.isOn = motionBlurEnabled;
+		chromaticAbberationToggle.isOn = chromaticAbberationEnabled;
+		bloomToggle.isOn = bloomEnabled;
 
-        // Apply effects
-        ToggleEffect<MotionBlur>(motionBlurEnabled);
-        ToggleEffect<ChromaticAberration>(chromaticAbberationEnabled);
-        ToggleEffect<Bloom>(bloomEnabled);
-    }
+		ToggleEffect<MotionBlur>(motionBlurEnabled);
+		ToggleEffect<ChromaticAberration>(chromaticAbberationEnabled);
+		ToggleEffect<Bloom>(bloomEnabled);
+	}
 
 
-    // This is for the jumpscare atm, need to find a better way to do this
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+	// This is for the jumpscare atm, need to find a better way to do this
+	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
 		if (loseTimeline == null)
 		{
