@@ -8,7 +8,6 @@ using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
 using TMPro;
 using UnityEngine.Playables;
-using static UnityEngine.Rendering.DebugUI;
 
 public class UIManager : MonoBehaviour
 {
@@ -334,7 +333,6 @@ public class UIManager : MonoBehaviour
 		}
 
 		SoundManager.Instance.PlaySound("Button", audioSource);
-		//Debug.Log("Button SFX");
 	}
 
 	public void BackFromNightPicker()
@@ -406,7 +404,6 @@ public class UIManager : MonoBehaviour
 
 	public void QuitGame()
 	{
-		Debug.Log("Quitting game");
 		Application.Quit();
 	}
 
@@ -464,7 +461,6 @@ public class UIManager : MonoBehaviour
 	{
 		if (loseTimeline != null)
 		{
-			Debug.Log("JUMPSCARE");
 			loseTimeline.Play();
 			yield return new WaitForSecondsRealtime((float)loseTimeline.duration);
 		}
@@ -700,7 +696,6 @@ public class UIManager : MonoBehaviour
     public TMP_Dropdown resolutionDropdown;
     public Toggle fullscreenToggle;
 
-    // Class-level resolutions array
     private Resolution[] resolutions;
 
     private void SetupMainCamera()
@@ -766,14 +761,12 @@ public class UIManager : MonoBehaviour
 
         PlayerPrefs.SetInt("ResolutionWidth", selectedResolution.width);
         PlayerPrefs.SetInt("ResolutionHeight", selectedResolution.height);
-        Debug.Log($"Set resolution to: {selectedResolution.width} x {selectedResolution.height}");
     }
 
     public void SetFullscreen(bool isFullscreen)
     {
         Screen.SetResolution(Screen.width, Screen.height, isFullscreen);
         PlayerPrefs.SetInt("Fullscreen", isFullscreen ? 1 : 0);
-        Debug.Log($"Set fullscreen to: {isFullscreen}");
     }
 
     private void LoadSettings()
