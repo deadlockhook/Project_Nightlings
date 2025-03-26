@@ -835,7 +835,7 @@ MonoBehaviour:
   sprintFOV: 80
   maxStamina: 150
   staminaDrainRate: 10
-  staminaRechargeRate: 12
+  staminaRechargeRate: 15
   staminaCoolDown: 1
   staminaRechargeBoost: 2.5
   staminaFadeSpeed: 15
