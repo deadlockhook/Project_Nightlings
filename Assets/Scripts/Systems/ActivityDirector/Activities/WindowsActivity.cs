@@ -17,7 +17,7 @@ public class WindowsActivity : MonoBehaviour
 
     private AudioSource triggerAudio1;
     private SoundManager soundManager;
-    private ActivityDirector.playedSoundAtTrigger[] soundTriggers;
+    private playedSoundAtTrigger[] soundTriggers;
 
     [Header("Nightling Settings")]
     public GameObject creature;
@@ -40,10 +40,10 @@ public class WindowsActivity : MonoBehaviour
             triggerAudio1 = sources[0];
         }
 
-        soundTriggers = new ActivityDirector.playedSoundAtTrigger[3];
-        soundTriggers[0] = new ActivityDirector.playedSoundAtTrigger(0.25f, triggerAudio1);
-        soundTriggers[1] = new ActivityDirector.playedSoundAtTrigger(0.50f, triggerAudio1);
-        soundTriggers[2] = new ActivityDirector.playedSoundAtTrigger(0.75f, triggerAudio1);
+        soundTriggers = new playedSoundAtTrigger[3];
+        soundTriggers[0] = new playedSoundAtTrigger(0.25f, triggerAudio1);
+        soundTriggers[1] = new playedSoundAtTrigger(0.50f, triggerAudio1);
+        soundTriggers[2] = new playedSoundAtTrigger(0.75f, triggerAudio1);
 
         if (creature != null)
         {
