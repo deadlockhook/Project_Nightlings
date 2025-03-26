@@ -10872,7 +10872,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: There is another Nightling trying to get in through the pet door!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b3ce9f30bea22eb49978344b1bc24c82, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
     type: 2}
   m_fontSharedMaterials: []
@@ -10937,7 +10937,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &202991952
@@ -11577,8 +11577,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: There are Nightlings trying to enter your house through multiple windows!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
-  m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
+  m_fontAsset: {fileID: 11400000, guid: b3ce9f30bea22eb49978344b1bc24c82, type: 2}
+  m_sharedMaterial: {fileID: -3575139053517095789, guid: b3ce9f30bea22eb49978344b1bc24c82,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -11712,7 +11712,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: A Nightling is now trying to work it's way up the toilet pipes!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b3ce9f30bea22eb49978344b1bc24c82, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
     type: 2}
   m_fontSharedMaterials: []
@@ -11777,7 +11777,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &273706936
@@ -19551,7 +19551,7 @@ MonoBehaviour:
   m_text: If you see the fire dying, rush to the basement and grab wood and throw
     it into the fire to keep it going!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b3ce9f30bea22eb49978344b1bc24c82, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
     type: 2}
   m_fontSharedMaterials: []
@@ -19616,7 +19616,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &581962087
@@ -23992,7 +23992,7 @@ MonoBehaviour:
   m_text: If you see or hear tapping on the sky light, use the remote in the dining
     room to shut it before it can get in!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b3ce9f30bea22eb49978344b1bc24c82, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
     type: 2}
   m_fontSharedMaterials: []
@@ -24057,7 +24057,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &799080503
@@ -26276,7 +26276,7 @@ MonoBehaviour:
   m_text: In case of an emergency, you can eat candy located in the kitchen to give
     you an extra boost in speed!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b3ce9f30bea22eb49978344b1bc24c82, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
     type: 2}
   m_fontSharedMaterials: []
@@ -26341,7 +26341,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &951964594
@@ -29921,7 +29921,7 @@ MonoBehaviour:
   m_text: Find toys like theses around the house and feed them through the pet door
     to make the Nightling go away!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b3ce9f30bea22eb49978344b1bc24c82, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
     type: 2}
   m_fontSharedMaterials: []
@@ -29986,7 +29986,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &967515511
@@ -31428,7 +31428,7 @@ MonoBehaviour:
   m_text: If you see or hear banging coming from the basement, rush down and close
     the hatch before they can open it!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b3ce9f30bea22eb49978344b1bc24c82, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
     type: 2}
   m_fontSharedMaterials: []
@@ -31493,7 +31493,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1006307976
@@ -33883,7 +33883,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: A Nightling is now trying to make it's way down the fire place!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b3ce9f30bea22eb49978344b1bc24c82, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
     type: 2}
   m_fontSharedMaterials: []
@@ -33948,7 +33948,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1098678424
@@ -35799,7 +35799,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Another Nightling is also trying to get in through the sky light window!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b3ce9f30bea22eb49978344b1bc24c82, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
     type: 2}
   m_fontSharedMaterials: []
@@ -35864,7 +35864,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1157380928
@@ -42528,7 +42528,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: If you are short on wood, you can use a toy to feed the fire at 25% effectiveness!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b3ce9f30bea22eb49978344b1bc24c82, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
     type: 2}
   m_fontSharedMaterials: []
@@ -42593,7 +42593,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1416745525
@@ -43523,7 +43523,7 @@ MonoBehaviour:
   m_text: If you see or hear a window start to open, rush to it and close it before
     the Nightling can get in!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b3ce9f30bea22eb49978344b1bc24c82, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
     type: 2}
   m_fontSharedMaterials: []
@@ -43588,7 +43588,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1449330883
@@ -44541,7 +44541,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Hold ENTER to skip!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b3ce9f30bea22eb49978344b1bc24c82, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
     type: 2}
   m_fontSharedMaterials: []
@@ -44606,7 +44606,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1524069105
@@ -45054,7 +45054,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Press RMB to recharge flashlight!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b3ce9f30bea22eb49978344b1bc24c82, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
     type: 2}
   m_fontSharedMaterials: []
@@ -45080,8 +45080,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -45119,7 +45119,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1547090954
@@ -45783,7 +45783,7 @@ MonoBehaviour:
   m_text: If you see or hear splashing sounds coming from the bathroom, rush to it
     and flush the toilet to send the Nightling away!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b3ce9f30bea22eb49978344b1bc24c82, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
     type: 2}
   m_fontSharedMaterials: []
@@ -45848,7 +45848,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1602800642
@@ -50665,7 +50665,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Nightlings are also trying to break into the basement hatch!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b3ce9f30bea22eb49978344b1bc24c82, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
     type: 2}
   m_fontSharedMaterials: []
@@ -50730,7 +50730,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1861720623
