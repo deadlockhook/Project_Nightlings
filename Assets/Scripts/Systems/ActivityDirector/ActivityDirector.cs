@@ -70,7 +70,7 @@ public class ActivityDirector : MonoBehaviour
 
         windowsTimeLimits.lastUpdateTime = Time.deltaTime;
         petdoorTimeLimits.lastUpdateTime = windowsTimeLimits.lastUpdateTime;
-       
+
         nightActivity = new timedActivity[3];
         nightActivity[0] = new timedActivity(420.0f, 0, OnNightStart, OnWin, null);
         nightActivity[1] = new timedActivity(420.0f, 1, OnNightStart, OnWin, null);
@@ -79,7 +79,7 @@ public class ActivityDirector : MonoBehaviour
         powerOutageEventObject = new timedActivity(powerOutageTimeLimits.timeLimit, 0, null, TriggerPowerOutage, null);
         phoneRingEventObject = new timedActivity(phoneRingTimeLimits.timeLimit, 0, null, TriggerPhoneRing, null);
 
-        deathTrigger = new timedActivity(10.0f, 0, null, OnDeath, null);
+        deathTrigger = new timedActivity(3.0f, 0, null, OnDeath, null);
 
         GameObject[] toySpawns = GameObject.FindGameObjectsWithTag("ToySpawn");
         toySpawnLocations = new List<Vector3>();
