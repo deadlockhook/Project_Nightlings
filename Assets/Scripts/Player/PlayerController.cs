@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
 	public float staminaRechargeBoost = 2.5f;
 	private float staminaCoolDownTimer = 0f;
 	private float currentStamina;
+	private bool staminaDepleted = false;
 
 	[Header("Stamina UI")]
 	private Image staminaBar;
@@ -280,11 +281,20 @@ public class PlayerController : MonoBehaviour
 	// Handle player sprinting
 	private void ProcessSprint(Vector3 inputDir)
 	{
-		if (!isRecharging && playerControlActions.Player.Sprint.IsPressed() && currentStamina > 0 && inputDir.magnitude > 0)
+		if (!playerControlActions.Player.Sprint.IsPressed())
+		{
+			staminaDepleted = false;
+		}
+
+		if (!isRecharging && playerControlActions.Player.Sprint.IsPressed() && !staminaDepleted && currentStamina > 0 && inputDir.magnitude > 0)
 		{
 			isRunning = true;
 			isWalking = false;
 			currentStamina = Mathf.Max(currentStamina - staminaDrainRate * Time.deltaTime, 0f);
+			if (currentStamina == 0)
+			{
+				staminaDepleted = true;
+			}
 		}
 		else
 		{
