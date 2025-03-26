@@ -104,6 +104,7 @@ public class UIManager : MonoBehaviour
 		sensitivitySlider = optionsUI.transform.Find("SensitivitySlider").GetComponent<Slider>();
         resolutionDropdown = videoOptionsUI.transform.Find("ResolutionDropdown").GetComponent<TMP_Dropdown>();
         fullscreenToggle = videoOptionsUI.transform.Find("FullscreenToggle").GetComponent<Toggle>();
+		motionBlurSlider = videoOptionsUI.transform.Find("MotionBlurSlider").GetComponent<Slider>();
 
         if (sensitivitySlider != null)
         {
@@ -117,9 +118,12 @@ public class UIManager : MonoBehaviour
 		{
 			fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
         }
+        if (motionBlurSlider != null)
+		{
+			motionBlurSlider.onValueChanged.AddListener(SetMotionBlur);
+        }
 
         audioVisualToggle = soundOptionsUI.transform.Find("AudioVisualToggle").GetComponent<Toggle>();
-		motionBlurToggle = videoOptionsUI.transform.Find("MotionBlurToggle").GetComponent<Toggle>();
 		chromaticAbberationToggle = videoOptionsUI.transform.Find("ChromaticAbberationToggle").GetComponent<Toggle>();
 		bloomToggle = videoOptionsUI.transform.Find("BloomToggle").GetComponent<Toggle>();
 
@@ -683,11 +687,12 @@ public class UIManager : MonoBehaviour
 		ChangeUIState(UIState.Gameplay);
 	}
 
+    // OPTIONS SECTION -------------------------------
     private GameObject mainCam;
     private Camera mainCamera;
     private Volume volume;
 
-    private bool motionBlurEnabled = false;
+    private float motionBlurIntensity = 0f;
     private bool chromaticAbberationEnabled = false;
     private bool bloomEnabled = false;
 
@@ -695,6 +700,7 @@ public class UIManager : MonoBehaviour
 
     public TMP_Dropdown resolutionDropdown;
     public Toggle fullscreenToggle;
+    public Slider motionBlurSlider;
 
     private Resolution[] resolutions;
 
@@ -710,6 +716,7 @@ public class UIManager : MonoBehaviour
             }
         }
     }
+
     private void ToggleEffect<T>(bool enabled) where T : VolumeComponent
     {
         SetupMainCamera();
@@ -718,12 +725,18 @@ public class UIManager : MonoBehaviour
             effect.active = enabled;
         }
     }
-    public void ToggleMotionBlur(bool enabled)
+
+    public void SetMotionBlur(float intensity)
     {
-        enabled = motionBlurToggle.isOn;
-        motionBlurEnabled = enabled;
-        PlayerPrefs.SetInt("MotionBlur", enabled ? 1 : 0);
-        ToggleEffect<MotionBlur>(enabled);
+        SetupMainCamera();
+        motionBlurIntensity = Mathf.Clamp(intensity, 0f, 1f);
+        PlayerPrefs.SetFloat("MotionBlurIntensity", motionBlurIntensity);
+
+        if (volume != null && volume.profile.TryGet<MotionBlur>(out MotionBlur motionBlur))
+        {
+            motionBlur.active = motionBlurIntensity > 0f;
+            motionBlur.intensity.value = motionBlurIntensity;
+        }
     }
 
     public void ToggleChromaticAbberation(bool enabled)
@@ -771,19 +784,25 @@ public class UIManager : MonoBehaviour
 
     private void LoadSettings()
     {
+        // Motion Blur as Slider
+        motionBlurIntensity = PlayerPrefs.GetFloat("MotionBlurIntensity", 0f);
+        if (motionBlurSlider != null)
+        {
+            motionBlurSlider.value = motionBlurIntensity;
+        }
+        SetMotionBlur(motionBlurIntensity);
 
-        motionBlurEnabled = PlayerPrefs.GetInt("MotionBlur", 0) == 1;
+        // Toggles
         chromaticAbberationEnabled = PlayerPrefs.GetInt("ChromaticAbberation", 0) == 1;
         bloomEnabled = PlayerPrefs.GetInt("Bloom", 0) == 1;
 
-        motionBlurToggle.isOn = motionBlurEnabled;
         chromaticAbberationToggle.isOn = chromaticAbberationEnabled;
         bloomToggle.isOn = bloomEnabled;
 
-        ToggleEffect<MotionBlur>(motionBlurEnabled);
         ToggleEffect<ChromaticAberration>(chromaticAbberationEnabled);
         ToggleEffect<Bloom>(bloomEnabled);
 
+        // Sensitivity
         sensitivity = PlayerPrefs.GetFloat("Sensitivity", 1f);
         if (sensitivitySlider != null)
         {
@@ -795,6 +814,7 @@ public class UIManager : MonoBehaviour
             playerController.SetSensitivity(sensitivity);
         }
 
+        // Resolution and Fullscreen
         int width = PlayerPrefs.GetInt("ResolutionWidth", 1920);
         int height = PlayerPrefs.GetInt("ResolutionHeight", 1080);
         bool isFullscreen = PlayerPrefs.GetInt("Fullscreen", 1) == 1;
@@ -859,8 +879,8 @@ public class UIManager : MonoBehaviour
         return 0;
     }
 
-	// This is for the jumpscare atm, need to find a better way to do this
-	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    // This is for the jumpscare atm, need to find a better way to do this
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
 		if (loseTimeline == null)
 		{
