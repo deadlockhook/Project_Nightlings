@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 using TMPro;
 using UnityEngine.UI;
+using static Unity.Collections.AllocatorManager;
 
 public class CutsceneManager : MonoBehaviour
 {
@@ -136,11 +137,13 @@ public class CutsceneManager : MonoBehaviour
 			currentDirector.Stop();
 		}
 		EndCutscene();
-	}
-
-	private void EndCutscene()
+    }
+    private void EndCutscene()
 	{
-		isPlayingCutscene = false;
+        List<GameObject> clocks = new List<GameObject>(GameObject.FindGameObjectsWithTag("Clock"));
+        clocks.ForEach(clock => clock.GetComponent<Clock>().ResetClock());
+
+        isPlayingCutscene = false;
 		if (playerController != null)
 		{
 			playerController.enabled = true;

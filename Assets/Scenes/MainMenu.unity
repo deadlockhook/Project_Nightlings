@@ -18735,10 +18735,60 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3653426663040059858, guid: f38aaec9c20b5734aa389e00540bdbf2,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3653426663040059858, guid: f38aaec9c20b5734aa389e00540bdbf2,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4339651990956556867, guid: f38aaec9c20b5734aa389e00540bdbf2,
         type: 3}
       propertyPath: m_Name
       value: UIManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5891812087232177489, guid: f38aaec9c20b5734aa389e00540bdbf2,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5891812087232177489, guid: f38aaec9c20b5734aa389e00540bdbf2,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5891812087232177489, guid: f38aaec9c20b5734aa389e00540bdbf2,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6850899088699569160, guid: f38aaec9c20b5734aa389e00540bdbf2,
+        type: 3}
+      propertyPath: m_fontColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6850899088699569160, guid: f38aaec9c20b5734aa389e00540bdbf2,
+        type: 3}
+      propertyPath: m_fontColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6850899088699569160, guid: f38aaec9c20b5734aa389e00540bdbf2,
+        type: 3}
+      propertyPath: m_fontColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6850899088699569160, guid: f38aaec9c20b5734aa389e00540bdbf2,
+        type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4278190335
+      objectReference: {fileID: 0}
+    - target: {fileID: 7462053670943381028, guid: f38aaec9c20b5734aa389e00540bdbf2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
