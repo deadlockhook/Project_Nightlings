@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
 	private float sugarRushTimer = 0f;
 	private float originalWalkSpeed;
 	private float originalRunSpeed;
+	private Color originalStaminaColor = Color.white;
 
 	[Header("Head Bob Settings")]
 	public float headBobPower = 0.05f;
@@ -258,15 +259,24 @@ public class PlayerController : MonoBehaviour
 		float ratio = currentStamina / maxStamina;
 		staminaBar.fillAmount = ratio;
 
-		if (ratio < 0.25f)
-			staminaBar.color = Color.red;
-		else if (ratio < 0.5f)
-			staminaBar.color = Color.yellow;
+		if (isSugarRushActive)
+		{
+			float pulse = (Mathf.Sin(Time.time * 10f) + 1f) / 2f;
+			staminaBar.color = Color.Lerp(Color.cyan, Color.blue, pulse);
+			staminaCanvasGroup.alpha = 1f;
+		}
 		else
-			staminaBar.color = Color.white;
+		{
+			if (ratio < 0.25f)
+				staminaBar.color = Color.red;
+			else if (ratio < 0.5f)
+				staminaBar.color = Color.yellow;
+			else
+				staminaBar.color = originalStaminaColor;
 
-		float targetAlpha = (currentStamina >= maxStamina) ? 0f : 1f;
-		staminaCanvasGroup.alpha = Mathf.Lerp(staminaCanvasGroup.alpha, targetAlpha, Time.deltaTime * staminaFadeSpeed);
+			float targetAlpha = (currentStamina >= maxStamina) ? 0f : 1f;
+			staminaCanvasGroup.alpha = Mathf.Lerp(staminaCanvasGroup.alpha, targetAlpha, Time.deltaTime * staminaFadeSpeed);
+		}
 	}
 
 	// Get player input direction
@@ -282,8 +292,13 @@ public class PlayerController : MonoBehaviour
 	private void ProcessSprint(Vector3 inputDir)
 	{
 		if (!playerControlActions.Player.Sprint.IsPressed())
-		{
 			staminaDepleted = false;
+
+		if (isSugarRushActive)
+		{
+			isRunning = true;
+			isWalking = false;
+			return;
 		}
 
 		if (!isRecharging && playerControlActions.Player.Sprint.IsPressed() && !staminaDepleted && currentStamina > 0 && inputDir.magnitude > 0)
@@ -292,9 +307,7 @@ public class PlayerController : MonoBehaviour
 			isWalking = false;
 			currentStamina = Mathf.Max(currentStamina - staminaDrainRate * Time.deltaTime, 0f);
 			if (currentStamina == 0)
-			{
 				staminaDepleted = true;
-			}
 		}
 		else
 		{
