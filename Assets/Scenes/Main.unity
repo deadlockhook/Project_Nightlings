@@ -12009,22 +12009,22 @@ PrefabInstance:
     - target: {fileID: 7620035456851030087, guid: bc2e5c63db1c9bb428dbdcc8142205a0,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.274
+      value: 1.1
       objectReference: {fileID: 0}
     - target: {fileID: 7620035456851030087, guid: bc2e5c63db1c9bb428dbdcc8142205a0,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.274
+      value: 1.1
       objectReference: {fileID: 0}
     - target: {fileID: 7620035456851030087, guid: bc2e5c63db1c9bb428dbdcc8142205a0,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.274
+      value: 1.1
       objectReference: {fileID: 0}
     - target: {fileID: 7620035456851030087, guid: bc2e5c63db1c9bb428dbdcc8142205a0,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -19.83
+      value: -18.787
       objectReference: {fileID: 0}
     - target: {fileID: 7620035456851030087, guid: bc2e5c63db1c9bb428dbdcc8142205a0,
         type: 3}
@@ -12034,7 +12034,7 @@ PrefabInstance:
     - target: {fileID: 7620035456851030087, guid: bc2e5c63db1c9bb428dbdcc8142205a0,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.038
+      value: -7.884
       objectReference: {fileID: 0}
     - target: {fileID: 7620035456851030087, guid: bc2e5c63db1c9bb428dbdcc8142205a0,
         type: 3}
@@ -12070,6 +12070,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7620035456851030087, guid: bc2e5c63db1c9bb428dbdcc8142205a0,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7951328153095072479, guid: bc2e5c63db1c9bb428dbdcc8142205a0,
         type: 3}
@@ -12139,7 +12144,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7619714048759145824, guid: bc2e5c63db1c9bb428dbdcc8142205a0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 282448893}
   m_SourcePrefab: {fileID: 100100000, guid: bc2e5c63db1c9bb428dbdcc8142205a0, type: 3}
 --- !u!4 &282448891 stripped
 Transform:
@@ -12147,6 +12156,33 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 282448890}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &282448892 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7619714048759145824, guid: bc2e5c63db1c9bb428dbdcc8142205a0,
+    type: 3}
+  m_PrefabInstance: {fileID: 282448890}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &282448893
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 282448892}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.5, y: 2, z: 2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &284479528 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2111939463043175621, guid: 97dfa105a2701f746b066397e7635579,
@@ -45033,7 +45069,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Press RMB to recharge flashlight!
+  m_text: Press (RMB) to recharge flashlight!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b3ce9f30bea22eb49978344b1bc24c82, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,

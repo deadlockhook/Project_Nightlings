@@ -27,7 +27,7 @@ public class ActivityDirector : MonoBehaviour
     private timeLimits skylightTimeLimits = new timeLimits(85.0f, 95.0f, 45.0f);
     private timeLimits toiletTimeLimits = new timeLimits(60.0f, 90.0f, 45.0f);
     private timeLimits powerOutageTimeLimits = new timeLimits(0.0f, 0.0f, 300.0f);
-    private timeLimits phoneRingTimeLimits = new timeLimits(0.0f, 0.0f, 300.0f);
+    private timeLimits phoneRingTimeLimits = new timeLimits(0.0f, 0.0f, 500.0f); // for now
 
     private timedActivity[] nightActivity;
     private List<activityTrigger> windowEventObjects;
