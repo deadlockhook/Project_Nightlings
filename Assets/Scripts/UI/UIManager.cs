@@ -70,9 +70,9 @@ public class UIManager : MonoBehaviour
 	private Toggle motionBlurToggle;
 	private Toggle chromaticAbberationToggle;
 	private Toggle bloomToggle;
-    [SerializeField] private Slider sensitivitySlider;
+	[SerializeField] private Slider sensitivitySlider;
 
-    [Header("UI AudioSource")]
+	[Header("UI AudioSource")]
 	public AudioSource audioSource;
 
 	//Singleton
@@ -89,7 +89,7 @@ public class UIManager : MonoBehaviour
 
 	private void Start()
 	{
-        mainMenuUI = transform.Find("MainMenu").gameObject;
+		mainMenuUI = transform.Find("MainMenu").gameObject;
 		pauseMenuUI = transform.Find("Pause").gameObject;
 		gameplayUI = transform.Find("Gameplay").gameObject;
 		optionsUI = transform.Find("Options").gameObject;
@@ -102,28 +102,28 @@ public class UIManager : MonoBehaviour
 		creditsUI = transform.Find("Credits").gameObject;
 		controlsUI = transform.Find("Controls").gameObject;
 		sensitivitySlider = optionsUI.transform.Find("SensitivitySlider").GetComponent<Slider>();
-        resolutionDropdown = videoOptionsUI.transform.Find("ResolutionDropdown").GetComponent<TMP_Dropdown>();
-        fullscreenToggle = videoOptionsUI.transform.Find("FullscreenToggle").GetComponent<Toggle>();
+		resolutionDropdown = videoOptionsUI.transform.Find("ResolutionDropdown").GetComponent<TMP_Dropdown>();
+		fullscreenToggle = videoOptionsUI.transform.Find("FullscreenToggle").GetComponent<Toggle>();
 		motionBlurSlider = videoOptionsUI.transform.Find("MotionBlurSlider").GetComponent<Slider>();
 
-        if (sensitivitySlider != null)
-        {
-            sensitivitySlider.onValueChanged.AddListener(SetSensitivity);
-        }
+		if (sensitivitySlider != null)
+		{
+			sensitivitySlider.onValueChanged.AddListener(SetSensitivity);
+		}
 		if(resolutionDropdown != null)
 		{
-            resolutionDropdown.onValueChanged.AddListener(SetResolution);
-        }
-        if (fullscreenToggle != null)
+			resolutionDropdown.onValueChanged.AddListener(SetResolution);
+		}
+		if (fullscreenToggle != null)
 		{
 			fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
-        }
-        if (motionBlurSlider != null)
+		}
+		if (motionBlurSlider != null)
 		{
 			motionBlurSlider.onValueChanged.AddListener(SetMotionBlur);
-        }
+		}
 
-        audioVisualToggle = soundOptionsUI.transform.Find("AudioVisualToggle").GetComponent<Toggle>();
+		audioVisualToggle = soundOptionsUI.transform.Find("AudioVisualToggle").GetComponent<Toggle>();
 		chromaticAbberationToggle = videoOptionsUI.transform.Find("ChromaticAbberationToggle").GetComponent<Toggle>();
 		bloomToggle = videoOptionsUI.transform.Find("BloomToggle").GetComponent<Toggle>();
 
@@ -182,12 +182,12 @@ public class UIManager : MonoBehaviour
 				break;
 			case UIState.Gameplay:
 				LoadSettings();
-                PlayerController playerController = FindObjectOfType<PlayerController>();
-                if (playerController != null)
-                {
-                    playerController.SetSensitivity(sensitivity);
-                }
-                SoundManager.Instance.StopMusic();
+				PlayerController playerController = FindObjectOfType<PlayerController>();
+				if (playerController != null)
+				{
+					playerController.SetSensitivity(sensitivity);
+				}
+				SoundManager.Instance.StopMusic();
 				Time.timeScale = 1f;
 				gameplayUI.SetActive(true);
 				Cursor.lockState = CursorLockMode.Locked;
@@ -657,7 +657,7 @@ public class UIManager : MonoBehaviour
 			cg = nightInfoUI.AddComponent<CanvasGroup>();
 		cg.alpha = 1f;
 
-		yield return new WaitForSeconds(3f);
+		yield return new WaitForSeconds(5f);
 
 		if (CutsceneManager.Instance != null)
 		{
@@ -687,200 +687,200 @@ public class UIManager : MonoBehaviour
 		ChangeUIState(UIState.Gameplay);
 	}
 
-    // OPTIONS SECTION -------------------------------
-    private GameObject mainCam;
-    private Camera mainCamera;
-    private Volume volume;
+	// OPTIONS SECTION -------------------------------
+	private GameObject mainCam;
+	private Camera mainCamera;
+	private Volume volume;
 
-    private float motionBlurIntensity = 0f;
-    private bool chromaticAbberationEnabled = false;
-    private bool bloomEnabled = false;
+	private float motionBlurIntensity = 0f;
+	private bool chromaticAbberationEnabled = false;
+	private bool bloomEnabled = false;
 
-    private float sensitivity = 0.1f;
+	private float sensitivity = 0.1f;
 
-    public TMP_Dropdown resolutionDropdown;
-    public Toggle fullscreenToggle;
-    public Slider motionBlurSlider;
+	public TMP_Dropdown resolutionDropdown;
+	public Toggle fullscreenToggle;
+	public Slider motionBlurSlider;
 
-    private Resolution[] resolutions;
+	private Resolution[] resolutions;
 
-    private void SetupMainCamera()
-    {
-        if (mainCam == null)
-        {
-            mainCam = GameObject.Find("Main Camera");
-            if (mainCam != null)
-            {
-                mainCamera = mainCam.GetComponent<Camera>();
-                volume = mainCam.GetComponent<Volume>();
-            }
-        }
-    }
+	private void SetupMainCamera()
+	{
+		if (mainCam == null)
+		{
+			mainCam = GameObject.Find("Main Camera");
+			if (mainCam != null)
+			{
+				mainCamera = mainCam.GetComponent<Camera>();
+				volume = mainCam.GetComponent<Volume>();
+			}
+		}
+	}
 
-    private void ToggleEffect<T>(bool enabled) where T : VolumeComponent
-    {
-        SetupMainCamera();
-        if (volume != null && volume.profile.TryGet<T>(out T effect))
-        {
-            effect.active = enabled;
-        }
-    }
+	private void ToggleEffect<T>(bool enabled) where T : VolumeComponent
+	{
+		SetupMainCamera();
+		if (volume != null && volume.profile.TryGet<T>(out T effect))
+		{
+			effect.active = enabled;
+		}
+	}
 
-    public void SetMotionBlur(float intensity)
-    {
-        SetupMainCamera();
-        motionBlurIntensity = Mathf.Clamp(intensity, 0f, 1f);
-        PlayerPrefs.SetFloat("MotionBlurIntensity", motionBlurIntensity);
+	public void SetMotionBlur(float intensity)
+	{
+		SetupMainCamera();
+		motionBlurIntensity = Mathf.Clamp(intensity, 0f, 1f);
+		PlayerPrefs.SetFloat("MotionBlurIntensity", motionBlurIntensity);
 
-        if (volume != null && volume.profile.TryGet<MotionBlur>(out MotionBlur motionBlur))
-        {
-            motionBlur.active = motionBlurIntensity > 0f;
-            motionBlur.intensity.value = motionBlurIntensity;
-        }
-    }
+		if (volume != null && volume.profile.TryGet<MotionBlur>(out MotionBlur motionBlur))
+		{
+			motionBlur.active = motionBlurIntensity > 0f;
+			motionBlur.intensity.value = motionBlurIntensity;
+		}
+	}
 
-    public void ToggleChromaticAbberation(bool enabled)
-    {
-        enabled = chromaticAbberationToggle.isOn;
-        chromaticAbberationEnabled = enabled;
-        PlayerPrefs.SetInt("ChromaticAbberation", enabled ? 1 : 0);
-        ToggleEffect<ChromaticAberration>(enabled);
-    }
+	public void ToggleChromaticAbberation(bool enabled)
+	{
+		enabled = chromaticAbberationToggle.isOn;
+		chromaticAbberationEnabled = enabled;
+		PlayerPrefs.SetInt("ChromaticAbberation", enabled ? 1 : 0);
+		ToggleEffect<ChromaticAberration>(enabled);
+	}
 
-    public void ToggleBloom(bool enabled)
-    {
-        enabled = bloomToggle.isOn;
-        bloomEnabled = enabled;
-        PlayerPrefs.SetInt("Bloom", enabled ? 1 : 0);
-        ToggleEffect<Bloom>(enabled);
-    }
+	public void ToggleBloom(bool enabled)
+	{
+		enabled = bloomToggle.isOn;
+		bloomEnabled = enabled;
+		PlayerPrefs.SetInt("Bloom", enabled ? 1 : 0);
+		ToggleEffect<Bloom>(enabled);
+	}
 
-    public void SetSensitivity(float value)
-    {
-        sensitivity = Mathf.Clamp(value, 0.01f, 1f);
-        PlayerPrefs.SetFloat("Sensitivity", sensitivity);
+	public void SetSensitivity(float value)
+	{
+		sensitivity = Mathf.Clamp(value, 0.01f, 1f);
+		PlayerPrefs.SetFloat("Sensitivity", sensitivity);
 
-        PlayerController playerController = FindObjectOfType<PlayerController>();
-        if (playerController != null)
-        {
-            playerController.SetSensitivity(sensitivity);
-        }
-    }
+		PlayerController playerController = FindObjectOfType<PlayerController>();
+		if (playerController != null)
+		{
+			playerController.SetSensitivity(sensitivity);
+		}
+	}
 
-    public void SetResolution(int index)
-    {
-        Resolution selectedResolution = resolutions[index];
-        Screen.SetResolution(selectedResolution.width, selectedResolution.height, Screen.fullScreen);
+	public void SetResolution(int index)
+	{
+		Resolution selectedResolution = resolutions[index];
+		Screen.SetResolution(selectedResolution.width, selectedResolution.height, Screen.fullScreen);
 
-        PlayerPrefs.SetInt("ResolutionWidth", selectedResolution.width);
-        PlayerPrefs.SetInt("ResolutionHeight", selectedResolution.height);
-    }
+		PlayerPrefs.SetInt("ResolutionWidth", selectedResolution.width);
+		PlayerPrefs.SetInt("ResolutionHeight", selectedResolution.height);
+	}
 
-    public void SetFullscreen(bool isFullscreen)
-    {
-        Screen.SetResolution(Screen.width, Screen.height, isFullscreen);
-        PlayerPrefs.SetInt("Fullscreen", isFullscreen ? 1 : 0);
-    }
+	public void SetFullscreen(bool isFullscreen)
+	{
+		Screen.SetResolution(Screen.width, Screen.height, isFullscreen);
+		PlayerPrefs.SetInt("Fullscreen", isFullscreen ? 1 : 0);
+	}
 
-    private void LoadSettings()
-    {
-        // Motion Blur as Slider
-        motionBlurIntensity = PlayerPrefs.GetFloat("MotionBlurIntensity", 0f);
-        if (motionBlurSlider != null)
-        {
-            motionBlurSlider.value = motionBlurIntensity;
-        }
-        SetMotionBlur(motionBlurIntensity);
+	private void LoadSettings()
+	{
+		// Motion Blur as Slider
+		motionBlurIntensity = PlayerPrefs.GetFloat("MotionBlurIntensity", 0f);
+		if (motionBlurSlider != null)
+		{
+			motionBlurSlider.value = motionBlurIntensity;
+		}
+		SetMotionBlur(motionBlurIntensity);
 
-        // Toggles
-        chromaticAbberationEnabled = PlayerPrefs.GetInt("ChromaticAbberation", 0) == 1;
-        bloomEnabled = PlayerPrefs.GetInt("Bloom", 0) == 1;
+		// Toggles
+		chromaticAbberationEnabled = PlayerPrefs.GetInt("ChromaticAbberation", 0) == 1;
+		bloomEnabled = PlayerPrefs.GetInt("Bloom", 0) == 1;
 
-        chromaticAbberationToggle.isOn = chromaticAbberationEnabled;
-        bloomToggle.isOn = bloomEnabled;
+		chromaticAbberationToggle.isOn = chromaticAbberationEnabled;
+		bloomToggle.isOn = bloomEnabled;
 
-        ToggleEffect<ChromaticAberration>(chromaticAbberationEnabled);
-        ToggleEffect<Bloom>(bloomEnabled);
+		ToggleEffect<ChromaticAberration>(chromaticAbberationEnabled);
+		ToggleEffect<Bloom>(bloomEnabled);
 
-        // Sensitivity
-        sensitivity = PlayerPrefs.GetFloat("Sensitivity", 1f);
-        if (sensitivitySlider != null)
-        {
-            sensitivitySlider.value = sensitivity;
-        }
-        PlayerController playerController = FindObjectOfType<PlayerController>();
-        if (playerController != null)
-        {
-            playerController.SetSensitivity(sensitivity);
-        }
+		// Sensitivity
+		sensitivity = PlayerPrefs.GetFloat("Sensitivity", 1f);
+		if (sensitivitySlider != null)
+		{
+			sensitivitySlider.value = sensitivity;
+		}
+		PlayerController playerController = FindObjectOfType<PlayerController>();
+		if (playerController != null)
+		{
+			playerController.SetSensitivity(sensitivity);
+		}
 
-        // Resolution and Fullscreen
-        int width = PlayerPrefs.GetInt("ResolutionWidth", 1920);
-        int height = PlayerPrefs.GetInt("ResolutionHeight", 1080);
-        bool isFullscreen = PlayerPrefs.GetInt("Fullscreen", 1) == 1;
+		// Resolution and Fullscreen
+		int width = PlayerPrefs.GetInt("ResolutionWidth", 1920);
+		int height = PlayerPrefs.GetInt("ResolutionHeight", 1080);
+		bool isFullscreen = PlayerPrefs.GetInt("Fullscreen", 1) == 1;
 
-        Resolution[] allResolutions = Screen.resolutions;
-        List<Resolution> validResolutions = new List<Resolution>();
+		Resolution[] allResolutions = Screen.resolutions;
+		List<Resolution> validResolutions = new List<Resolution>();
 
-        foreach (var res in allResolutions)
-        {
-            if (res.width * 9 == res.height * 16)
-            {
-                if (!validResolutions.Any(r => r.width == res.width && r.height == res.height))
-                {
-                    validResolutions.Add(res);
-                }
-            }
-        }
+		foreach (var res in allResolutions)
+		{
+			if (res.width * 9 == res.height * 16)
+			{
+				if (!validResolutions.Any(r => r.width == res.width && r.height == res.height))
+				{
+					validResolutions.Add(res);
+				}
+			}
+		}
 
-        validResolutions.Sort((a, b) => a.width.CompareTo(b.width));
-        resolutions = validResolutions.ToArray();
+		validResolutions.Sort((a, b) => a.width.CompareTo(b.width));
+		resolutions = validResolutions.ToArray();
 
-        if (width == 1920 && height == 1080 && resolutions.Length > 0)
-        {
-            Resolution maxResolution = resolutions[resolutions.Length - 1];
-            Screen.SetResolution(maxResolution.width, maxResolution.height, isFullscreen);
-            PlayerPrefs.SetInt("ResolutionWidth", maxResolution.width);
-            PlayerPrefs.SetInt("ResolutionHeight", maxResolution.height);
-        }
-        else
-        {
-            Screen.SetResolution(width, height, isFullscreen);
-        }
+		if (width == 1920 && height == 1080 && resolutions.Length > 0)
+		{
+			Resolution maxResolution = resolutions[resolutions.Length - 1];
+			Screen.SetResolution(maxResolution.width, maxResolution.height, isFullscreen);
+			PlayerPrefs.SetInt("ResolutionWidth", maxResolution.width);
+			PlayerPrefs.SetInt("ResolutionHeight", maxResolution.height);
+		}
+		else
+		{
+			Screen.SetResolution(width, height, isFullscreen);
+		}
 
-        resolutionDropdown.ClearOptions();
-        var options = new List<string>();
-        foreach (var res in resolutions)
-        {
-            options.Add(res.width + " x " + res.height);
-        }
-        resolutionDropdown.AddOptions(options);
+		resolutionDropdown.ClearOptions();
+		var options = new List<string>();
+		foreach (var res in resolutions)
+		{
+			options.Add(res.width + " x " + res.height);
+		}
+		resolutionDropdown.AddOptions(options);
 
-        int currentResolutionIndex = GetCurrentResolutionIndex();
-        resolutionDropdown.value = currentResolutionIndex;
-        resolutionDropdown.RefreshShownValue();
+		int currentResolutionIndex = GetCurrentResolutionIndex();
+		resolutionDropdown.value = currentResolutionIndex;
+		resolutionDropdown.RefreshShownValue();
 
-        fullscreenToggle.isOn = isFullscreen;
-    }
+		fullscreenToggle.isOn = isFullscreen;
+	}
 
-    private int GetCurrentResolutionIndex()
-    {
-        int currentWidth = PlayerPrefs.GetInt("ResolutionWidth", 1920);
-        int currentHeight = PlayerPrefs.GetInt("ResolutionHeight", 1080);
+	private int GetCurrentResolutionIndex()
+	{
+		int currentWidth = PlayerPrefs.GetInt("ResolutionWidth", 1920);
+		int currentHeight = PlayerPrefs.GetInt("ResolutionHeight", 1080);
 
-        for (int i = 0; i < resolutions.Length; i++)
-        {
-            if (resolutions[i].width == currentWidth && resolutions[i].height == currentHeight)
-            {
-                return i;
-            }
-        }
+		for (int i = 0; i < resolutions.Length; i++)
+		{
+			if (resolutions[i].width == currentWidth && resolutions[i].height == currentHeight)
+			{
+				return i;
+			}
+		}
 
-        return 0;
-    }
+		return 0;
+	}
 
-    // This is for the jumpscare atm, need to find a better way to do this
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+	// This is for the jumpscare atm, need to find a better way to do this
+	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
 		if (loseTimeline == null)
 		{
