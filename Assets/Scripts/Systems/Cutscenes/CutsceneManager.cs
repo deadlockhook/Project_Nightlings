@@ -154,7 +154,7 @@ public class CutsceneManager : MonoBehaviour
 			skipText.gameObject.SetActive(false);
 
 		Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = false;
+		//Cursor.visible = false;
 
 		if (currentDirector == night1Cutscene)
 		{
