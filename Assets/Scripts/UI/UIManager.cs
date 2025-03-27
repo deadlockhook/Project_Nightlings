@@ -171,11 +171,13 @@ public class UIManager : MonoBehaviour
 					SoundManager.Instance.PlayMusic("MainMenu");
 				}
 				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
 				Time.timeScale = 1f;
 				mainMenuUI.SetActive(true);
 				break;
 			case UIState.PauseMenu:
 				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
 				Time.timeScale = 0f;
 				pauseMenuUI.SetActive(true);
 				isPaused = true;
@@ -191,35 +193,42 @@ public class UIManager : MonoBehaviour
 				Time.timeScale = 1f;
 				gameplayUI.SetActive(true);
 				Cursor.lockState = CursorLockMode.Locked;
+				Cursor.visible = false;
 				isPaused = false;
 				break;
 			case UIState.Options:
 				Time.timeScale = 0f;
 				optionsUI.SetActive(true);
 				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
 				break;
 			case UIState.SoundOptions:
 				Time.timeScale = 0f;
 				soundOptionsUI.SetActive(true);
 				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
 				break;
 			case UIState.VideoOptions:
 				Time.timeScale = 0f;
 				videoOptionsUI.SetActive(true);
 				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
 				break;
 			case UIState.Win:
 				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
 				Time.timeScale = 0f;
 				winUI.SetActive(true);
 				break;
 			case UIState.Lose:
 				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
 				Time.timeScale = 0f;
 				loseUI.SetActive(true);
 				break;
 			case UIState.NightPicker:
 				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
 				Time.timeScale = 0f;
 				nightPickerUI.SetActive(true);
 				break;
@@ -232,11 +241,13 @@ public class UIManager : MonoBehaviour
 				break;
 			case UIState.CreditsUI:
 				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
 				Time.timeScale = 0f;
 				creditsUI.SetActive(true);
 				break;
 			case UIState.Controls:
 				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
 				Time.timeScale = 0f;
 				controlsUI.SetActive(true);
 				break;
