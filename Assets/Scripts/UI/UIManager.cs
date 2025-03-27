@@ -803,7 +803,7 @@ public class UIManager : MonoBehaviour
 		ToggleEffect<Bloom>(bloomEnabled);
 
 		// Sensitivity
-		sensitivity = PlayerPrefs.GetFloat("Sensitivity", 1f);
+		sensitivity = PlayerPrefs.GetFloat("Sensitivity", 0.25f);
 		if (sensitivitySlider != null)
 		{
 			sensitivitySlider.value = sensitivity;
