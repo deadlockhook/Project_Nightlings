@@ -97,4 +97,13 @@ public class HintManager : MonoBehaviour
 
 		shownHints.Add(type);
 	}
+
+	public void ResetGameHints() {
+		StopAllCoroutines();
+		hintQueue.Clear();
+		isHintActive = false;
+		shownHints.Clear();
+		if (hintCanvasGroup != null)
+			hintCanvasGroup.alpha = 0f;
+	}
 }

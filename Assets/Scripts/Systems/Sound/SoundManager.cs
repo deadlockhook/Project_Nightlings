@@ -92,6 +92,10 @@ public class SoundManager : MonoBehaviour
                     .FirstOrDefault(o => o.name == "MusicSlider");
         }
 
+        masterVolume = PlayerPrefs.GetFloat("MasterVolume", 1f);
+        sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1f);
+        musicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.5f);
+
         masterVolumeSlider = masterSliderGameObject.GetComponent<Slider>();
         sfxVolumeSlider = sfxSliderGameObject.GetComponent<Slider>();
         musicVolumeSlider = musicSliderGameObject.GetComponent<Slider>();
@@ -216,18 +220,21 @@ public class SoundManager : MonoBehaviour
     public void SetMasterVolume(float volume)
     {
         masterVolume = volume;
+        PlayerPrefs.SetFloat("MasterVolume", masterVolume);
         UpdateVolumes();
     }
 
     public void SetSFXVolume(float volume)
     {
         sfxVolume = volume;
+        PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
         UpdateVolumes();
     }
 
     public void SetMusicVolume(float volume)
     {
         musicVolume = volume;
+        PlayerPrefs.SetFloat("MusicVolume", musicVolume);
         UpdateVolumes();
     }
 

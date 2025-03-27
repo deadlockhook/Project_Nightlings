@@ -166,19 +166,29 @@ public class IconManager : MonoBehaviour
         return screenPos;
     }
 
-    public void RegisterIcon(int id, Vector3 worldPosition, IconType iconType = IconType.Default)
+    public GameObject RegisterIcon(int id, Vector3 worldPosition, IconType iconType = IconType.Default)
     {
-        if (activeIcons.ContainsKey(id)) return;
+        if (activeIcons.ContainsKey(id)) return activeIcons[id].icon;
 
         if (!iconPrefabMap.TryGetValue(iconType, out GameObject prefab))
         {
             Debug.LogWarning($"No prefab found for {iconType}, using default");
-            if (!iconPrefabMap.TryGetValue(IconType.Default, out prefab)) return;
+            if (!iconPrefabMap.TryGetValue(IconType.Default, out prefab)) return null;
         }
 
         GameObject newIcon = Instantiate(prefab, iconCanvas.transform, false);
         activeIcons[id] = (newIcon, worldPosition, iconType);
         newIcon.SetActive(true);
+        return newIcon;
+    }
+
+    public GameObject GetIcon(int id)
+    {
+        if (activeIcons.TryGetValue(id, out (GameObject icon, Vector3 worldPosition, IconType type) iconData))
+        {
+            return iconData.icon;
+        }
+        return null;
     }
 
     public void UpdateIconType(int id, IconType newType)

@@ -30,9 +30,11 @@ public class PlayerController : MonoBehaviour
 	public float staminaRechargeBoost = 2.5f;
 	private float staminaCoolDownTimer = 0f;
 	private float currentStamina;
+	private bool staminaDepleted = false;
 
 	[Header("Stamina UI")]
-	public Image staminaBar;
+	private Image staminaBar;
+	private CanvasGroup staminaCanvasGroup;
 	public float staminaFadeSpeed = 1f;
 
 	[Header("Sugar Rush Settings")]
@@ -42,6 +44,7 @@ public class PlayerController : MonoBehaviour
 	private float sugarRushTimer = 0f;
 	private float originalWalkSpeed;
 	private float originalRunSpeed;
+	private Color originalStaminaColor = Color.white;
 
 	[Header("Head Bob Settings")]
 	public float headBobPower = 0.05f;
@@ -90,15 +93,6 @@ public class PlayerController : MonoBehaviour
 	private void Awake()
 	{
 		playerControlActions = new PlayerControlActions();
-		staminaBar = GameObject.Find("StaminaBar")?.GetComponent<Image>();
-		if (staminaBar == null)
-		{
-			staminaBar = FindObjectsOfType<Image>(true).FirstOrDefault(img => img.gameObject.name == "StaminaBar");
-		}
-		if (staminaBar == null)
-		{
-			Debug.LogError("No Stamina Bar");
-		}
 	}
 
 	private void OnEnable()
@@ -179,9 +173,13 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 	}
+    public void SetSensitivity(float newSensitivity)
+    {
+        lookSensitivity = newSensitivity;
+    }
 
-	// flashlight toggle on/off
-	private void ProcessFlashlightToggle()
+    // flashlight toggle on/off
+    private void ProcessFlashlightToggle()
 	{
 		var controls = playerControlActions.Player;
 		if (controls.FlashlightToggle.triggered && !isRecharging)
@@ -238,13 +236,47 @@ public class PlayerController : MonoBehaviour
 	private void UpdateStaminaUI()
 	{
 		if (staminaBar == null)
+		{
+			GameObject barObject = GameObject.Find("StaminaBar");
+			if (barObject != null)
+				staminaBar = barObject.GetComponent<Image>();
+			else
+				staminaBar = FindObjectsOfType<Image>(true).FirstOrDefault(img => img.gameObject.name == "StaminaBar");
+		}
+
+		if (staminaCanvasGroup == null)
+		{
+			GameObject panelObject = GameObject.Find("StaminaPanel");
+			if (panelObject != null)
+				staminaCanvasGroup = panelObject.GetComponent<CanvasGroup>();
+			else
+				staminaCanvasGroup = FindObjectsOfType<CanvasGroup>(true).FirstOrDefault(cg => cg.gameObject.name == "StaminaPanel");
+		}
+
+		if (staminaBar == null || staminaCanvasGroup == null)
 			return;
+
 		float ratio = currentStamina / maxStamina;
 		staminaBar.fillAmount = ratio;
-		Color baseColor = ratio < 0.25f ? Color.red : ratio < 0.5f ? Color.yellow : Color.white;
-		float targetAlpha = currentStamina >= maxStamina ? 0f : 1f;
-		baseColor.a = Mathf.Lerp(staminaBar.color.a, targetAlpha, Time.deltaTime * staminaFadeSpeed);
-		staminaBar.color = baseColor;
+
+		if (isSugarRushActive)
+		{
+			float pulse = (Mathf.Sin(Time.time * 10f) + 1f) / 2f;
+			staminaBar.color = Color.Lerp(Color.cyan, Color.blue, pulse);
+			staminaCanvasGroup.alpha = 1f;
+		}
+		else
+		{
+			if (ratio < 0.25f)
+				staminaBar.color = Color.red;
+			else if (ratio < 0.5f)
+				staminaBar.color = Color.yellow;
+			else
+				staminaBar.color = originalStaminaColor;
+
+			float targetAlpha = (currentStamina >= maxStamina) ? 0f : 1f;
+			staminaCanvasGroup.alpha = Mathf.Lerp(staminaCanvasGroup.alpha, targetAlpha, Time.deltaTime * staminaFadeSpeed);
+		}
 	}
 
 	// Get player input direction
@@ -259,11 +291,23 @@ public class PlayerController : MonoBehaviour
 	// Handle player sprinting
 	private void ProcessSprint(Vector3 inputDir)
 	{
-		if (!isRecharging && playerControlActions.Player.Sprint.IsPressed() && currentStamina > 0 && inputDir.magnitude > 0)
+		if (!playerControlActions.Player.Sprint.IsPressed())
+			staminaDepleted = false;
+
+		if (isSugarRushActive)
+		{
+			isRunning = true;
+			isWalking = false;
+			return;
+		}
+
+		if (!isRecharging && playerControlActions.Player.Sprint.IsPressed() && !staminaDepleted && currentStamina > 0 && inputDir.magnitude > 0)
 		{
 			isRunning = true;
 			isWalking = false;
 			currentStamina = Mathf.Max(currentStamina - staminaDrainRate * Time.deltaTime, 0f);
+			if (currentStamina == 0)
+				staminaDepleted = true;
 		}
 		else
 		{

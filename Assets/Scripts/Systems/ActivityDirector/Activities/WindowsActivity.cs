@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class WindowsActivity : MonoBehaviour
 {
@@ -18,8 +17,16 @@ public class WindowsActivity : MonoBehaviour
 
     private AudioSource triggerAudio1;
     private SoundManager soundManager;
+    private playedSoundAtTrigger[] soundTriggers;
 
-    private ActivityDirector.playedSoundAtTrigger[] soundTriggers;
+    [Header("Nightling Settings")]
+    public GameObject creature;
+    public float hiddenOffset = -0.5f;
+    public float riseTime = 0.5f;
+    public float lowerTime = 0.5f;
+
+    private Vector3 creaturePeekPos;
+    private Vector3 creatureHiddenPos;
 
     private void Start()
     {
@@ -33,15 +40,25 @@ public class WindowsActivity : MonoBehaviour
             triggerAudio1 = sources[0];
         }
 
-        soundTriggers = new ActivityDirector.playedSoundAtTrigger[3];
-        soundTriggers[0] = new ActivityDirector.playedSoundAtTrigger(0.25f, triggerAudio1);
-        soundTriggers[1] = new ActivityDirector.playedSoundAtTrigger(0.50f, triggerAudio1);
-        soundTriggers[2] = new ActivityDirector.playedSoundAtTrigger(0.75f, triggerAudio1);
+        soundTriggers = new playedSoundAtTrigger[3];
+        soundTriggers[0] = new playedSoundAtTrigger(0.25f, triggerAudio1);
+        soundTriggers[1] = new playedSoundAtTrigger(0.50f, triggerAudio1);
+        soundTriggers[2] = new playedSoundAtTrigger(0.75f, triggerAudio1);
+
+        if (creature != null)
+        {
+            creaturePeekPos = creature.transform.position;
+            creatureHiddenPos = new Vector3(creaturePeekPos.x, creaturePeekPos.y + hiddenOffset, creaturePeekPos.z);
+            creature.transform.position = creatureHiddenPos;
+            creature.SetActive(false);
+        }
     }
+
     private void PlayTriggerAudio()
     {
         soundManager.PlaySound("Creak2", triggerAudio1);
     }
+
     public void ResetActivity()
     {
         if (activityFinished || !inActivity)
@@ -52,8 +69,13 @@ public class WindowsActivity : MonoBehaviour
         resetAnimBegin = true;
         resetProgress = 1.0f - lastActivityProgress;
         positionYOnResetBegin = transform.position.y;
-        //triggerAudio.Play();
+
+        if (creature != null && creature.activeSelf)
+        {
+            StartCoroutine(LowerCreature());
+        }
     }
+
     public void ActivityTriggerStart()
     {
         if (activityFinished)
@@ -62,7 +84,15 @@ public class WindowsActivity : MonoBehaviour
         inActivity = true;
         shouldReset = false;
         PlayTriggerAudio();
+
+        if (creature != null)
+        {
+            creature.SetActive(true);
+            StopCoroutine("LowerCreature");
+            StartCoroutine(RiseCreature());
+        }
     }
+
     public bool OnActivityUpdate(float activityProgress)
     {
         if (activityFinished)
@@ -76,17 +106,17 @@ public class WindowsActivity : MonoBehaviour
 
         foreach (var trigger in soundTriggers)
         {
-           if (trigger.ShouldPlay(activityProgress))
+            if (trigger.ShouldPlay(activityProgress))
                 PlayTriggerAudio();
         }
 
         Vector3 target = new Vector3(transform.position.x, startYPosition + (0.8972201f * activityProgress), transform.position.z);
         transform.position = target;
-
         lastActivityProgress = activityProgress;
 
         return false;
     }
+
     public void ActivityTriggerEnd()
     {
         if (shouldReset)
@@ -95,11 +125,45 @@ public class WindowsActivity : MonoBehaviour
         inActivity = false;
         activityFinished = true;
         PlayTriggerAudio();
+
+        if (creature != null)
+        {
+            StartCoroutine(LowerCreature());
+        }
+    }
+
+    private IEnumerator RiseCreature()
+    {
+        float elapsed = 0f;
+        Vector3 startPos = creature.transform.position;
+        while (elapsed < riseTime)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / riseTime);
+            creature.transform.position = Vector3.Lerp(startPos, creaturePeekPos, t);
+            yield return null;
+        }
+        creature.transform.position = creaturePeekPos;
+    }
+
+    private IEnumerator LowerCreature()
+    {
+        float elapsed = 0f;
+        Vector3 startPos = creature.transform.position;
+        while (elapsed < lowerTime)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / lowerTime);
+            creature.transform.position = Vector3.Lerp(startPos, creatureHiddenPos, t);
+            yield return null;
+        }
+        creature.transform.position = creatureHiddenPos;
+        creature.SetActive(false);
     }
 
     private bool windowShutPlayed = false;
 
-    public void Update()
+    private void Update()
     {
         if (resetAnimBegin)
         {
@@ -122,9 +186,8 @@ public class WindowsActivity : MonoBehaviour
             }
             else
             {
-                transform.position = new Vector3(transform.position.x, endYPosition - (0.8972201f * ( resetProgress)), transform.position.z);
+                transform.position = new Vector3(transform.position.x, endYPosition - (0.8972201f * resetProgress), transform.position.z);
             }
         }
-
     }
 }

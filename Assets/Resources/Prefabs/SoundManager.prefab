@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6874945791814882280
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2253116042138777668}
+  - component: {fileID: 5417322594430981804}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2253116042138777668
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6874945791814882280}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.193041, y: 10.306024, z: -26.06969}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5417322594430981804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6874945791814882280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bbdb9f15384e924d90778fcc866fffa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentMusic: 
+  sounds:
+  - name: PlayerWalk
+    clip: {fileID: 8300000, guid: 83d577976823b4246a45797985e4cc49, type: 3}
+  - name: PlayerRun
+    clip: {fileID: 8300000, guid: e0078014c73b63d46bc5d2f820fee255, type: 3}
+  - name: MonsterFootsteps
+    clip: {fileID: 8300000, guid: e0c53302883dfab449d25da5a556b6a3, type: 3}
+  - name: Flashlight
+    clip: {fileID: 8300000, guid: d28bc450d8277c94d930ed0b755e858c, type: 3}
+  - name: Jumpscare
+    clip: {fileID: 8300000, guid: 5e78e5620e474d64cb9b232fca392898, type: 3}
+  - name: WindowTap1
+    clip: {fileID: 8300000, guid: 1e451d4c9c61d8a4da754e8393a359f6, type: 3}
+  - name: WindowTap2
+    clip: {fileID: 8300000, guid: cb42607211b1c2345a9cb976364e43b0, type: 3}
+  - name: Creak1
+    clip: {fileID: 8300000, guid: 6bb31dbdbe842ba41be7d0bb892ddca2, type: 3}
+  - name: Creak2
+    clip: {fileID: 8300000, guid: bfd197f971abfaa458cf947b676c9c8f, type: 3}
+  - name: Creak3
+    clip: {fileID: 8300000, guid: bfd197f971abfaa458cf947b676c9c8f, type: 3}
+  - name: FlashlightShake
+    clip: {fileID: 8300000, guid: 897ea8374f24d204295cca447091ff9f, type: 3}
+  - name: MainMenu
+    clip: {fileID: 8300000, guid: bc043af8cc76de14aa43a91f13d45a73, type: 3}
+  - name: InGame
+    clip: {fileID: 8300000, guid: 9bddb78c191c39f48a54e66322053961, type: 3}
+  - name: DoorBell
+    clip: {fileID: 8300000, guid: 7e74c901c41faee48a5373a2eafbb5b1, type: 3}
+  - name: BasementKnock
+    clip: {fileID: 8300000, guid: 2cb7d15ba4fe9524a975aa7152d46a86, type: 3}
+  - name: FireBurning
+    clip: {fileID: 8300000, guid: 2d6ebc1f2f79f1e4787bbb3040dccc20, type: 3}
+  - name: RefuelFire
+    clip: {fileID: 8300000, guid: 600a31a7913d310469e0d9e6a9129da5, type: 3}
+  - name: ToiletFlush
+    clip: {fileID: 8300000, guid: 5cdc07c75777a9346a83be2692607fc0, type: 3}
+  - name: ToiletSplash
+    clip: {fileID: 8300000, guid: 61c01fe7454e2664f80094188f2dda80, type: 3}
+  - name: Clock
+    clip: {fileID: 8300000, guid: cdc23aded6b4e284bb0066c9a7da3b27, type: 3}
+  - name: TinToyDrop
+    clip: {fileID: 8300000, guid: 145d1aa26e2c66c41b040bd880a94bda, type: 3}
+  - name: PlasticToyDrop
+    clip: {fileID: 8300000, guid: a42e25043c6762c429e6213656bb19e5, type: 3}
+  - name: WoodToyDrop
+    clip: {fileID: 8300000, guid: f9f14387624c9fa4f9d20254257925fa, type: 3}
+  - name: BasementShut
+    clip: {fileID: 8300000, guid: ab7771a43632c0c49a8dbad73aa20b31, type: 3}
+  - name: WindowShut
+    clip: {fileID: 8300000, guid: ee0bcb89643713844a47506e0239cd57, type: 3}
+  - name: AlarmWin
+    clip: {fileID: 8300000, guid: 4392aed04ecb1d142937ab201e7dc27f, type: 3}
+  - name: Button
+    clip: {fileID: 8300000, guid: 6c85329d1def4da40aab45d9ab4d34cc, type: 3}
+  - name: PhoneRing
+    clip: {fileID: 8300000, guid: e9a9bd935f5940a4b8bc3fb3ea91b3b0, type: 3}
+  - name: RadioMusic
+    clip: {fileID: 8300000, guid: df82034c28d7d814588f564feaa80558, type: 3}
+  - name: Breaker
+    clip: {fileID: 8300000, guid: 500639475cab7074dae21659a615e087, type: 3}
+  - name: PhoneRing
+    clip: {fileID: 8300000, guid: ef7e5ea52e8e8be43ae9ad149d74801d, type: 3}
+  - name: HintAppear
+    clip: {fileID: 8300000, guid: b5b3a2aa14059e644bc9c83b834919a8, type: 3}
+  masterVolume: 1
+  sfxVolume: 1
+  musicVolume: 0.5

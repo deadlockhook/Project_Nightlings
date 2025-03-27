@@ -30,7 +30,8 @@ public class UIManager : MonoBehaviour
 		Lose,
 		NightPicker,
 		NightInfo,
-		CreditsUI
+		CreditsUI,
+		Controls
 	}
 
 	[Header("UI Screens")]
@@ -43,6 +44,7 @@ public class UIManager : MonoBehaviour
 	private GameObject soundOptionsUI;
 	private GameObject videoOptionsUI;
 	private GameObject creditsUI;
+	private GameObject controlsUI;
 
 	[Header("Loading Screen")]
 	public GameObject loadingScreen;
@@ -68,12 +70,13 @@ public class UIManager : MonoBehaviour
 	private Toggle motionBlurToggle;
 	private Toggle chromaticAbberationToggle;
 	private Toggle bloomToggle;
+	[SerializeField] private Slider sensitivitySlider;
 
 	[Header("UI AudioSource")]
-    public AudioSource audioSource;
+	public AudioSource audioSource;
 
-    //Singleton
-    private void Awake()
+	//Singleton
+	private void Awake()
 	{
 		if (Instance != null && Instance != this)
 		{
@@ -97,9 +100,30 @@ public class UIManager : MonoBehaviour
 		nightPickerUI = transform.Find("NightPicker").gameObject;
 		nightInfoUI = transform.Find("NightInfo").gameObject;
 		creditsUI = transform.Find("Credits").gameObject;
+		controlsUI = transform.Find("Controls").gameObject;
+		sensitivitySlider = optionsUI.transform.Find("SensitivitySlider").GetComponent<Slider>();
+		resolutionDropdown = videoOptionsUI.transform.Find("ResolutionDropdown").GetComponent<TMP_Dropdown>();
+		fullscreenToggle = videoOptionsUI.transform.Find("FullscreenToggle").GetComponent<Toggle>();
+		motionBlurSlider = videoOptionsUI.transform.Find("MotionBlurSlider").GetComponent<Slider>();
+
+		if (sensitivitySlider != null)
+		{
+			sensitivitySlider.onValueChanged.AddListener(SetSensitivity);
+		}
+		if(resolutionDropdown != null)
+		{
+			resolutionDropdown.onValueChanged.AddListener(SetResolution);
+		}
+		if (fullscreenToggle != null)
+		{
+			fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
+		}
+		if (motionBlurSlider != null)
+		{
+			motionBlurSlider.onValueChanged.AddListener(SetMotionBlur);
+		}
 
 		audioVisualToggle = soundOptionsUI.transform.Find("AudioVisualToggle").GetComponent<Toggle>();
-		motionBlurToggle = videoOptionsUI.transform.Find("MotionBlurToggle").GetComponent<Toggle>();
 		chromaticAbberationToggle = videoOptionsUI.transform.Find("ChromaticAbberationToggle").GetComponent<Toggle>();
 		bloomToggle = videoOptionsUI.transform.Find("BloomToggle").GetComponent<Toggle>();
 
@@ -129,6 +153,7 @@ public class UIManager : MonoBehaviour
 		winUI.SetActive(false);
 		loseUI.SetActive(false);
 		creditsUI.SetActive(false);
+		controlsUI.SetActive(false);
 		if (nightPickerUI != null) nightPickerUI.SetActive(false);
 		if (nightInfoUI != null) nightInfoUI.SetActive(false);
 	}
@@ -139,59 +164,76 @@ public class UIManager : MonoBehaviour
 		switch (state)
 		{
 			case UIState.MainMenu:
+				LoadSettings();
 				if (SoundManager.Instance.currentMusic != "MainMenu")
 				{
 					SoundManager.Instance.StopMusic();
 					SoundManager.Instance.PlayMusic("MainMenu");
 				}
 				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
 				Time.timeScale = 1f;
 				mainMenuUI.SetActive(true);
 				break;
 			case UIState.PauseMenu:
 				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
 				Time.timeScale = 0f;
 				pauseMenuUI.SetActive(true);
 				isPaused = true;
 				break;
 			case UIState.Gameplay:
+				LoadSettings();
+				PlayerController playerController = FindObjectOfType<PlayerController>();
+				if (playerController != null)
+				{
+					playerController.SetSensitivity(sensitivity);
+				}
 				SoundManager.Instance.StopMusic();
 				Time.timeScale = 1f;
 				gameplayUI.SetActive(true);
 				Cursor.lockState = CursorLockMode.Locked;
+				Cursor.visible = false;
 				isPaused = false;
 				break;
 			case UIState.Options:
 				Time.timeScale = 0f;
 				optionsUI.SetActive(true);
 				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
 				break;
 			case UIState.SoundOptions:
 				Time.timeScale = 0f;
 				soundOptionsUI.SetActive(true);
 				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
 				break;
 			case UIState.VideoOptions:
 				Time.timeScale = 0f;
 				videoOptionsUI.SetActive(true);
 				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
 				break;
 			case UIState.Win:
 				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
 				Time.timeScale = 0f;
 				winUI.SetActive(true);
 				break;
 			case UIState.Lose:
 				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
 				Time.timeScale = 0f;
 				loseUI.SetActive(true);
 				break;
 			case UIState.NightPicker:
 				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
 				Time.timeScale = 0f;
 				nightPickerUI.SetActive(true);
 				break;
 			case UIState.NightInfo:
+				LoadSettings();
 				SoundManager.Instance.StopMusic();
 				Cursor.lockState = CursorLockMode.Locked;
 				Time.timeScale = 1f;
@@ -199,8 +241,15 @@ public class UIManager : MonoBehaviour
 				break;
 			case UIState.CreditsUI:
 				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
 				Time.timeScale = 0f;
 				creditsUI.SetActive(true);
+				break;
+			case UIState.Controls:
+				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
+				Time.timeScale = 0f;
+				controlsUI.SetActive(true);
 				break;
 		}
 		uiStateHistory.Push(state);
@@ -231,7 +280,7 @@ public class UIManager : MonoBehaviour
 		}
 		if (Input.GetKeyDown(KeyCode.Escape) && canUseEscape)
 		{
-			if (optionsUI.activeSelf || soundOptionsUI.activeSelf || videoOptionsUI.activeSelf)
+			if (optionsUI.activeSelf || soundOptionsUI.activeSelf || videoOptionsUI.activeSelf || controlsUI.activeSelf)
 			{
 				OptionsBack();
 			}
@@ -274,7 +323,7 @@ public class UIManager : MonoBehaviour
 		{
 			UIState previousState = uiStateHistory.Peek();
 
-			while (previousState == UIState.Options || previousState == UIState.SoundOptions || previousState == UIState.VideoOptions)
+			while (previousState == UIState.Options || previousState == UIState.SoundOptions || previousState == UIState.VideoOptions || previousState == UIState.Controls)
 			{
 				uiStateHistory.Pop();
 				if (uiStateHistory.Count == 0)
@@ -295,12 +344,11 @@ public class UIManager : MonoBehaviour
 	{
 		if (audioSource.isPlaying)
 		{
-            audioSource.Stop();
+			audioSource.Stop();
 		}
 
-        SoundManager.Instance.PlaySound("Button", audioSource);
-		Debug.Log("Button SFX");
-    }
+		SoundManager.Instance.PlaySound("Button", audioSource);
+	}
 
 	public void BackFromNightPicker()
 	{
@@ -331,6 +379,8 @@ public class UIManager : MonoBehaviour
 			IconManager.Instance.ClearAllIcons();
 		}
 
+		ControlHintManager.Instance.ResetControlHints();
+
 		StartCoroutine(LoadMainMenuWithLoading());
 	}
 
@@ -357,6 +407,11 @@ public class UIManager : MonoBehaviour
 		ChangeUIState(UIState.VideoOptions);
 	}
 
+	public void GoToControls()
+	{
+		ChangeUIState(UIState.Controls);
+	}
+
 	public void ShowCredits()
 	{
 		ChangeUIState(UIState.CreditsUI);
@@ -364,7 +419,6 @@ public class UIManager : MonoBehaviour
 
 	public void QuitGame()
 	{
-		Debug.Log("Quitting game");
 		Application.Quit();
 	}
 
@@ -422,7 +476,6 @@ public class UIManager : MonoBehaviour
 	{
 		if (loseTimeline != null)
 		{
-			Debug.Log("JUMPSCARE");
 			loseTimeline.Play();
 			yield return new WaitForSecondsRealtime((float)loseTimeline.duration);
 		}
@@ -555,6 +608,16 @@ public class UIManager : MonoBehaviour
 			return;
 		}
 
+		if(night == 0 && ControlHintManager.Instance != null)
+		{
+			ControlHintManager.Instance.ResetControlHints();
+		}
+
+		if (HintManager.Instance != null)
+		{
+			HintManager.Instance.ResetGameHints();
+		}
+
 		StartCoroutine(LoadMainAndShowNightInfo(night));
 	}
 
@@ -605,7 +668,7 @@ public class UIManager : MonoBehaviour
 			cg = nightInfoUI.AddComponent<CanvasGroup>();
 		cg.alpha = 1f;
 
-		yield return new WaitForSeconds(3f);
+		yield return new WaitForSeconds(5f);
 
 		if (CutsceneManager.Instance != null)
 		{
@@ -635,14 +698,22 @@ public class UIManager : MonoBehaviour
 		ChangeUIState(UIState.Gameplay);
 	}
 
-	// OPTIONS SECTION
+	// OPTIONS SECTION -------------------------------
 	private GameObject mainCam;
 	private Camera mainCamera;
 	private Volume volume;
 
-	private bool motionBlurEnabled = false;
+	private float motionBlurIntensity = 0f;
 	private bool chromaticAbberationEnabled = false;
 	private bool bloomEnabled = false;
+
+	private float sensitivity = 0.1f;
+
+	public TMP_Dropdown resolutionDropdown;
+	public Toggle fullscreenToggle;
+	public Slider motionBlurSlider;
+
+	private Resolution[] resolutions;
 
 	private void SetupMainCamera()
 	{
@@ -666,17 +737,24 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-	public void ToggleMotionBlur(bool enabled)
+	public void SetMotionBlur(float intensity)
 	{
-		enabled = motionBlurToggle.isOn;
-		motionBlurEnabled = enabled;
-		ToggleEffect<MotionBlur>(enabled);
+		SetupMainCamera();
+		motionBlurIntensity = Mathf.Clamp(intensity, 0f, 1f);
+		PlayerPrefs.SetFloat("MotionBlurIntensity", motionBlurIntensity);
+
+		if (volume != null && volume.profile.TryGet<MotionBlur>(out MotionBlur motionBlur))
+		{
+			motionBlur.active = motionBlurIntensity > 0f;
+			motionBlur.intensity.value = motionBlurIntensity;
+		}
 	}
 
 	public void ToggleChromaticAbberation(bool enabled)
 	{
 		enabled = chromaticAbberationToggle.isOn;
 		chromaticAbberationEnabled = enabled;
+		PlayerPrefs.SetInt("ChromaticAbberation", enabled ? 1 : 0);
 		ToggleEffect<ChromaticAberration>(enabled);
 	}
 
@@ -684,7 +762,132 @@ public class UIManager : MonoBehaviour
 	{
 		enabled = bloomToggle.isOn;
 		bloomEnabled = enabled;
+		PlayerPrefs.SetInt("Bloom", enabled ? 1 : 0);
 		ToggleEffect<Bloom>(enabled);
+	}
+
+	public void SetSensitivity(float value)
+	{
+		sensitivity = Mathf.Clamp(value, 0.01f, 1f);
+		PlayerPrefs.SetFloat("Sensitivity", sensitivity);
+
+		PlayerController playerController = FindObjectOfType<PlayerController>();
+		if (playerController != null)
+		{
+			playerController.SetSensitivity(sensitivity);
+		}
+	}
+
+	public void SetResolution(int index)
+	{
+		Resolution selectedResolution = resolutions[index];
+		Screen.SetResolution(selectedResolution.width, selectedResolution.height, Screen.fullScreen);
+
+		PlayerPrefs.SetInt("ResolutionWidth", selectedResolution.width);
+		PlayerPrefs.SetInt("ResolutionHeight", selectedResolution.height);
+	}
+
+	public void SetFullscreen(bool isFullscreen)
+	{
+		Screen.SetResolution(Screen.width, Screen.height, isFullscreen);
+		PlayerPrefs.SetInt("Fullscreen", isFullscreen ? 1 : 0);
+	}
+
+	private void LoadSettings()
+	{
+		// Motion Blur as Slider
+		motionBlurIntensity = PlayerPrefs.GetFloat("MotionBlurIntensity", 0f);
+		if (motionBlurSlider != null)
+		{
+			motionBlurSlider.value = motionBlurIntensity;
+		}
+		SetMotionBlur(motionBlurIntensity);
+
+		// Toggles
+		chromaticAbberationEnabled = PlayerPrefs.GetInt("ChromaticAbberation", 0) == 1;
+		bloomEnabled = PlayerPrefs.GetInt("Bloom", 0) == 1;
+
+		chromaticAbberationToggle.isOn = chromaticAbberationEnabled;
+		bloomToggle.isOn = bloomEnabled;
+
+		ToggleEffect<ChromaticAberration>(chromaticAbberationEnabled);
+		ToggleEffect<Bloom>(bloomEnabled);
+
+		// Sensitivity
+		sensitivity = PlayerPrefs.GetFloat("Sensitivity", 0.25f);
+		if (sensitivitySlider != null)
+		{
+			sensitivitySlider.value = sensitivity;
+		}
+		PlayerController playerController = FindObjectOfType<PlayerController>();
+		if (playerController != null)
+		{
+			playerController.SetSensitivity(sensitivity);
+		}
+
+		// Resolution and Fullscreen
+		int width = PlayerPrefs.GetInt("ResolutionWidth", 1920);
+		int height = PlayerPrefs.GetInt("ResolutionHeight", 1080);
+		bool isFullscreen = PlayerPrefs.GetInt("Fullscreen", 1) == 1;
+
+		Resolution[] allResolutions = Screen.resolutions;
+		List<Resolution> validResolutions = new List<Resolution>();
+
+		foreach (var res in allResolutions)
+		{
+			if (res.width * 9 == res.height * 16)
+			{
+				if (!validResolutions.Any(r => r.width == res.width && r.height == res.height))
+				{
+					validResolutions.Add(res);
+				}
+			}
+		}
+
+		validResolutions.Sort((a, b) => a.width.CompareTo(b.width));
+		resolutions = validResolutions.ToArray();
+
+		if (width == 1920 && height == 1080 && resolutions.Length > 0)
+		{
+			Resolution maxResolution = resolutions[resolutions.Length - 1];
+			Screen.SetResolution(maxResolution.width, maxResolution.height, isFullscreen);
+			PlayerPrefs.SetInt("ResolutionWidth", maxResolution.width);
+			PlayerPrefs.SetInt("ResolutionHeight", maxResolution.height);
+		}
+		else
+		{
+			Screen.SetResolution(width, height, isFullscreen);
+		}
+
+		resolutionDropdown.ClearOptions();
+		var options = new List<string>();
+		foreach (var res in resolutions)
+		{
+			options.Add(res.width + " x " + res.height);
+		}
+		resolutionDropdown.AddOptions(options);
+
+		int currentResolutionIndex = GetCurrentResolutionIndex();
+		resolutionDropdown.value = currentResolutionIndex;
+		resolutionDropdown.RefreshShownValue();
+
+		fullscreenToggle.isOn = isFullscreen;
+	}
+
+	private int GetCurrentResolutionIndex()
+	{
+		int currentWidth = PlayerPrefs.GetInt("ResolutionWidth", 1920);
+		int currentHeight = PlayerPrefs.GetInt("ResolutionHeight", 1080);
+
+		for (int i = 0; i < resolutions.Length; i++)
+		{
+			if (resolutions[i].width == currentWidth && resolutions[i].height == currentHeight)
+			{
+				return i;
+			}
+		}
+
+		return 0;
 	}
 
 	// This is for the jumpscare atm, need to find a better way to do this

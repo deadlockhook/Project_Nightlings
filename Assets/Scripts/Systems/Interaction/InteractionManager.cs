@@ -1,204 +1,291 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
-using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
+using System.Linq;
 
 public class InteractionManager : MonoBehaviour
 {
-    public enum Interactions
-    {
-        PickUpToy = 0,
-        ThrowToy,
-        PickUpFirewood,
-        ThrowFirewood,
-        CloseWindows,
-        FlushToilet,
-        CloseSkylightWithRemote,
-        CloseBasementHatch,
-    }
+	public enum Interactions
+	{
+		PickUpToy = 0,
+		ThrowToy,
+		PickUpFirewood,
+		ThrowFirewood,
+		CloseWindows,
+		FlushToilet,
+		CloseSkylightWithRemote,
+		CloseBasementHatch,
+	}
 
-    private float interactionDistance = 1.6f;
-    private float objectLockDistance = 1.2f;
-    private float interactableMovementSpeed = 20.0f;
+	private float interactionDistance = 1.8f;
+	private float objectLockDistance = 1.2f;
+	private float interactableMovementSpeed = 20.0f;
 
-    public LayerMask interactableLayer;
-    public LayerMask obstacleLayer;
+	public LayerMask interactableLayer;
+	public LayerMask obstacleLayer;
 
-    private PlayerController playerController = null;
-    private Camera playerCamera = null;
+	private PlayerController playerController = null;
+	private Camera playerCamera = null;
 
-    private GameObject interactableObject;
-    private Rigidbody interactableObjRigidBody;
+	private GameObject interactableObject;
+	private Rigidbody interactableObjRigidBody;
 
-    public void OnLocalPlayerSetup(PlayerController targetController, Camera targetCamera)
-    {
-       playerController = targetController;
-       playerCamera = targetCamera;
-    }
+	private Outline currentOutline;
 
-    public void ApplyMotionOnInteractable(Rigidbody rigidBody)
-    {
-        Vector3 endPoint = playerCamera.transform.position + (playerCamera.transform.forward * objectLockDistance);
-        Vector3 direction = (endPoint - rigidBody.position).normalized;
-        float distance = Vector3.Distance(rigidBody.position, endPoint);
+	public Image interactionIcon;
+	public Sprite defaultCrosshairSprite;
+	public Sprite handIconSprite;
+	public Sprite handGrabIconSprite;
 
-        if (!Physics.Raycast(playerCamera.transform.position, direction, distance, obstacleLayer))
-        {
-            Vector3 targetVelocity = direction * (distance * interactableMovementSpeed);
-            rigidBody.velocity = Vector3.Lerp(rigidBody.velocity, targetVelocity, Time.deltaTime * interactableMovementSpeed);
-            rigidBody.velocity *= 0.95f;
-            rigidBody.angularVelocity *= 0.9f;
-        }
-    }    
-    public void OnLocalPlayerUpdate()
-    {
+	private void Awake()
+	{
+		if (interactionIcon == null)
+		{
+			interactionIcon = GameObject.Find("InteractionIcon")?.GetComponent<Image>();
+			if (interactionIcon == null)
+			{
+				interactionIcon = FindObjectsOfType<Image>(true).FirstOrDefault(img => img.gameObject.name == "InteractionIcon");
+			}
+			if (interactionIcon == null)
+			{
+				Debug.LogError("No icon");
+			}
+		}
+	}
 
-        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
-        RaycastHit hit;
+	public void OnLocalPlayerSetup(PlayerController targetController, Camera targetCamera)
+	{
+		playerController = targetController;
+		playerCamera = targetCamera;
+	}
 
-        if (Physics.Raycast(ray, out hit, interactionDistance))
-        {
-            if (hit.collider != null)
-                 OnObjectTraceCollide(hit.transform.gameObject, hit);
-        }
+	public void ApplyMotionOnInteractable(Rigidbody rigidBody)
+	{
+		Vector3 endPoint = playerCamera.transform.position + (playerCamera.transform.forward * objectLockDistance);
+		Vector3 direction = (endPoint - rigidBody.position).normalized;
+		float distance = Vector3.Distance(rigidBody.position, endPoint);
 
-        if (interactableObject != null)
-        {
-            if (interactableObject.IsDestroyed())
-            {
-                interactableObject = null;
-                interactableObjRigidBody = null;
-            }
-            else if (!playerController.playerControlActions.Player.Interact.IsPressed())
-            {
-                if (interactableObjRigidBody)
-                {
-                    interactableObjRigidBody.useGravity = true;
-                    interactableObjRigidBody.constraints = RigidbodyConstraints.None;
-                    interactableObjRigidBody = null;
+		if (!Physics.Raycast(playerCamera.transform.position, direction, distance, obstacleLayer))
+		{
+			Vector3 targetVelocity = direction * (distance * interactableMovementSpeed);
+			rigidBody.velocity = Vector3.Lerp(rigidBody.velocity, targetVelocity, Time.deltaTime * interactableMovementSpeed);
+			rigidBody.velocity *= 0.95f;
+			rigidBody.angularVelocity *= 0.9f;
+		}
+	}
 
-                    if (interactableObject.tag == "Interactable_Blocks")
-                    {
-                        GameObject parent = interactableObject.transform.parent.gameObject;
+	public void OnLocalPlayerUpdate()
+	{
+		Ray outlineRay = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+		if (Physics.Raycast(outlineRay, out RaycastHit outlineHit, interactionDistance))
+		{
+			Outline outline = outlineHit.collider.GetComponentInChildren<Outline>();
+			if (outline != null)
+			{
+				if (currentOutline != outline)
+				{
+					if (currentOutline != null)
+						currentOutline.enabled = false;
+					currentOutline = outline;
+				}
+				currentOutline.enabled = true;
+			}
+			else
+			{
+				if (currentOutline != null)
+				{
+					currentOutline.enabled = false;
+					currentOutline = null;
+				}
+			}
+		}
+		else
+		{
+			if (currentOutline != null)
+			{
+				currentOutline.enabled = false;
+				currentOutline = null;
+			}
+		}
 
-                        if (parent)
-                        {
-                            Rigidbody[] blocks = parent.GetComponentsInChildren<Rigidbody>();
+		if (interactableObject != null)
+		{
+			Outline heldOutline = interactableObject.GetComponentInChildren<Outline>();
+			if (heldOutline != null)
+			{
+				heldOutline.enabled = true;
+			}
+		}
 
-                            for (int i = 0; i < blocks.Length; i++)
-                            {
-                                Rigidbody blockRigidBody = blocks[i];
-                                if (blockRigidBody)
-                                {
-                                    blockRigidBody.useGravity = true;
-                                    blockRigidBody.constraints = RigidbodyConstraints.None;
-                                }
-                            }
-                        }
-                    }
-                }
+		Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+		if (Physics.Raycast(ray, out RaycastHit hit, interactionDistance))
+		{
+			if (hit.collider != null)
+				OnObjectTraceCollide(hit.transform.gameObject, hit);
+		}
 
-                interactableObject = null;
-            }
-            else
-            {
-                if (interactableObjRigidBody)
-                {
-                    if (interactableObject.tag == "Interactable_Blocks")
-                    {
-                        GameObject parent = interactableObject.transform.parent.gameObject;
+		if (interactableObject != null)
+		{
+			if (interactableObject.IsDestroyed())
+			{
+				interactableObject = null;
+				interactableObjRigidBody = null;
+			}
+			else if (!playerController.playerControlActions.Player.Interact.IsPressed())
+			{
+				if (interactableObjRigidBody)
+				{
+					interactableObjRigidBody.useGravity = true;
+					interactableObjRigidBody.constraints = RigidbodyConstraints.None;
+					interactableObjRigidBody = null;
 
-                        if (parent)
-                        {
-                            Rigidbody[] blocks = parent.GetComponentsInChildren<Rigidbody>();
+					if (interactableObject.tag == "Interactable_Blocks")
+					{
+						GameObject parent = interactableObject.transform.parent.gameObject;
+						if (parent)
+						{
+							Rigidbody[] blocks = parent.GetComponentsInChildren<Rigidbody>();
+							for (int i = 0; i < blocks.Length; i++)
+							{
+								Rigidbody blockRigidBody = blocks[i];
+								if (blockRigidBody)
+								{
+									blockRigidBody.useGravity = true;
+									blockRigidBody.constraints = RigidbodyConstraints.None;
+								}
+							}
+						}
+					}
+				}
 
-                            for (int i = 0; i < blocks.Length; i++)
-                            {
-                                Rigidbody blockRigidBody = blocks[i];
-                                if (blockRigidBody)
-                                {
-                                    ApplyMotionOnInteractable(blockRigidBody);
-                                }
-                            }
-                        }
-                    }
+				Outline heldOutline = interactableObject.GetComponentInChildren<Outline>();
+				if (heldOutline != null)
+				{
+					heldOutline.enabled = false;
+				}
 
-                    ApplyMotionOnInteractable(interactableObjRigidBody);
-                }
-                else
-                    interactableObject.transform.position = playerCamera.transform.position + playerCamera.transform.forward;
-            }
-        }
-    }
+				interactableObject = null;
+			}
+			else
+			{
+				if (interactableObjRigidBody)
+				{
+					if (interactableObject.tag == "Interactable_Blocks")
+					{
+						GameObject parent = interactableObject.transform.parent.gameObject;
+						if (parent)
+						{
+							Rigidbody[] blocks = parent.GetComponentsInChildren<Rigidbody>();
+							for (int i = 0; i < blocks.Length; i++)
+							{
+								Rigidbody blockRigidBody = blocks[i];
+								if (blockRigidBody)
+								{
+									ApplyMotionOnInteractable(blockRigidBody);
+								}
+							}
+						}
+					}
+					ApplyMotionOnInteractable(interactableObjRigidBody);
+				}
+				else
+				{
+					interactableObject.transform.position = playerCamera.transform.position + playerCamera.transform.forward;
+				}
+			}
+		}
 
-    private void OnObjectTraceCollide(GameObject gameObj, RaycastHit hit)
-    {
-        bool interactTriggered = playerController.playerControlActions.Player.Interact.triggered;
-        if (gameObj.tag.Contains("Interactable_"))
-        {
-            if (interactTriggered)
-            {
-                interactableObject = gameObj;
-                interactableObjRigidBody = interactableObject.GetComponent<Rigidbody>();
-                interactableObjRigidBody.useGravity = false;
-                interactableObjRigidBody.interpolation = RigidbodyInterpolation.Interpolate;
-                interactableObjRigidBody.constraints = RigidbodyConstraints.FreezeRotation;
-                interactableObjRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+		bool isLookingAtInteractable = false;
+		if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit iconHit, interactionDistance))
+		{
+			if (iconHit.collider != null && iconHit.collider.gameObject.tag.Contains("Interactable_"))
+			{
+				isLookingAtInteractable = true;
+			}
+		}
 
-                if (interactableObject.tag == "Interactable_Blocks")
-                {
-                    GameObject parent = interactableObject.transform.parent.gameObject;
+		if (interactionIcon != null)
+		{
+			if (interactableObject != null)
+			{
+				interactionIcon.sprite = handGrabIconSprite;
+			}
+			else if (isLookingAtInteractable)
+			{
+				interactionIcon.sprite = handIconSprite;
+			}
+			else
+			{
+				interactionIcon.sprite = defaultCrosshairSprite;
+			}
+		}
+	}
 
-                    if (parent)
-                    {
-                        Rigidbody[] blocks = parent.GetComponentsInChildren<Rigidbody>();
+	private void OnObjectTraceCollide(GameObject gameObj, RaycastHit hit)
+	{
+		bool interactTriggered = playerController.playerControlActions.Player.Interact.triggered;
+		
+		if (gameObj.tag.Contains("Interactable_"))
+		{
+			if (interactTriggered)
+			{
+				interactableObject = gameObj;
+				interactableObjRigidBody = interactableObject.GetComponent<Rigidbody>();
+				interactableObjRigidBody.useGravity = false;
+				interactableObjRigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+				interactableObjRigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+				interactableObjRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
-                        for (int i = 0; i < blocks.Length; i++)
-                        {
-                            Rigidbody blockRigidBody = blocks[i];
+				if (interactableObject.tag == "Interactable_Blocks")
+				{
+					GameObject parent = interactableObject.transform.parent.gameObject;
+					if (parent)
+					{
+						Rigidbody[] blocks = parent.GetComponentsInChildren<Rigidbody>();
+						for (int i = 0; i < blocks.Length; i++)
+						{
+							Rigidbody blockRigidBody = blocks[i];
+							if (blockRigidBody)
+							{
+								blockRigidBody.useGravity = false;
+								blockRigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+								blockRigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+								blockRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+							}
+						}
+					}
+				}
+			}
+		}
 
-                            if (blockRigidBody)
-                            {
-                                blockRigidBody.useGravity = false;
-                                blockRigidBody.interpolation = RigidbodyInterpolation.Interpolate;
-                                blockRigidBody.constraints = RigidbodyConstraints.FreezeRotation;
-                                blockRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if (interactTriggered)
-        {
-            if (gameObj.GetComponent<WindowsActivity>() != null)
-                 gameObj.GetComponent<WindowsActivity>().ResetActivity();
-       
-            if (gameObj.tag.Contains("BasementHatch_Door"))
-                 FindObjectOfType<BasementHatch>().ResetActivity();
-         
-            if (gameObj.tag.Contains("PowerRestore"))
-                  FindObjectOfType<ActivityDirector>().RestorePower();
+		if (interactTriggered)
+		{
+			if (gameObj.GetComponent<WindowsActivity>() != null)
+				gameObj.GetComponent<WindowsActivity>().ResetActivity();
 
-            if (gameObj.tag.Contains("Skylight_Remote"))
-                 FindObjectOfType<SkylightActivity>().ResetActivity();
-             
-            if (gameObj.tag.Contains("Toilet_Flush"))
-                 FindObjectOfType<ToiletActivity>().ResetActivity();
+			if (gameObj.tag.Contains("BasementHatch_Door"))
+				FindObjectOfType<BasementHatch>().ResetActivity();
 
-            if (gameObj.tag.Contains("Telephone"))
-                FindObjectOfType<ActivityDirector>().StopPhoneRing();
-            
-            
+			if (gameObj.tag.Contains("PowerRestore"))
+				FindObjectOfType<ActivityDirector>().RestorePower();
 
-            if (gameObj.tag.Contains("Candy"))
-            {
-                if (FindObjectOfType<PlayerController>().EatCandy())
-                    Destroy(gameObj);
-            }
+			if (gameObj.tag.Contains("Skylight_Remote"))
+				FindObjectOfType<SkylightActivity>().ResetActivity();
 
-        }
-    }
+			if (gameObj.tag.Contains("Toilet_Flush"))
+				FindObjectOfType<ToiletActivity>().ResetActivity();
+
+			if (gameObj.tag.Contains("Telephone"))
+				FindObjectOfType<ActivityDirector>().StopPhoneRing();
+
+			if (gameObj.tag.Contains("Candy"))
+			{
+				if (FindObjectOfType<PlayerController>().EatCandy())
+					Destroy(gameObj);
+			}
+		}
+	}
 }

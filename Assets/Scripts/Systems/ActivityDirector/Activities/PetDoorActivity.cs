@@ -13,7 +13,7 @@ public class PetDoorActivity : MonoBehaviour
 
     private SoundManager soundManager;
     private AudioSource triggerAudio1;
-    private ActivityDirector.playedSoundAtTrigger[] soundTriggers;
+    private playedSoundAtTrigger[] soundTriggers;
     private void Start()
     {
         soundManager = FindObjectOfType<SoundManager>();
@@ -24,10 +24,10 @@ public class PetDoorActivity : MonoBehaviour
             triggerAudio1 = sources[0];
         }
 
-        soundTriggers = new ActivityDirector.playedSoundAtTrigger[3];
-        soundTriggers[0] = new ActivityDirector.playedSoundAtTrigger(0.25f, triggerAudio1);
-        soundTriggers[1] = new ActivityDirector.playedSoundAtTrigger(0.50f, triggerAudio1);
-        soundTriggers[2] = new ActivityDirector.playedSoundAtTrigger(0.75f, triggerAudio1);
+        soundTriggers = new playedSoundAtTrigger[3];
+        soundTriggers[0] = new playedSoundAtTrigger(0.25f, triggerAudio1);
+        soundTriggers[1] = new playedSoundAtTrigger(0.50f, triggerAudio1);
+        soundTriggers[2] = new playedSoundAtTrigger(0.75f, triggerAudio1);
     }
 
     private void PlayTriggerAudio()

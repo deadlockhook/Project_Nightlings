@@ -15,12 +15,14 @@ public class FireplaceActivity : MonoBehaviour
     private SoundManager soundManager;
     private AudioSource triggerAudio1;
     private AudioSource triggerAudio2;
-    private ActivityDirector.playedSoundAtTrigger[] soundTriggers;
+    private playedSoundAtTrigger[] soundTriggers;
 
-    private ActivityDirector.timedActivity activityReference;
+    private timedActivity activityReference;
+    private FireplaceSoundHandler fireSoundHandler;
 
     private void Start()
     {
+        fireSoundHandler = GetComponent<FireplaceSoundHandler>();
         soundManager = FindObjectOfType<SoundManager>();
         AudioSource[] sources = GetComponents<AudioSource>();
         if (sources.Length >= 2)
@@ -31,11 +33,10 @@ public class FireplaceActivity : MonoBehaviour
         triggerAudio1.loop = true;
         triggerAudio1.Play();
         triggerAudio1.spatialBlend = 1f;
-        soundTriggers = new ActivityDirector.playedSoundAtTrigger[3];
-        soundTriggers[0] = new ActivityDirector.playedSoundAtTrigger(0.25f, triggerAudio1);
-        soundTriggers[1] = new ActivityDirector.playedSoundAtTrigger(0.50f, triggerAudio1);
-        soundTriggers[2] = new ActivityDirector.playedSoundAtTrigger(0.75f, triggerAudio1);
-        SoundManager.Instance.PlaySound("FireBurning", triggerAudio1);
+        soundTriggers = new playedSoundAtTrigger[3];
+        soundTriggers[0] = new playedSoundAtTrigger(0.25f, triggerAudio1);
+        soundTriggers[1] = new playedSoundAtTrigger(0.50f, triggerAudio1);
+        soundTriggers[2] = new playedSoundAtTrigger(0.75f, triggerAudio1);
     }
 
     private void PlayTriggerAudio()
@@ -86,7 +87,7 @@ public class FireplaceActivity : MonoBehaviour
         activityReference.RemoveProgressPercentage(removeProgressPercentage);
     }
 
-    public void ActivityTriggerStart(ActivityDirector.timedActivity activity)
+    public void ActivityTriggerStart(timedActivity activity)
     {
         activityReference = activity;
         if (activityFinished)
@@ -100,9 +101,10 @@ public class FireplaceActivity : MonoBehaviour
 
     public bool OnActivityUpdate(float activityProgress)
     {
-        triggerAudio1.volume = 1.0f - activityProgress;
         if (activityFinished)
             return true;
+
+        fireSoundHandler.SetFireIntensity(1.0f - activityProgress);
 
         if (shouldReset)
         {

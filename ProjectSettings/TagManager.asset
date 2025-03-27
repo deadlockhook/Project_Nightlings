@@ -23,6 +23,7 @@ TagManager:
   - Candy
   - Telephone
   - ThunderControl
+  - DoorIcon
   layers:
   - Default
   - TransparentFX
