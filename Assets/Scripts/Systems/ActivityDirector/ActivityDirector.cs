@@ -18,11 +18,13 @@ public class ActivityDirector : MonoBehaviour
 
     [SerializeField] private int maxCandySpawns = 3;
 
-    private timeLimits windowsTimeLimits = new timeLimits(25.0f, 40.0f, 45.0f);
-    private timeLimits petdoorTimeLimits = new timeLimits(45.0f, 55.0f, 45.0f);
-    private timeLimits basementTimeLimits = new timeLimits(60.0f, 80.0f, 45.0f);
-    private timeLimits fireplaceTimeLimits = new timeLimits(0.0f, 0.0f, 90.0f);
-    private timeLimits skylightTimeLimits = new timeLimits(85.0f, 90.0f, 45.0f);
+    // (start range) (end range) (time limit)
+
+    private timeLimits windowsTimeLimits = new timeLimits(45.0f, 60.0f, 45.0f);
+    private timeLimits petdoorTimeLimits = new timeLimits(50.0f, 65.0f, 45.0f);
+    private timeLimits basementTimeLimits = new timeLimits(70.0f, 80.0f, 45.0f);
+    private timeLimits fireplaceTimeLimits = new timeLimits(0.0f, 0.0f, 105.0f); // 1:45
+    private timeLimits skylightTimeLimits = new timeLimits(85.0f, 95.0f, 45.0f);
     private timeLimits toiletTimeLimits = new timeLimits(60.0f, 90.0f, 45.0f);
     private timeLimits powerOutageTimeLimits = new timeLimits(0.0f, 0.0f, 300.0f);
     private timeLimits phoneRingTimeLimits = new timeLimits(0.0f, 0.0f, 300.0f);
@@ -298,7 +300,7 @@ public class ActivityDirector : MonoBehaviour
         HintManager.Instance.DisplayGameHint(HintType.Window);
 
         windowsTimeLimits.lastUpdateTime = gTime.currentTime;
-        gTime.currentTime += (windowsTimeLimits.rangeStart / 2);
+        //gTime.currentTime += (windowsTimeLimits.rangeStart / 2);
     }
 
     private void OnWindowActivityUpdate(int activityIndex)

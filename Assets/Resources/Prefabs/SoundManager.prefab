@@ -108,10 +108,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 500639475cab7074dae21659a615e087, type: 3}
   - name: PhoneRing
     clip: {fileID: 8300000, guid: ef7e5ea52e8e8be43ae9ad149d74801d, type: 3}
-  - name: DoorOpen
-    clip: {fileID: 8300000, guid: ccac96061fcfbed469f435e127c406ae, type: 3}
-  - name: DoorClose
-    clip: {fileID: 8300000, guid: bd664c76aa607a94a91237fa87f45818, type: 3}
+  - name: HintAppear
+    clip: {fileID: 8300000, guid: b5b3a2aa14059e644bc9c83b834919a8, type: 3}
   masterVolume: 1
   sfxVolume: 1
   musicVolume: 0.5
