@@ -137,6 +137,7 @@ public class CutsceneManager : MonoBehaviour
 		}
 		EndCutscene();
 	}
+
 	private void EndCutscene()
 	{
 		List<GameObject> clocks = new List<GameObject>(GameObject.FindGameObjectsWithTag("Clock"));
@@ -151,6 +152,9 @@ public class CutsceneManager : MonoBehaviour
 
 		if (skipText != null)
 			skipText.gameObject.SetActive(false);
+
+		Cursor.lockState = CursorLockMode.Locked;
+		Cursor.visible = false;
 
 		if (currentDirector == night1Cutscene)
 		{
