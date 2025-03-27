@@ -664,6 +664,7 @@ public class ActivityDirector : MonoBehaviour
 
         powerOutageEventObject.Deactivate(activeActivites);
         powerOut = true;
+        SoundManager.Instance.PlaySound("Breaker");
     }
     public void RestorePower()
     {
@@ -677,6 +678,7 @@ public class ActivityDirector : MonoBehaviour
 
         powerOutageEventObject.Activate(activeActivites);
         powerOut = false;
+        SoundManager.Instance.PlaySound("Breaker");
     }
 
     void TriggerPhoneRing(int activityIndex)
