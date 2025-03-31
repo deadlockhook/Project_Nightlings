@@ -11,39 +11,64 @@ public class UITextGlow : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     private Material textMaterial;
     private Material textMaterialOriginal;
     private Button button;
+    private Toggle toggle;
+    private TMP_Dropdown dropdown;
+    private Slider slider;
 
-    void Awake()
+    void OnEnable()
     {
-        uiText = transform.Find("Text").GetComponent<TMP_Text>();
+        uiText = transform.Find("Text")?.GetComponent<TMP_Text>();
+
+        if (uiText == null)
+        {
+            Debug.LogError("UITextGlow: No TMP_Text child named 'Text' found!", this);
+            enabled = false;
+            return;
+        }
+
         textMaterialOriginal = uiText.fontMaterial;
         textMaterial = Instantiate(textMaterialOriginal);
         uiText.fontMaterial = textMaterial;
-    }
 
-    void Start()
-    {
         button = GetComponent<Button>();
+        toggle = GetComponent<Toggle>();
+        dropdown = GetComponent<TMP_Dropdown>();
+        slider = GetComponent<Slider>();
+
         DisableGlow();
+
+        if (toggle != null) toggle.onValueChanged.AddListener(OnToggleValueChanged);
+        if (dropdown != null) dropdown.onValueChanged.AddListener(OnDropdownValueChanged);
+        if (slider != null) slider.onValueChanged.AddListener(OnSliderValueChanged);
+    }
+    void OnDisable()
+    {
+        if (toggle != null) toggle.onValueChanged.RemoveListener(OnToggleValueChanged);
+        if (dropdown != null) dropdown.onValueChanged.RemoveListener(OnDropdownValueChanged);
+        if (slider != null) slider.onValueChanged.RemoveListener(OnSliderValueChanged);
+
+        if (uiText != null && textMaterialOriginal != null)
+        {
+            uiText.fontMaterial = textMaterialOriginal;
+        }
     }
 
     public void EnableGlow(Color glowColor, float glowPower = 0.5f)
     {
-        if (textMaterial == null) return;
         textMaterial.EnableKeyword("GLOW_ON");
-        textMaterial.SetColor(ShaderUtilities.ID_GlowColor, textMaterialOriginal.GetColor(ShaderUtilities.ID_GlowColor));
-        textMaterial.SetFloat(ShaderUtilities.ID_GlowPower, textMaterialOriginal.GetFloat(ShaderUtilities.ID_GlowPower));
+        textMaterial.SetColor(ShaderUtilities.ID_GlowColor, glowColor);
+        textMaterial.SetFloat(ShaderUtilities.ID_GlowPower, glowPower);
     }
 
     public void DisableGlow()
     {
-        if (textMaterial == null) return;
         textMaterial.DisableKeyword("GLOW_ON");
         textMaterial.SetFloat(ShaderUtilities.ID_GlowPower, 0);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        EnableGlow(Color.cyan, 0.5f);
+        EnableGlow(Color.red, 0.5f);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -53,11 +78,33 @@ public class UITextGlow : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnSelect(BaseEventData eventData)
     {
-        EnableGlow(Color.cyan, 0.5f);
+        EnableGlow(Color.red, 0.5f);
     }
 
     public void OnDeselect(BaseEventData eventData)
     {
         DisableGlow();
+    }
+
+    public void OnToggleValueChanged(bool isOn)
+    {
+        if (isOn)
+        {
+            EnableGlow(Color.red, 0.5f);
+        }
+        else
+        {
+            DisableGlow();
+        }
+    }
+
+    public void OnDropdownValueChanged(int value)
+    {
+        EnableGlow(Color.red, 0.5f);
+    }
+
+    public void OnSliderValueChanged(float value)
+    {
+        EnableGlow(Color.red, 0.5f);
     }
 }
