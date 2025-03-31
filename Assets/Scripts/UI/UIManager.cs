@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
 using TMPro;
 using UnityEngine.Playables;
+using UnityEngine.EventSystems;
 
 public class UIManager : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class UIManager : MonoBehaviour
 	private List<GameObject> clocks;
 	private ActivityDirector activityDirector;
 
-	public PlayableDirector loseTimeline;
+    public PlayableDirector loseTimeline;
 
 	public enum UIState
 	{
@@ -64,8 +65,19 @@ public class UIManager : MonoBehaviour
 	public GameObject nightPickerUI;
 	public GameObject nightInfoUI;
 
+	[Header("DefaultButtons")]
+    [SerializeField] private GameObject mainMenuFirstButton;
+    [SerializeField] private GameObject pauseMenuFirstButton;
+    [SerializeField] private GameObject optionsFirstButton;
+    [SerializeField] private GameObject soundOptionsFirstButton;
+    [SerializeField] private GameObject videoOptionsFirstButton;
+    [SerializeField] private GameObject winFirstButton;
+    [SerializeField] private GameObject loseFirstButton;
+    [SerializeField] private GameObject nightPickerFirstButton;
+    [SerializeField] private GameObject creditsFirstButton;
+    [SerializeField] private GameObject controlsFirstButton;
 
-	private bool isPaused = false;
+    private bool isPaused = false;
 	private Toggle audioVisualToggle;
 	private Toggle motionBlurToggle;
 	private Toggle chromaticAbberationToggle;
@@ -141,8 +153,36 @@ public class UIManager : MonoBehaviour
 			}
 		}
 	}
+    private GameObject GetDefaultButtonForState(UIState state)
+    {
+        switch (state)
+        {
+            case UIState.MainMenu: return mainMenuFirstButton;
+            case UIState.PauseMenu: return pauseMenuFirstButton;
+            case UIState.Options: return optionsFirstButton;
+            case UIState.SoundOptions: return soundOptionsFirstButton;
+            case UIState.VideoOptions: return videoOptionsFirstButton;
+            case UIState.Win: return winFirstButton;
+            case UIState.Lose: return loseFirstButton;
+            case UIState.NightPicker: return nightPickerFirstButton;
+            case UIState.CreditsUI: return creditsFirstButton;
+            case UIState.Controls: return controlsFirstButton;
+            default: return null;
+        }
+    }
 
-	private void DeactivateAllScreens()
+    private void SelectDefaultButton(UIState state)
+    {
+        GameObject defaultButton = GetDefaultButtonForState(state);
+
+        if (defaultButton != null && defaultButton.activeInHierarchy)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(defaultButton);
+        }
+    }
+
+    private void DeactivateAllScreens()
 	{
 		mainMenuUI.SetActive(false);
 		pauseMenuUI.SetActive(false);
@@ -165,7 +205,7 @@ public class UIManager : MonoBehaviour
 		{
 			case UIState.MainMenu:
 				LoadSettings();
-				if (SoundManager.Instance.currentMusic != "MainMenu")
+                if (SoundManager.Instance.currentMusic != "MainMenu")
 				{
 					SoundManager.Instance.StopMusic();
 					SoundManager.Instance.PlayMusic("MainMenu");
@@ -174,12 +214,14 @@ public class UIManager : MonoBehaviour
 				Cursor.visible = true;
 				Time.timeScale = 1f;
 				mainMenuUI.SetActive(true);
+                SelectDefaultButton(UIState.MainMenu);
 				break;
 			case UIState.PauseMenu:
-				Cursor.lockState = CursorLockMode.None;
+                Cursor.lockState = CursorLockMode.None;
 				Cursor.visible = true;
 				Time.timeScale = 0f;
 				pauseMenuUI.SetActive(true);
+                SelectDefaultButton(UIState.PauseMenu);
 				isPaused = true;
 				break;
 			case UIState.Gameplay:
@@ -197,59 +239,67 @@ public class UIManager : MonoBehaviour
 				isPaused = false;
 				break;
 			case UIState.Options:
-				Time.timeScale = 0f;
+                Time.timeScale = 0f;
 				optionsUI.SetActive(true);
+                SelectDefaultButton(UIState.Options);
 				Cursor.lockState = CursorLockMode.None;
 				Cursor.visible = true;
 				break;
 			case UIState.SoundOptions:
-				Time.timeScale = 0f;
+                Time.timeScale = 0f;
 				soundOptionsUI.SetActive(true);
+                SelectDefaultButton(UIState.SoundOptions);
 				Cursor.lockState = CursorLockMode.None;
 				Cursor.visible = true;
 				break;
 			case UIState.VideoOptions:
-				Time.timeScale = 0f;
+                Time.timeScale = 0f;
 				videoOptionsUI.SetActive(true);
+                SelectDefaultButton(UIState.VideoOptions);
 				Cursor.lockState = CursorLockMode.None;
 				Cursor.visible = true;
 				break;
 			case UIState.Win:
-				Cursor.lockState = CursorLockMode.None;
+                Cursor.lockState = CursorLockMode.None;
 				Cursor.visible = true;
 				Time.timeScale = 0f;
 				winUI.SetActive(true);
+                SelectDefaultButton(UIState.Win);
 				break;
 			case UIState.Lose:
-				Cursor.lockState = CursorLockMode.None;
+                Cursor.lockState = CursorLockMode.None;
 				Cursor.visible = true;
 				Time.timeScale = 0f;
 				loseUI.SetActive(true);
+                SelectDefaultButton(UIState.Lose);
 				break;
 			case UIState.NightPicker:
-				Cursor.lockState = CursorLockMode.None;
+                Cursor.lockState = CursorLockMode.None;
 				Cursor.visible = true;
 				Time.timeScale = 0f;
 				nightPickerUI.SetActive(true);
+                SelectDefaultButton(UIState.NightPicker);
 				break;
 			case UIState.NightInfo:
-				LoadSettings();
+                LoadSettings();
 				SoundManager.Instance.StopMusic();
 				Cursor.lockState = CursorLockMode.Locked;
 				Time.timeScale = 1f;
 				nightInfoUI.SetActive(true);
 				break;
 			case UIState.CreditsUI:
-				Cursor.lockState = CursorLockMode.None;
+                Cursor.lockState = CursorLockMode.None;
 				Cursor.visible = true;
 				Time.timeScale = 0f;
 				creditsUI.SetActive(true);
+                SelectDefaultButton(UIState.CreditsUI);
 				break;
 			case UIState.Controls:
-				Cursor.lockState = CursorLockMode.None;
+                Cursor.lockState = CursorLockMode.None;
 				Cursor.visible = true;
 				Time.timeScale = 0f;
 				controlsUI.SetActive(true);
+                SelectDefaultButton(UIState.Controls);
 				break;
 		}
 		uiStateHistory.Push(state);
@@ -537,6 +587,7 @@ public class UIManager : MonoBehaviour
 	public void StartGame()
 	{
 		ChangeUIState(UIState.NightPicker);
+		
 	}
 
 	private IEnumerator TransitionToState(UIState newState)
