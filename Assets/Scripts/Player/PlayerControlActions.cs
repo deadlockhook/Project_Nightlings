@@ -98,6 +98,24 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Escape"",
+                    ""type"": ""Button"",
+                    ""id"": ""38704ce0-9b84-4bcf-a2d4-d20c1081a96b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skip"",
+                    ""type"": ""Button"",
+                    ""id"": ""baae5d43-9465-4aa8-b75d-325a0d275d2b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -353,6 +371,50 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
                     ""action"": ""Crouch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1f5c25b9-8b3f-47fd-8015-81757244b18c"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Escape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5e141b8b-4465-4de4-b3c3-d5e65af74357"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Escape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5f239645-fe32-482d-98d3-ef787ca698e8"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Skip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""384b84e4-b1c6-4576-8cb5-c4f2216b9029"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Skip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -430,6 +492,8 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
         m_Player_FlashlightRecharge = m_Player.FindAction("FlashlightRecharge", throwIfNotFound: true);
         m_Player_FlashlightToggle = m_Player.FindAction("FlashlightToggle", throwIfNotFound: true);
         m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
+        m_Player_Escape = m_Player.FindAction("Escape", throwIfNotFound: true);
+        m_Player_Skip = m_Player.FindAction("Skip", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -499,6 +563,8 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_FlashlightRecharge;
     private readonly InputAction m_Player_FlashlightToggle;
     private readonly InputAction m_Player_Crouch;
+    private readonly InputAction m_Player_Escape;
+    private readonly InputAction m_Player_Skip;
     public struct PlayerActions
     {
         private @PlayerControlActions m_Wrapper;
@@ -511,6 +577,8 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
         public InputAction @FlashlightRecharge => m_Wrapper.m_Player_FlashlightRecharge;
         public InputAction @FlashlightToggle => m_Wrapper.m_Player_FlashlightToggle;
         public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
+        public InputAction @Escape => m_Wrapper.m_Player_Escape;
+        public InputAction @Skip => m_Wrapper.m_Player_Skip;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -544,6 +612,12 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
             @Crouch.started += instance.OnCrouch;
             @Crouch.performed += instance.OnCrouch;
             @Crouch.canceled += instance.OnCrouch;
+            @Escape.started += instance.OnEscape;
+            @Escape.performed += instance.OnEscape;
+            @Escape.canceled += instance.OnEscape;
+            @Skip.started += instance.OnSkip;
+            @Skip.performed += instance.OnSkip;
+            @Skip.canceled += instance.OnSkip;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -572,6 +646,12 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
             @Crouch.started -= instance.OnCrouch;
             @Crouch.performed -= instance.OnCrouch;
             @Crouch.canceled -= instance.OnCrouch;
+            @Escape.started -= instance.OnEscape;
+            @Escape.performed -= instance.OnEscape;
+            @Escape.canceled -= instance.OnEscape;
+            @Skip.started -= instance.OnSkip;
+            @Skip.performed -= instance.OnSkip;
+            @Skip.canceled -= instance.OnSkip;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -644,5 +724,7 @@ public partial class @PlayerControlActions: IInputActionCollection2, IDisposable
         void OnFlashlightRecharge(InputAction.CallbackContext context);
         void OnFlashlightToggle(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
+        void OnEscape(InputAction.CallbackContext context);
+        void OnSkip(InputAction.CallbackContext context);
     }
 }

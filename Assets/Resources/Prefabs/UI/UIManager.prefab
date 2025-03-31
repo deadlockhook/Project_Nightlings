@@ -14559,7 +14559,7 @@ MonoBehaviour:
   m_text: LOADING...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e7a043fa35e73c142b84b5ab3481ee9b, type: 2}
-  m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
+  m_sharedMaterial: {fileID: 6027689051808125181, guid: e7a043fa35e73c142b84b5ab3481ee9b,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}

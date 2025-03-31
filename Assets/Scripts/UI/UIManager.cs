@@ -20,7 +20,9 @@ public class UIManager : MonoBehaviour
 
     public PlayableDirector loseTimeline;
 
-	public enum UIState
+    public PlayerControlActions playerControlActions;
+
+    public enum UIState
 	{
 		MainMenu,
 		PauseMenu,
@@ -98,7 +100,10 @@ public class UIManager : MonoBehaviour
 		}
 		Instance = this;
 		DontDestroyOnLoad(gameObject);
-	}
+
+        playerControlActions = new PlayerControlActions();
+        playerControlActions.Enable();
+    }
 
 	private void Start()
 	{
@@ -329,9 +334,10 @@ public class UIManager : MonoBehaviour
 		{
 			canUseEscape = false;
 		}
-		if (Input.GetKeyDown(KeyCode.Escape) && canUseEscape)
-		{
-			if (optionsUI.activeSelf || soundOptionsUI.activeSelf || videoOptionsUI.activeSelf || controlsUI.activeSelf)
+        if (playerControlActions.Player.Escape.WasPressedThisFrame() && canUseEscape)
+
+        {
+            if (optionsUI.activeSelf || soundOptionsUI.activeSelf || videoOptionsUI.activeSelf || controlsUI.activeSelf)
 			{
 				OptionsBack();
 			}

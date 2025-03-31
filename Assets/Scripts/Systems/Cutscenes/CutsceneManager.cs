@@ -8,8 +8,9 @@ using UnityEngine.UI;
 public class CutsceneManager : MonoBehaviour
 {
 	public static CutsceneManager Instance;
+    public PlayerControlActions playerControlActions;
 
-	[Header("Cutscene Settings")]
+    [Header("Cutscene Settings")]
 	public PlayableDirector night1Cutscene;
 	public PlayableDirector night2Cutscene;
 	public PlayableDirector night3Cutscene;
@@ -35,7 +36,10 @@ public class CutsceneManager : MonoBehaviour
 			Instance = this;
 		else
 			Destroy(gameObject);
-	}
+
+        playerControlActions = new PlayerControlActions();
+        playerControlActions.Enable();
+    }
 
 	private void Start()
 	{
@@ -87,8 +91,8 @@ public class CutsceneManager : MonoBehaviour
 	{
 		if (isPlayingCutscene && currentDirector != null)
 		{
-			if (Input.GetKey(KeyCode.Return))
-			{
+            if (playerControlActions.Player.Skip.IsPressed())
+            {
 				currentHoldTime += Time.deltaTime;
 
 				if (!isHoldingSkip)
