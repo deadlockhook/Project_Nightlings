@@ -21,6 +21,15 @@ public class UIManager : MonoBehaviour
     public PlayableDirector loseTimeline;
 
     public PlayerControlActions playerControlActions;
+    
+	private bool allowCursorToggle = true;
+    private UIState previousUIState;
+    private bool wasUsingController = false;
+    private float lastInputTime;
+    private float inputSwitchCooldown = 0.5f;
+    private bool lockCursorState;
+    private Vector3 previousMousePosition;
+    private Vector3 currentMousePosition;
 
     public enum UIState
 	{
@@ -204,114 +213,137 @@ public class UIManager : MonoBehaviour
 		if (nightInfoUI != null) nightInfoUI.SetActive(false);
 	}
 
-	public void ChangeUIState(UIState state)
-	{
-		DeactivateAllScreens();
-		switch (state)
-		{
-			case UIState.MainMenu:
-				LoadSettings();
-                if (SoundManager.Instance.currentMusic != "MainMenu")
-				{
-					SoundManager.Instance.StopMusic();
-					SoundManager.Instance.PlayMusic("MainMenu");
-				}
-				Cursor.lockState = CursorLockMode.None;
-				Cursor.visible = true;
-				Time.timeScale = 1f;
-				mainMenuUI.SetActive(true);
-                SelectDefaultButton(UIState.MainMenu);
-				break;
-			case UIState.PauseMenu:
-                Cursor.lockState = CursorLockMode.None;
-				Cursor.visible = true;
-				Time.timeScale = 0f;
-				pauseMenuUI.SetActive(true);
-                SelectDefaultButton(UIState.PauseMenu);
-				isPaused = true;
-				break;
-			case UIState.Gameplay:
-				LoadSettings();
-				PlayerController playerController = FindObjectOfType<PlayerController>();
-				if (playerController != null)
-				{
-					playerController.SetSensitivity(sensitivity);
-				}
-				SoundManager.Instance.StopMusic();
-				Time.timeScale = 1f;
-				gameplayUI.SetActive(true);
-				Cursor.lockState = CursorLockMode.Locked;
-				Cursor.visible = false;
-				isPaused = false;
-				break;
-			case UIState.Options:
-                Time.timeScale = 0f;
-				optionsUI.SetActive(true);
-                SelectDefaultButton(UIState.Options);
-				Cursor.lockState = CursorLockMode.None;
-				Cursor.visible = true;
-				break;
-			case UIState.SoundOptions:
-                Time.timeScale = 0f;
-				soundOptionsUI.SetActive(true);
-                SelectDefaultButton(UIState.SoundOptions);
-				Cursor.lockState = CursorLockMode.None;
-				Cursor.visible = true;
-				break;
-			case UIState.VideoOptions:
-                Time.timeScale = 0f;
-				videoOptionsUI.SetActive(true);
-                SelectDefaultButton(UIState.VideoOptions);
-				Cursor.lockState = CursorLockMode.None;
-				Cursor.visible = true;
-				break;
-			case UIState.Win:
-                Cursor.lockState = CursorLockMode.None;
-				Cursor.visible = true;
-				Time.timeScale = 0f;
-				winUI.SetActive(true);
-                SelectDefaultButton(UIState.Win);
-				break;
-			case UIState.Lose:
-                Cursor.lockState = CursorLockMode.None;
-				Cursor.visible = true;
-				Time.timeScale = 0f;
-				loseUI.SetActive(true);
-                SelectDefaultButton(UIState.Lose);
-				break;
-			case UIState.NightPicker:
-                Cursor.lockState = CursorLockMode.None;
-				Cursor.visible = true;
-				Time.timeScale = 0f;
-				nightPickerUI.SetActive(true);
-                SelectDefaultButton(UIState.NightPicker);
-				break;
-			case UIState.NightInfo:
-                LoadSettings();
-				SoundManager.Instance.StopMusic();
-				Cursor.lockState = CursorLockMode.Locked;
-				Time.timeScale = 1f;
-				nightInfoUI.SetActive(true);
-				break;
-			case UIState.CreditsUI:
-                Cursor.lockState = CursorLockMode.None;
-				Cursor.visible = true;
-				Time.timeScale = 0f;
-				creditsUI.SetActive(true);
-                SelectDefaultButton(UIState.CreditsUI);
-				break;
-			case UIState.Controls:
-                Cursor.lockState = CursorLockMode.None;
-				Cursor.visible = true;
-				Time.timeScale = 0f;
-				controlsUI.SetActive(true);
-                SelectDefaultButton(UIState.Controls);
-				break;
-		}
-		uiStateHistory.Push(state);
-	}
+    public void ChangeUIState(UIState state)
+    {
+        DeactivateAllScreens();
 
-	private GameObject GetActiveUIPanel()
+        previousUIState = uiStateHistory.Count > 0 ? uiStateHistory.Peek() : UIState.Gameplay;
+        HandleStateTransition(previousUIState, state);
+
+        switch (state)
+        {
+            case UIState.MainMenu:
+                LoadSettings();
+                if (SoundManager.Instance.currentMusic != "MainMenu")
+                {
+                    SoundManager.Instance.StopMusic();
+                    SoundManager.Instance.PlayMusic("MainMenu");
+                }
+                allowCursorToggle = true;
+                SetCursorState(true);
+                mainMenuUI.SetActive(true);
+                SelectDefaultButton(UIState.MainMenu);
+                break;
+            case UIState.PauseMenu:
+                allowCursorToggle = true;
+                SetCursorState(true);
+                Time.timeScale = 0f;
+                pauseMenuUI.SetActive(true);
+                SelectDefaultButton(UIState.PauseMenu);
+                isPaused = true;
+                break;
+            case UIState.Gameplay:
+                LoadSettings();
+                PlayerController playerController = FindObjectOfType<PlayerController>();
+                if (playerController != null)
+                {
+                    playerController.SetSensitivity(sensitivity);
+                }
+                SoundManager.Instance.StopMusic();
+                allowCursorToggle = false;
+                SetCursorState(false);
+                Time.timeScale = 1f;
+                gameplayUI.SetActive(true);
+                isPaused = false;
+                break;
+            case UIState.Options:
+                allowCursorToggle = true;
+                SetCursorState(true);
+                Time.timeScale = 0f;
+                optionsUI.SetActive(true);
+                SelectDefaultButton(UIState.Options);
+                break;
+            case UIState.SoundOptions:
+                allowCursorToggle = true;
+                SetCursorState(true);
+                Time.timeScale = 0f;
+                soundOptionsUI.SetActive(true);
+                SelectDefaultButton(UIState.SoundOptions);
+                break;
+            case UIState.VideoOptions:
+                allowCursorToggle = true;
+                SetCursorState(true);
+                Time.timeScale = 0f;
+                videoOptionsUI.SetActive(true);
+                SelectDefaultButton(UIState.VideoOptions);
+                break;
+            case UIState.Win:
+                allowCursorToggle = true;
+                SetCursorState(true);
+                Time.timeScale = 0f;
+                winUI.SetActive(true);
+                SelectDefaultButton(UIState.Win);
+                break;
+            case UIState.Lose:
+                allowCursorToggle = true;
+                SetCursorState(true);
+                Time.timeScale = 0f;
+                loseUI.SetActive(true);
+                SelectDefaultButton(UIState.Lose);
+                break;
+            case UIState.NightPicker:
+                allowCursorToggle = true;
+                SetCursorState(true);
+                Time.timeScale = 0f;
+                nightPickerUI.SetActive(true);
+                SelectDefaultButton(UIState.NightPicker);
+                break;
+            case UIState.NightInfo:
+                LoadSettings();
+                SoundManager.Instance.StopMusic();
+                allowCursorToggle = false;
+                SetCursorState(false);
+                Time.timeScale = 1f;
+                nightInfoUI.SetActive(true);
+                break;
+            case UIState.CreditsUI:
+                allowCursorToggle = true;
+                SetCursorState(true);
+                Time.timeScale = 0f;
+                creditsUI.SetActive(true);
+                SelectDefaultButton(UIState.CreditsUI);
+                break;
+            case UIState.Controls:
+                allowCursorToggle = true;
+                SetCursorState(true);
+                Time.timeScale = 0f;
+                controlsUI.SetActive(true);
+                SelectDefaultButton(UIState.Controls);
+                break;
+        }
+        uiStateHistory.Push(state);
+    }
+    private void HandleStateTransition(UIState fromState, UIState toState)
+    {
+        if (fromState == UIState.Gameplay && toState != UIState.Gameplay)
+        {
+            wasUsingController = false;
+            Cursor.visible = true;
+        }
+    }
+
+    private void SetCursorState(bool visible)
+    {
+        Cursor.lockState = visible ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = visible;
+
+        if (!visible && EventSystem.current.currentSelectedGameObject == null)
+        {
+            EventSystem.current.SetSelectedGameObject(GetDefaultButtonForState(GetCurrentUIState()));
+        }
+    }
+
+    private GameObject GetActiveUIPanel()
 	{
 		if (mainMenuUI.activeSelf) return mainMenuUI;
 		if (pauseMenuUI.activeSelf) return pauseMenuUI;
@@ -362,8 +394,6 @@ public class UIManager : MonoBehaviour
 			}
 		}
 	}
-   
-	private bool wasUsingController = false;
 
     private void Update()
     {
@@ -375,37 +405,104 @@ public class UIManager : MonoBehaviour
 
         HandleEscapeInput();
         DetectInputMethod();
-		CheckBackButtonInput();
+        CheckBackButtonInput();
+
+        if (!allowCursorToggle && EventSystem.current.currentSelectedGameObject == null)
+        {
+            EventSystem.current.SetSelectedGameObject(GetDefaultButtonForState(GetCurrentUIState()));
+        }
+    }
+
+    private bool IsKeyboardKey(KeyCode key)
+    {
+        return key < KeyCode.JoystickButton0 &&
+               !IsMouseKey(key);
+    }
+
+    private bool IsMouseKey(KeyCode key)
+    {
+        return key == KeyCode.Mouse0 ||
+               key == KeyCode.Mouse1 ||
+               key == KeyCode.Mouse2;
     }
 
     private void DetectInputMethod()
     {
-        bool controllerInput =
-            Mathf.Abs(Input.GetAxis("Horizontal")) > 0.5f ||
-            Mathf.Abs(Input.GetAxis("Vertical")) > 0.5f ||
-            Input.GetButtonDown("Submit") ||
-            Input.GetButtonDown("Cancel") ||
-            Input.GetButtonDown("Jump");
+        if (!allowCursorToggle) return;
+
+        bool controllerInput = CheckControllerInput();
+        currentMousePosition = Input.mousePosition;
+
+        Vector3 mouseDelta = currentMousePosition - previousMousePosition;
+        bool significantMouseMove = mouseDelta.magnitude > 10f;
+
+        GameObject defaultButton = GetDefaultButtonForState(GetCurrentUIState());
+
+        if (Time.time - lastInputTime < inputSwitchCooldown) return;
 
         if (controllerInput)
         {
             Cursor.visible = false;
             if (!wasUsingController)
             {
-                EventSystem.current.SetSelectedGameObject(null);
-                SelectDefaultButton(GetCurrentUIState());
+                EventSystem.current.SetSelectedGameObject(defaultButton);
+                lastInputTime = Time.time;
             }
             wasUsingController = true;
         }
-        else
+        else if (significantMouseMove || CheckMouseClick())
         {
-            if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0 ||
-                Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2))
+            Cursor.visible = true;
+            wasUsingController = false;
+            EventSystem.current.SetSelectedGameObject(null);
+        }
+
+        previousMousePosition = currentMousePosition;
+
+        if (!wasUsingController && Input.anyKeyDown)
+        {
+            foreach (KeyCode keyCode in System.Enum.GetValues(typeof(KeyCode)))
             {
-                Cursor.visible = true;
-                wasUsingController = false;
+                if (Input.GetKeyDown(keyCode) && IsKeyboardKey(keyCode))
+                {
+                    EventSystem.current.SetSelectedGameObject(defaultButton);
+                    Cursor.visible = false;
+                    wasUsingController = true;
+                    break;
+                }
             }
         }
+    }
+
+    private bool CheckMouseClick()
+    {
+        return Input.GetMouseButtonDown(0) ||
+               Input.GetMouseButtonDown(1) ||
+               Input.GetMouseButtonDown(2);
+    }
+
+    private bool CheckControllerInput()
+    {
+        for (int i = 0; i < 20; i++)
+        {
+            if (Input.GetKey((KeyCode)((int)KeyCode.JoystickButton0 + i)))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool CheckMouseInput()
+    {
+        if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
+        {
+            return true;
+        }
+
+        return Input.GetMouseButtonDown(0) ||
+               Input.GetMouseButtonDown(1) ||
+               Input.GetMouseButtonDown(2);
     }
 
     private void CheckBackButtonInput()
