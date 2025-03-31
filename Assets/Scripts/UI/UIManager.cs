@@ -9,6 +9,7 @@ using UnityEngine.Rendering.Universal;
 using TMPro;
 using UnityEngine.Playables;
 using UnityEngine.EventSystems;
+using System;
 
 public class UIManager : MonoBehaviour
 {
@@ -355,19 +356,88 @@ public class UIManager : MonoBehaviour
 			}
 		}
 	}
+   
+	private bool wasUsingController = false;
 
-	private void Update()
-	{
-		if (blackScreen != null && blackScreen.activeSelf)
-			return;
+    private void Update()
+    {
+        if (blackScreen != null && blackScreen.activeSelf)
+            return;
 
-		if (winUI.activeSelf || loseUI.activeSelf)
-			return;
+        if (winUI.activeSelf || loseUI.activeSelf)
+            return;
 
-		HandleEscapeInput();
-	}
+        HandleEscapeInput();
+        DetectInputMethod();
+		CheckBackButtonInput();
+    }
 
-	public void OptionsBack()
+    private void DetectInputMethod()
+    {
+        bool controllerInput =
+            Mathf.Abs(Input.GetAxis("Horizontal")) > 0.5f ||
+            Mathf.Abs(Input.GetAxis("Vertical")) > 0.5f ||
+            Input.GetButtonDown("Submit") ||
+            Input.GetButtonDown("Cancel") ||
+            Input.GetButtonDown("Jump");
+
+        if (controllerInput)
+        {
+            Cursor.visible = false;
+            if (!wasUsingController)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+                SelectDefaultButton(GetCurrentUIState());
+            }
+            wasUsingController = true;
+        }
+        else
+        {
+            if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0 ||
+                Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2))
+            {
+                Cursor.visible = true;
+                wasUsingController = false;
+            }
+        }
+    }
+
+    private void CheckBackButtonInput()
+    {
+        if (Input.GetButtonDown("Cancel"))
+        {
+            Button[] buttons = FindObjectsOfType<Button>();
+
+            foreach (Button button in buttons)
+            {
+                if (button.name == "BackButton")
+                {
+                    button.onClick.Invoke();
+                    return;
+                }
+            }
+        }
+    }
+
+    private UIState GetCurrentUIState()
+    {
+        if (mainMenuUI.activeSelf) return UIState.MainMenu;
+        if (pauseMenuUI.activeSelf) return UIState.PauseMenu;
+        if (gameplayUI.activeSelf) return UIState.Gameplay;
+        if (optionsUI.activeSelf) return UIState.Options;
+        if (soundOptionsUI.activeSelf) return UIState.SoundOptions;
+        if (videoOptionsUI.activeSelf) return UIState.VideoOptions;
+        if (winUI.activeSelf) return UIState.Win;
+        if (loseUI.activeSelf) return UIState.Lose;
+        if (nightPickerUI != null && nightPickerUI.activeSelf) return UIState.NightPicker;
+        if (nightInfoUI != null && nightInfoUI.activeSelf) return UIState.NightInfo;
+        if (creditsUI.activeSelf) return UIState.CreditsUI;
+        if (controlsUI.activeSelf) return UIState.Controls;
+
+        return UIState.MainMenu;
+    }
+
+    public void OptionsBack()
 	{
 		if (uiStateHistory.Count > 1)
 		{

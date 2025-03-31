@@ -3449,7 +3449,7 @@ GameObject:
   - component: {fileID: 9195412367497214772}
   - component: {fileID: 5515791008227476910}
   m_Layer: 5
-  m_Name: Back
+  m_Name: BackButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7557,7 +7557,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2929177075017366521
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20846,7 +20846,7 @@ GameObject:
   - component: {fileID: 5110939940372019448}
   - component: {fileID: 5257939442870144868}
   m_Layer: 5
-  m_Name: Back
+  m_Name: BackButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21409,7 +21409,7 @@ GameObject:
   - component: {fileID: 3022309795100258522}
   - component: {fileID: 6301587808723771314}
   m_Layer: 5
-  m_Name: Back
+  m_Name: BackButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23975,7 +23975,7 @@ PrefabInstance:
     - target: {fileID: 2120493461490013987, guid: f56bf910f078e4242a4f526ec9054236,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2418889961821973337, guid: f56bf910f078e4242a4f526ec9054236,
         type: 3}
@@ -24085,7 +24085,7 @@ PrefabInstance:
     - target: {fileID: 9087699175831026592, guid: f56bf910f078e4242a4f526ec9054236,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
