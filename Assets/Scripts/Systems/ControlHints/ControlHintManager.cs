@@ -165,21 +165,21 @@ public class ControlHintManager : MonoBehaviour
         float leftStickY = Input.GetAxisRaw("Vertical");
         float rightStickX = Input.GetAxisRaw("Look X");
         float rightStickY = Input.GetAxisRaw("Look Y");
+        float leftTrigger = Input.GetAxisRaw("JoystickTriggerLeft");
+        float rightTrigger = Input.GetAxisRaw("JoystickTriggerRight");
 
-        bool stickInput =
-            Mathf.Abs(leftStickX) > 0.2f ||
-            Mathf.Abs(leftStickY) > 0.2f ||
-            Mathf.Abs(rightStickX) > 0.2f ||
-            Mathf.Abs(rightStickY) > 0.2f;
-
-        bool triggerInput = Mathf.Abs(Input.GetAxisRaw("Fire1")) > 0.2f;
-
-        return stickInput || triggerInput;
+        return Mathf.Abs(leftStickX) > 0.2f ||
+               Mathf.Abs(leftStickY) > 0.2f ||
+               Mathf.Abs(rightStickX) > 0.2f ||
+               Mathf.Abs(rightStickY) > 0.2f ||
+               Mathf.Abs(leftTrigger) > 0.2f ||
+               Mathf.Abs(rightTrigger) > 0.2f;
     }
 
     private bool CheckForKeyboardInput()
-    { 
-        if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
+    {
+        if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0 ||
+        Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2))
         {
             return true;
         }
@@ -191,15 +191,12 @@ public class ControlHintManager : MonoBehaviour
                 if (Input.GetKey(keyCode))
                 {
                     if (keyCode >= KeyCode.JoystickButton0) continue;
-                    if (keyCode == KeyCode.Mouse0 ||
-                        keyCode == KeyCode.Mouse1 ||
-                        keyCode == KeyCode.Mouse2) continue;
-
                     return true;
                 }
             }
         }
         return false;
+
     }
 
     private void UpdateInputDevice()
@@ -222,9 +219,10 @@ public class ControlHintManager : MonoBehaviour
 
     public void ResetControlHints()
     {
+        if (controlHintCanvasGroup == null) return;
+
         StopAllCoroutines();
         hintsShown = false;
-        if (controlHintCanvasGroup != null)
-            controlHintCanvasGroup.alpha = 0f;
+        controlHintCanvasGroup.alpha = 0f;
     }
 }

@@ -157,9 +157,10 @@ public class UIManager : MonoBehaviour
 		clocks = new List<GameObject>();
 		clocks.AddRange(GameObject.FindGameObjectsWithTag("Clock"));
 
-		ChangeUIState(UIState.MainMenu);
+        ChangeUIState(UIState.MainMenu);
+        EventSystem.current.SetSelectedGameObject(mainMenuFirstButton);
 
-		if (nightPickerUI != null)
+        if (nightPickerUI != null)
 		{
 			NightButton[] nightButtons = nightPickerUI.GetComponentsInChildren<NightButton>(true);
 			foreach (NightButton button in nightButtons)
@@ -243,6 +244,7 @@ public class UIManager : MonoBehaviour
                 isPaused = true;
                 break;
             case UIState.Gameplay:
+                playerControlActions.Enable();
                 LoadSettings();
                 PlayerController playerController = FindObjectOfType<PlayerController>();
                 if (playerController != null)
@@ -580,24 +582,27 @@ public class UIManager : MonoBehaviour
 
 	public void PauseGame()
 	{
-		if (winUI.activeSelf || loseUI.activeSelf)
-			return;
+        if (winUI.activeSelf || loseUI.activeSelf)
+            return;
 
-		isPaused = true;
-		ChangeUIState(UIState.PauseMenu);
-	}
+        isPaused = true;
+        playerControlActions.Disable();
+        ChangeUIState(UIState.PauseMenu);
+    }
 
 	public void ResumeGame()
 	{
 		if (winUI.activeSelf || loseUI.activeSelf)
 			return;
 		isPaused = false;
-		ChangeUIState(UIState.Gameplay);
-	}
+        playerControlActions.Enable();
+        ChangeUIState(UIState.Gameplay);
+    }
 
 	public void GoToMainMenu()
 	{
-		if (IconManager.Instance != null)
+        Time.timeScale = 1f;
+        if (IconManager.Instance != null)
 		{
 			IconManager.Instance.ClearAllIcons();
 		}
@@ -607,15 +612,24 @@ public class UIManager : MonoBehaviour
 		StartCoroutine(LoadMainMenuWithLoading());
 	}
 
-	private IEnumerator LoadMainMenuWithLoading()
-	{
-		SceneManager.LoadScene("MainMenu");
-		ChangeUIStateWithLoading(UIState.MainMenu);
+    private IEnumerator LoadMainMenuWithLoading()
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainMenu");
+        asyncLoad.allowSceneActivation = false;
 
-		yield return new WaitForSecondsRealtime(loadingDisplayDuration + loadingFadeDuration);
-	}
+        while (!asyncLoad.isDone)
+        {
+            if (asyncLoad.progress >= 0.9f)
+                asyncLoad.allowSceneActivation = true;
 
-	public void GoToOptions()
+            yield return null;
+        }
+
+        ChangeUIStateWithLoading(UIState.MainMenu);
+        Time.timeScale = 1f;
+    }
+
+    public void GoToOptions()
 	{
 		ChangeUIState(UIState.Options);
 	}
@@ -763,28 +777,28 @@ public class UIManager : MonoBehaviour
 		
 	}
 
-	private IEnumerator TransitionToState(UIState newState)
-	{
-		loadingScreen.SetActive(true);
-		CanvasGroup canvasGroup = loadingScreen.GetComponent<CanvasGroup>();
-		canvasGroup.alpha = 1f;
+    private IEnumerator TransitionToState(UIState newState)
+    {
+        loadingScreen.SetActive(true);
+        CanvasGroup canvasGroup = loadingScreen.GetComponent<CanvasGroup>();
+        canvasGroup.alpha = 1f;
 
-		yield return new WaitForSecondsRealtime(loadingDisplayDuration);
+        yield return new WaitUntil(() => SceneManager.GetActiveScene().isLoaded);
 
-		ChangeUIState(newState);
+        ChangeUIState(newState);
 
-		float timer = 0f;
-		while (timer < loadingFadeDuration)
-		{
-			timer += Time.deltaTime;
-			canvasGroup.alpha = Mathf.Lerp(1f, 0f, timer / loadingFadeDuration);
-			yield return null;
-		}
+        float timer = 0f;
+        while (timer < loadingFadeDuration)
+        {
+            timer += Time.deltaTime;
+            canvasGroup.alpha = Mathf.Lerp(1f, 0f, timer / loadingFadeDuration);
+            yield return null;
+        }
 
-		loadingScreen.SetActive(false);
-	}
+        loadingScreen.SetActive(false);
+    }
 
-	public void ChangeUIStateWithLoading(UIState newState)
+    public void ChangeUIStateWithLoading(UIState newState)
 	{
 		StartCoroutine(TransitionToState(newState));
 	}
@@ -848,8 +862,8 @@ public class UIManager : MonoBehaviour
 	private IEnumerator LoadMainAndShowNightInfo(int night)
 	{
 		Time.timeScale = 1f;
-
-		SceneManager.LoadScene("Main");
+        isPaused = false;
+        SceneManager.LoadScene("Main");
 		ChangeUIStateWithLoading(UIState.NightInfo);
 
 		yield return null;

@@ -29,12 +29,31 @@ public class ControlHintData : ScriptableObject
 
     private bool IsUsingController()
     {
-        if (Input.GetButtonDown("Fire1") || Input.GetButtonDown("Jump"))
+        for (int i = 0; i < 20; i++)
+        {
+            if (Input.GetKey((KeyCode)((int)KeyCode.JoystickButton0 + i)))
+            {
+                return true;
+            }
+        }
+
+        float leftStickX = Input.GetAxisRaw("Horizontal");
+        float leftStickY = Input.GetAxisRaw("Vertical");
+        float rightStickX = Input.GetAxisRaw("Look X");
+        float rightStickY = Input.GetAxisRaw("Look Y");
+
+        if (Mathf.Abs(leftStickX) > 0.2f ||
+            Mathf.Abs(leftStickY) > 0.2f ||
+            Mathf.Abs(rightStickX) > 0.2f ||
+            Mathf.Abs(rightStickY) > 0.2f)
         {
             return true;
         }
 
-        if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.Space))
+        if (Input.GetMouseButton(0) ||
+            Input.GetKey(KeyCode.W) ||
+            Input.GetKey(KeyCode.Space) ||
+            Input.anyKeyDown)
         {
             return false;
         }
