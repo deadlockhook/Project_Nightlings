@@ -35,7 +35,6 @@ public class ControlHintManager : MonoBehaviour
     private int currentHintIndex = 0;
     private bool hintsShown = false;
     private bool isController = false;
-    private bool wasControllerPreviously = false;
 
     private void Awake()
     {

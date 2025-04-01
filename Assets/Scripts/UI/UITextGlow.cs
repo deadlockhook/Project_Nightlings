@@ -37,10 +37,16 @@ public class UITextGlow : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         DisableGlow();
 
+        if (EventSystem.current.currentSelectedGameObject == gameObject)
+        {
+            EnableGlow(Color.red, 0.5f);
+        }
+
         if (toggle != null) toggle.onValueChanged.AddListener(OnToggleValueChanged);
         if (dropdown != null) dropdown.onValueChanged.AddListener(OnDropdownValueChanged);
         if (slider != null) slider.onValueChanged.AddListener(OnSliderValueChanged);
     }
+
     void OnDisable()
     {
         if (toggle != null) toggle.onValueChanged.RemoveListener(OnToggleValueChanged);
