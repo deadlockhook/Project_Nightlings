@@ -164,7 +164,7 @@ public class PlayerController : MonoBehaviour
 		{
 			if (currentLightIntensity < 0.5f && !isRecharging)
 			{
-				rechargeFlashlightText.text = "Press RMB to recharge flashlight!";
+				rechargeFlashlightText.text = "Press      to recharge flashlight!";
 				rechargeFlashlightText.gameObject.SetActive(true);
 			}
 			else
