@@ -165,15 +165,11 @@ public class ControlHintManager : MonoBehaviour
         float leftStickY = Input.GetAxisRaw("Vertical");
         float rightStickX = Input.GetAxisRaw("Look X");
         float rightStickY = Input.GetAxisRaw("Look Y");
-        float leftTrigger = Input.GetAxisRaw("JoystickTriggerLeft");
-        float rightTrigger = Input.GetAxisRaw("JoystickTriggerRight");
 
         return Mathf.Abs(leftStickX) > 0.2f ||
                Mathf.Abs(leftStickY) > 0.2f ||
                Mathf.Abs(rightStickX) > 0.2f ||
-               Mathf.Abs(rightStickY) > 0.2f ||
-               Mathf.Abs(leftTrigger) > 0.2f ||
-               Mathf.Abs(rightTrigger) > 0.2f;
+               Mathf.Abs(rightStickY) > 0.2f;
     }
 
     private bool CheckForKeyboardInput()

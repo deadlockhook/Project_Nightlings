@@ -143,7 +143,7 @@ public class PlayerController : MonoBehaviour
 
 	private void Update()
 	{
-		if (isDead)
+		if (isDead || UIManager.Instance.IsPaused())
 			return;
 
 		ProcessFlashlightToggle();

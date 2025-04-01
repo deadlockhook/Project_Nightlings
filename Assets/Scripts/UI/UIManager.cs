@@ -590,16 +590,25 @@ public class UIManager : MonoBehaviour
         ChangeUIState(UIState.PauseMenu);
     }
 
-	public void ResumeGame()
-	{
-		if (winUI.activeSelf || loseUI.activeSelf)
-			return;
-		isPaused = false;
-        playerControlActions.Enable();
+    public void ResumeGame()
+    {
+        if (winUI.activeSelf || loseUI.activeSelf)
+            return;
+
+        Input.ResetInputAxes();
+        StartCoroutine(PreventJumpOnResume());
         ChangeUIState(UIState.Gameplay);
+        isPaused = false;
     }
 
-	public void GoToMainMenu()
+    private IEnumerator PreventJumpOnResume()
+    {
+        playerControlActions.Disable();
+        yield return new WaitForSeconds(0.5f);
+        playerControlActions.Enable();
+    }
+
+    public void GoToMainMenu()
 	{
         Time.timeScale = 1f;
         if (IconManager.Instance != null)
