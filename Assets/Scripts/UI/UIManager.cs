@@ -92,6 +92,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject controlsFirstButton;
 
     private bool isPaused = false;
+	private bool previousPaused = false;
+	private bool forceInputDisable = false;
+	private bool controllerWasForceDisabled = false;
 	private Toggle audioVisualToggle;
 	private Toggle motionBlurToggle;
 	private Toggle chromaticAbberationToggle;
@@ -476,6 +479,33 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+		if (isPaused != previousPaused)
+			forceInputDisable = true;
+
+        previousPaused = isPaused;
+
+		if (forceInputDisable)
+		{
+            PlayerController playerController = FindObjectOfType<PlayerController>();
+			if (playerController != null)
+			{
+				playerController.DisableUpdates();
+				controllerWasForceDisabled = true;
+            }
+
+            forceInputDisable = false;
+        }
+		else if (controllerWasForceDisabled && !isPaused && !previousPaused)
+		{
+            PlayerController playerController = FindObjectOfType<PlayerController>();
+            if (playerController != null)
+            {
+                playerController.EnableUpdates();
+                controllerWasForceDisabled = true;
+            }
+            controllerWasForceDisabled = false;
+        }
+
         DetectInputMethod();
         UpdateInputBasedSensitivity();
 

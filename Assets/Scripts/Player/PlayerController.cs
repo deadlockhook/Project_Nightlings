@@ -75,8 +75,9 @@ public class PlayerController : MonoBehaviour
 	private float verticalRotation = 0f;
 	private bool isRunning = false;
 	private bool isWalking = false;
+	private bool bDisableUpdates = false;
 
-	private float headBobTimer = 0f;
+    private float headBobTimer = 0f;
 	private Vector3 cameraOriginalPosition;
 
 	private InteractionManager interactionManager;
@@ -143,7 +144,7 @@ public class PlayerController : MonoBehaviour
 
 	private void Update()
 	{
-		if (isDead || UIManager.Instance.IsPaused())
+		if (isDead || UIManager.Instance.IsPaused() || bDisableUpdates)
 			return;
 
 		ProcessFlashlightToggle();
@@ -471,7 +472,16 @@ public class PlayerController : MonoBehaviour
 		transform.localPosition = lastSpawnPosition;
 	}
 
-	public bool EatCandy()
+	public void DisableUpdates()
+	{
+		bDisableUpdates = true;
+	}
+    public void EnableUpdates()
+    {
+        bDisableUpdates = false;
+    }
+
+    public bool EatCandy()
 	{
 		if (isSugarRushActive)
 			return false;
