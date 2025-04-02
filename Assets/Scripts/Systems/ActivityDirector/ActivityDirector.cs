@@ -679,6 +679,10 @@ public class ActivityDirector : MonoBehaviour
         powerOutageEventObject.Activate(activeActivites);
         powerOut = false;
         SoundManager.Instance.PlaySound("Breaker");
+
+
+        if (FindObjectOfType<FuseBoxAnimator>() != null)
+            FindObjectOfType<FuseBoxAnimator>().TriggerAnimation();
     }
 
     void TriggerPhoneRing(int activityIndex)

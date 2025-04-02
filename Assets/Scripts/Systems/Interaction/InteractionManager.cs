@@ -49,10 +49,9 @@ public class InteractionManager : MonoBehaviour
 			{
 				interactionIcon = FindObjectsOfType<Image>(true).FirstOrDefault(img => img.gameObject.name == "InteractionIcon");
 			}
+
 			if (interactionIcon == null)
-			{
 				Debug.LogError("No icon");
-			}
 		}
 	}
 
@@ -270,9 +269,13 @@ public class InteractionManager : MonoBehaviour
 				FindObjectOfType<BasementHatch>().ResetActivity();
 
 			if (gameObj.tag.Contains("PowerRestore"))
+			{
 				FindObjectOfType<ActivityDirector>().RestorePower();
 
-			if (gameObj.tag.Contains("Skylight_Remote"))
+            }
+
+
+            if (gameObj.tag.Contains("Skylight_Remote"))
 				FindObjectOfType<SkylightActivity>().ResetActivity();
 
 			if (gameObj.tag.Contains("Toilet_Flush"))
