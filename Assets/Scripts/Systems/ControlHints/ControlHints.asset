@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hints:
   - hintText: Use
-    keyboardMouseSprite: {fileID: 21300000, guid: 6261367552bf2354fac8454244df0e27,
+    keyboardMouseSprite: {fileID: 21300000, guid: 46b5681ba6fa1d949a6e4f5e34a67446,
       type: 3}
     controllerSprite: {fileID: 21300000, guid: 353d6e4eeca8c0a49b584fc3553c5819, type: 3}
     additionalInfo: to move!
