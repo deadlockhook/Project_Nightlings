@@ -15,7 +15,7 @@ public class CutsceneManager : MonoBehaviour
 	public PlayableDirector night2Cutscene;
 	public PlayableDirector night3Cutscene;
 
-	private float skipHoldTime = 3f;
+	private float skipHoldTime = 1.5f;
 	private float currentHoldTime = 0f;
 	private bool isHoldingSkip = false;
 
