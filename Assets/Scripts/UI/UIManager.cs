@@ -10,6 +10,7 @@ using TMPro;
 using UnityEngine.Playables;
 using UnityEngine.EventSystems;
 using System;
+using UnityEngine.InputSystem;
 
 public class UIManager : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class UIManager : MonoBehaviour
     
 	private bool allowCursorToggle = true;
     private UIState previousUIState;
-    private bool wasUsingController = false;
+    [HideInInspector] public bool wasUsingController = false;
     private Vector3 previousMousePosition;
     private Vector3 currentMousePosition;
     private float cursorStateChangeCooldown = 0.5f;
@@ -476,6 +477,7 @@ public class UIManager : MonoBehaviour
     private void Update()
     {
         DetectInputMethod();
+        UpdateInputBasedSensitivity();
 
         UpdateCursorVisibility();
 
@@ -530,11 +532,13 @@ public class UIManager : MonoBehaviour
         {
             wasUsingController = false;
             EventSystem.current.SetSelectedGameObject(null);
+            UpdateInputBasedSensitivity();
         }
         else if (!wasUsingController && controllerInput)
         {
             wasUsingController = true;
             SelectDefaultButton(GetCurrentUIState());
+            UpdateInputBasedSensitivity();
         }
 
         previousMousePosition = currentMousePosition;
@@ -581,8 +585,27 @@ public class UIManager : MonoBehaviour
                 return true;
             }
         }
+
+        if (Gamepad.current != null)
+        {
+            Vector2 rightStick = Gamepad.current.rightStick.ReadValue();
+            if (rightStick.magnitude > 0.1f)
+            {
+                return true;
+            }
+        }
+		if (Gamepad.current != null)
+        {
+            Vector2 rightStick = Gamepad.current.leftStick.ReadValue();
+            if (rightStick.magnitude > 0.1f)
+            {
+                return true;
+            }
+        }
+
         return false;
     }
+
 
     private void CheckBackButtonInput()
     {
@@ -1082,7 +1105,7 @@ public class UIManager : MonoBehaviour
 	private bool chromaticAbberationEnabled = false;
 	private bool bloomEnabled = false;
 
-	private float sensitivity = 0.1f;
+	[HideInInspector] public float sensitivity = 0.25f;
 
 	public TMP_Dropdown resolutionDropdown;
 	public Toggle fullscreenToggle;
@@ -1141,19 +1164,24 @@ public class UIManager : MonoBehaviour
 		ToggleEffect<Bloom>(enabled);
 	}
 
-	public void SetSensitivity(float value)
-	{
-		sensitivity = Mathf.Clamp(value, 0.01f, 1f);
-		PlayerPrefs.SetFloat("Sensitivity", sensitivity);
+    public void UpdateInputBasedSensitivity()
+    {
+        PlayerController playerController = FindObjectOfType<PlayerController>();
+        if (playerController != null)
+        {
+            float adjustedSensitivity = wasUsingController ? sensitivity * 4f : sensitivity;
+            playerController.SetSensitivity(adjustedSensitivity);
+        }
+    }
 
-		PlayerController playerController = FindObjectOfType<PlayerController>();
-		if (playerController != null)
-		{
-			playerController.SetSensitivity(sensitivity);
-		}
-	}
+    public void SetSensitivity(float value)
+    {
+        sensitivity = Mathf.Clamp(value, 0.01f, 1f);
+        PlayerPrefs.SetFloat("Sensitivity", sensitivity);
+        UpdateInputBasedSensitivity();
+    }
 
-	public void SetResolution(int index)
+    public void SetResolution(int index)
 	{
 		Resolution selectedResolution = resolutions[index];
 		Screen.SetResolution(selectedResolution.width, selectedResolution.height, Screen.fullScreen);
@@ -1170,8 +1198,9 @@ public class UIManager : MonoBehaviour
 
 	private void LoadSettings()
 	{
-		// Motion Blur as Slider
-		motionBlurIntensity = PlayerPrefs.GetFloat("MotionBlurIntensity", 0f);
+        // Motion Blur as Slider
+        SetSensitivity(sensitivity);
+        motionBlurIntensity = PlayerPrefs.GetFloat("MotionBlurIntensity", 0f);
 		if (motionBlurSlider != null)
 		{
 			motionBlurSlider.value = motionBlurIntensity;
