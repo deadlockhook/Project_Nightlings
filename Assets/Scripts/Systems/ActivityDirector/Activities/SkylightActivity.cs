@@ -8,24 +8,26 @@ public class SkylightActivity : MonoBehaviour
     private bool shouldReset = false;
     private bool resetAnimBegin = false;
     private float resetProgress = 0.0f;
-    private float positionYOnResetBegin = 0.0f;
+    private float positionZOnResetBegin = 0.0f;
     private bool activityFinished = false;
     private bool inActivity = false;
 
-    private float endYPosition = 0.0f;
-    private float startYPosition = 0.0f;
+    private float endZPosition = 0.0f;
+    private float startZPosition = 0.0f;
     private float lastActivityProgress = 0.0f;
 
     private AudioSource triggerAudio1;
     private SoundManager soundManager;
 
     private playedSoundAtTrigger[] soundTriggers;
+
+    private float posDelta = 2.729924f;
     private void Start()
     {
         soundManager = FindObjectOfType<SoundManager>();
 
-        startYPosition = transform.localPosition.y;
-        endYPosition = startYPosition - 0.00909f;
+        startZPosition = transform.localPosition.z;
+        endZPosition = startZPosition - posDelta;
 
         AudioSource[] sources = GetComponents<AudioSource>();
         if (sources.Length >= 1)
@@ -51,7 +53,7 @@ public class SkylightActivity : MonoBehaviour
         shouldReset = true;
         resetAnimBegin = true;
         resetProgress = 1.0f - lastActivityProgress;
-        positionYOnResetBegin = transform.localPosition.y;
+        positionZOnResetBegin = transform.localPosition.z;
     }
     public void ActivityTriggerStart()
     {
@@ -79,7 +81,7 @@ public class SkylightActivity : MonoBehaviour
                 PlayTriggerAudio();
         }
 
-        transform.localPosition = new Vector3(transform.localPosition.x, startYPosition - (0.00909f * activityProgress), transform.localPosition.z);
+        transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, startZPosition - (posDelta * activityProgress));
         lastActivityProgress = activityProgress;
 
         return false;
@@ -113,12 +115,12 @@ public class SkylightActivity : MonoBehaviour
                 resetProgress = 0.0f;
                 resetAnimBegin = false;
                 skylightShutPlayed = false;
-                transform.localPosition = new Vector3(transform.localPosition.x, startYPosition, transform.localPosition.z);
+                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, startZPosition);
                 SoundManager.Instance.PlaySound("WindowShut", triggerAudio1);
             }
             else
             {
-                transform.localPosition = new Vector3(transform.localPosition.x, endYPosition + (0.009409f * resetProgress), transform.localPosition.z);
+                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, endZPosition + (posDelta * resetProgress));
             }
         }
 
