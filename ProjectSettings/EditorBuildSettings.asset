@@ -11,7 +11,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Main.unity
     guid: 174108c7d9144bd4794f2f009a9d0aec
-  - enabled: 0
-    path: Assets/Scenes/Dylan_Test.unity
-    guid: 67c2ae4060cd18e4ba35ed041822f791
   m_configObjects: {}
