@@ -18819,6 +18819,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 746580490652628059, guid: f38aaec9c20b5734aa389e00540bdbf2,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 222
+      objectReference: {fileID: 0}
     - target: {fileID: 916577836283200106, guid: f38aaec9c20b5734aa389e00540bdbf2,
         type: 3}
       propertyPath: m_fontColor32.rgba
@@ -18963,6 +18968,62 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UIManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4429893595387063257, guid: f38aaec9c20b5734aa389e00540bdbf2,
+        type: 3}
+      propertyPath: m_text
+      value: 'Picture frames with photos by 3Dfrk
+
+
+        Black Cherry Firewood
+        01 by Baldinoboy
+
+
+        Low Poly Basic Items Pack - Household Items by
+        Kabungus
+
+
+        QA Books by QAtmo
+
+
+        Furniture FREE - Low Poly
+        3D Models Pack by ithappy
+
+
+        Low Poly Kitchen Set by HunterCraft Creations
+
+
+        Free:
+        House Interior by Studio Billion
+
+
+        Wood Floor Texture: Polyhaven.com
+
+
+        Furniture
+        FREE - Low Poly 3D Models Pack by ithappy
+
+
+        Casual Plants Lite Pack
+        by GoGo Creator
+
+
+        House Interior - Free by nappin
+
+
+        Office
+        Pack - Free by nappin
+
+
+        Bedroom / Interior - Low Poly assets by Fries
+        and Seagull
+
+
+        Wood Floor Texture: Polyhaven.com
+
+
+        URP Tree
+        Models by ALlyerEdon'
       objectReference: {fileID: 0}
     - target: {fileID: 4794065855814692596, guid: f38aaec9c20b5734aa389e00540bdbf2,
         type: 3}
