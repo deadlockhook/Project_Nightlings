@@ -200,9 +200,21 @@ public class InteractionManager : MonoBehaviour
 		bool isLookingAtInteractable = false;
 		if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit iconHit, interactionDistance))
 		{
-			if (iconHit.collider != null && iconHit.collider.gameObject.tag.Contains("Interactable_"))
+			if (iconHit.collider != null)
 			{
-				isLookingAtInteractable = true;
+				string tag = iconHit.collider.gameObject.tag;
+				if (
+					tag.Contains("Interactable_") ||
+					tag == "OutlineCommon" ||
+					tag == "Toilet_Flush" ||
+					tag == "BasementHatch_Door" ||
+					tag == "Candy" ||
+					tag == "Skylight_Remote" ||
+					tag == "PowerRestore"
+				)
+				{
+					isLookingAtInteractable = true;
+				}
 			}
 		}
 
@@ -226,7 +238,7 @@ public class InteractionManager : MonoBehaviour
 	private void OnObjectTraceCollide(GameObject gameObj, RaycastHit hit)
 	{
 		bool interactTriggered = playerController.playerControlActions.Player.Interact.triggered;
-		
+
 		if (gameObj.tag.Contains("Interactable_"))
 		{
 			if (interactTriggered)

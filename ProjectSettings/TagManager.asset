@@ -24,6 +24,7 @@ TagManager:
   - Telephone
   - ThunderControl
   - DoorIcon
+  - OutlineCommon
   layers:
   - Default
   - TransparentFX
