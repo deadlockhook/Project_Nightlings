@@ -42,7 +42,7 @@ public class BasementHatch : MonoBehaviour
     }
     public void ResetActivity()
     {
-        if (activityFinished)
+        if (activityFinished || !inActivity)
             return;
 
         inActivity = false;

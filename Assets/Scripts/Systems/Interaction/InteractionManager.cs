@@ -281,11 +281,7 @@ public class InteractionManager : MonoBehaviour
 				FindObjectOfType<BasementHatch>().ResetActivity();
 
 			if (gameObj.tag.Contains("PowerRestore"))
-			{
 				FindObjectOfType<ActivityDirector>().RestorePower();
-
-            }
-
 
             if (gameObj.tag.Contains("Skylight_Remote"))
 				FindObjectOfType<SkylightActivity>().ResetActivity();

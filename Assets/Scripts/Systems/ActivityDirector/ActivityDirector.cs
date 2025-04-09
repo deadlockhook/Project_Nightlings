@@ -658,7 +658,6 @@ public class ActivityDirector : MonoBehaviour
     private bool powerOut = false;
     void TriggerPowerOutage(int activityIndex)
     {
-        //Trigger Power Outage Sound
         for (int i = 0; i < powerControlGameObjects.Length; i++)
             powerControlGameObjects[i].SetActive(false);
 
@@ -670,8 +669,6 @@ public class ActivityDirector : MonoBehaviour
     {
         if (!powerOut)
             return;
-
-        //Trigger Restore Power Sound
 
         for (int i = 0; i < powerControlGameObjects.Length; i++)
             powerControlGameObjects[i].SetActive(true);
