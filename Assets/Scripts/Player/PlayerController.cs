@@ -89,6 +89,7 @@ public class PlayerController : MonoBehaviour
 	private Vector2 movementInput;
 	private Vector2 lookInput;
 	private Vector3 lastSpawnPosition;
+	private bool bWasPaused = false;
 
 	private void Awake()
 	{
@@ -143,6 +144,11 @@ public class PlayerController : MonoBehaviour
 
 	private void Update()
 	{
+		if (UIManager.Instance.IsPaused())
+		{
+			bWasPaused = true;
+		}
+
 		if (isDead || UIManager.Instance.IsPaused())
 			return;
 
@@ -333,8 +339,14 @@ public class PlayerController : MonoBehaviour
 	private void ProcessJump()
 	{
 		if (characterController.isGrounded)
-		{
-			if (playerControlActions.Player.Jump.IsPressed())
+        {
+            if (bWasPaused && !playerControlActions.Player.Jump.IsPressed())
+                bWasPaused = false;
+            
+			if (bWasPaused)
+				return;
+
+            if (playerControlActions.Player.Jump.IsPressed())
 			{
 				verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
 				footsteps.Stop();
