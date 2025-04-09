@@ -179,13 +179,13 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 	}
-    public void SetSensitivity(float newSensitivity)
-    {
-        lookSensitivity = newSensitivity;
-    }
+	public void SetSensitivity(float newSensitivity)
+	{
+		lookSensitivity = newSensitivity;
+	}
 
-    // flashlight toggle on/off
-    private void ProcessFlashlightToggle()
+	// flashlight toggle on/off
+	private void ProcessFlashlightToggle()
 	{
 		var controls = playerControlActions.Player;
 		if (controls.FlashlightToggle.triggered && !isRecharging)
@@ -339,14 +339,14 @@ public class PlayerController : MonoBehaviour
 	private void ProcessJump()
 	{
 		if (characterController.isGrounded)
-        {
-            if (bWasPaused && !playerControlActions.Player.Jump.IsPressed())
-                bWasPaused = false;
-            
+		{
+			if (bWasPaused && !playerControlActions.Player.Jump.IsPressed())
+				bWasPaused = false;
+
 			if (bWasPaused)
 				return;
 
-            if (playerControlActions.Player.Jump.IsPressed())
+			if (playerControlActions.Player.Jump.IsPressed())
 			{
 				verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
 				footsteps.Stop();

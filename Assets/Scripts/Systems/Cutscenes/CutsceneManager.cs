@@ -8,9 +8,9 @@ using UnityEngine.UI;
 public class CutsceneManager : MonoBehaviour
 {
 	public static CutsceneManager Instance;
-    public PlayerControlActions playerControlActions;
+	public PlayerControlActions playerControlActions;
 
-    [Header("Cutscene Settings")]
+	[Header("Cutscene Settings")]
 	public PlayableDirector night1Cutscene;
 	public PlayableDirector night2Cutscene;
 	public PlayableDirector night3Cutscene;
@@ -22,13 +22,14 @@ public class CutsceneManager : MonoBehaviour
 	[Header("Skip UI")]
 	public CanvasGroup skipPanel;
 	public Image skipProgressImage;
-
 	public TextMeshProUGUI skipText;
 
 	private PlayerController playerController;
 	private PlayableDirector currentDirector;
 	private bool isPlayingCutscene = false;
 	public bool IsPlayingCutscene { get { return isPlayingCutscene; } }
+
+	private bool cameraReenabled = false;
 
 	private void Awake()
 	{
@@ -37,9 +38,9 @@ public class CutsceneManager : MonoBehaviour
 		else
 			Destroy(gameObject);
 
-        playerControlActions = new PlayerControlActions();
-        playerControlActions.Enable();
-    }
+		playerControlActions = new PlayerControlActions();
+		playerControlActions.Enable();
+	}
 
 	private void Start()
 	{
@@ -72,12 +73,18 @@ public class CutsceneManager : MonoBehaviour
 		}
 
 		if (playerController != null)
+		{
 			playerController.enabled = false;
+			if (playerController.playerCamera != null)
+				playerController.playerCamera.enabled = false;
+		}
+
+		cameraReenabled = false;
 
 		isPlayingCutscene = true;
 		currentDirector.Play();
 
-		if(skipText != null)
+		if (skipText != null)
 			skipText.gameObject.SetActive(true);
 
 		if (skipPanel != null)
@@ -91,8 +98,8 @@ public class CutsceneManager : MonoBehaviour
 	{
 		if (isPlayingCutscene && currentDirector != null)
 		{
-            if (playerControlActions.Player.Skip.IsPressed())
-            {
+			if (playerControlActions.Player.Skip.IsPressed())
+			{
 				currentHoldTime += Time.deltaTime;
 
 				if (!isHoldingSkip)
@@ -124,6 +131,15 @@ public class CutsceneManager : MonoBehaviour
 					skipProgressImage.fillAmount = 0f;
 			}
 
+			if (!cameraReenabled && (currentDirector.duration - currentDirector.time) <= 1f)
+			{
+				if (playerController != null && playerController.playerCamera != null)
+				{
+					playerController.playerCamera.enabled = true;
+					cameraReenabled = true;
+				}
+			}
+
 			if (currentDirector.state != PlayState.Playing)
 			{
 				EndCutscene();
@@ -151,6 +167,8 @@ public class CutsceneManager : MonoBehaviour
 		if (playerController != null)
 		{
 			playerController.enabled = true;
+			if (playerController.playerCamera != null)
+				playerController.playerCamera.enabled = true;
 			playerController.EnableFlashlight();
 		}
 
