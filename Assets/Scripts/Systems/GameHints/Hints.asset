@@ -40,3 +40,6 @@ MonoBehaviour:
     hints:
     - You can eat the candy bars located on the dinner table for a temporary speed
       boost!
+  - hintType: 7
+    hints:
+    - The power has gone out! Use the fuze box in the basement to turn it back on!

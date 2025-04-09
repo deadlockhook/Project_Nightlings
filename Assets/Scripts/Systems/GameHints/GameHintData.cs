@@ -8,7 +8,8 @@ public enum HintType {
 	Fireplace,
 	Skylight,
 	Toilet,
-	CandyBar
+	CandyBar,
+	PowerBox
 }
 
 [System.Serializable]

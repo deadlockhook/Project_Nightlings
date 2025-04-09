@@ -664,6 +664,7 @@ public class ActivityDirector : MonoBehaviour
         powerOutageEventObject.Deactivate(activeActivites);
         powerOut = true;
         SoundManager.Instance.PlaySound("Breaker");
+        HintManager.Instance.DisplayGameHint(HintType.PowerBox);
     }
     public void RestorePower()
     {
