@@ -21175,7 +21175,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -400}
+  m_AnchoredPosition: {x: 0, y: -300}
   m_SizeDelta: {x: 1000, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7521258346445936697
@@ -21206,7 +21206,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Testing
+  m_text: "The sun rises. The house is quiet. The Nightlings are gone. You survived
+    all three nights. But in the dark, they\u2019re still watching. Waiting. You
+    survived\u2026 \nfor now."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b3ce9f30bea22eb49978344b1bc24c82, type: 2}
   m_sharedMaterial: {fileID: -3575139053517095789, guid: b3ce9f30bea22eb49978344b1bc24c82,
@@ -21234,8 +21236,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 42
-  m_fontSizeBase: 42
+  m_fontSize: 36
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
