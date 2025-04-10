@@ -146,9 +146,10 @@ public class PlayerController : MonoBehaviour
 	{
 		if (UIManager.Instance.IsPaused())
 		{
+			if (rechargeFlashlightText != null)
+				rechargeFlashlightText.gameObject.SetActive(false);
 			if (footsteps != null && footsteps.isPlaying)
 				footsteps.Stop();
-
 			bWasPaused = true;
 			return;
 		}
@@ -172,7 +173,7 @@ public class PlayerController : MonoBehaviour
 
 		if (rechargeFlashlightText != null)
 		{
-			if (currentLightIntensity < 0.5f && !isRecharging)
+			if (UIManager.Instance.IsInGame() && currentLightIntensity < 0.5f && !isRecharging)
 			{
 				rechargeFlashlightText.text = "Press      to recharge flashlight!";
 				rechargeFlashlightText.gameObject.SetActive(true);
@@ -183,7 +184,7 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 	}
-	
+
 	public void SetSensitivity(float newSensitivity)
 	{
 		lookSensitivity = newSensitivity;
