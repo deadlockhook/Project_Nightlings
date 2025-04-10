@@ -1132,7 +1132,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Project Manager - NitroWolf902
+  m_text: Project Manager - Cameron Traer
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
@@ -1937,7 +1937,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Lead Programmer - Timefallc
+  m_text: Lead Programmer - Harjot Singh
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
@@ -4684,7 +4684,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Lead Game Designer - Armanlot '
+  m_text: Lead Game Designer - Joseph MacDonald
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
@@ -6278,7 +6278,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Lead Artist - thelittlebear
+  m_text: Lead Artist - Em Martin
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e023c1b571d9d0f48bff8b352e51482c, type: 2}
   m_sharedMaterial: {fileID: 6466586278272431116, guid: e023c1b571d9d0f48bff8b352e51482c,
