@@ -872,6 +872,10 @@ public class UIManager : MonoBehaviour
 
 	private IEnumerator FinalWinSequence()
 	{
+		SoundManager.Instance.StopMusic();
+		SoundManager.Instance.PauseAllSounds();
+		SoundManager.Instance.StopThunderSounds();
+
 		ChangeUIState(UIState.FinalWin);
 
 		if(finalWinImageCanvasGroup != null)
@@ -892,6 +896,8 @@ public class UIManager : MonoBehaviour
 		}
 		if(finalWinImageCanvasGroup != null)
 			finalWinImageCanvasGroup.alpha = 1f;
+
+		SoundManager.Instance.PlayMusic("SunRise");
 
 		timer = 0f;
 		while(timer < fadeDuration)

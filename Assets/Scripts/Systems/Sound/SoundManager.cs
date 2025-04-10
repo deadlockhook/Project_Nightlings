@@ -15,245 +15,259 @@ using static Unity.VisualScripting.Member;
 
 public class SoundManager : MonoBehaviour
 {
-    public static SoundManager Instance;
+	public static SoundManager Instance;
 
-    private GameObject masterSliderGameObject;
-    private GameObject sfxSliderGameObject;
-    private GameObject musicSliderGameObject;
+	private GameObject masterSliderGameObject;
+	private GameObject sfxSliderGameObject;
+	private GameObject musicSliderGameObject;
 
-    private Slider masterVolumeSlider;
-    private Slider sfxVolumeSlider;
-    private Slider musicVolumeSlider;
+	private Slider masterVolumeSlider;
+	private Slider sfxVolumeSlider;
+	private Slider musicVolumeSlider;
 
-    [HideInInspector] public string currentMusic;
+	[HideInInspector] public string currentMusic;
 
-    [System.Serializable]
-    public class Sound
-    {
-        public string name;
-        public AudioClip clip;
-    }
+	[System.Serializable]
+	public class Sound
+	{
+		public string name;
+		public AudioClip clip;
+	}
 
-    public List<Sound> sounds;
-    private Dictionary<string, AudioClip> soundDictionary;
-    private Dictionary<string, AudioSource> audioSources;
-    private AudioSource musicSource;
+	public List<Sound> sounds;
+	private Dictionary<string, AudioClip> soundDictionary;
+	private Dictionary<string, AudioSource> audioSources;
+	private AudioSource musicSource;
 
-    [Range(0f, 1f)] public float masterVolume;
-    [Range(0f, 1f)] public float sfxVolume;
-    [Range(0f, 1f)] public float musicVolume;
+	[Range(0f, 1f)] public float masterVolume;
+	[Range(0f, 1f)] public float sfxVolume;
+	[Range(0f, 1f)] public float musicVolume;
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+	private void Awake()
+	{
+		if (Instance == null)
+		{
+			Instance = this;
+			DontDestroyOnLoad(gameObject);
+		}
+		else
+		{
+			Destroy(gameObject);
+			return;
+		}
 
-        soundDictionary = new Dictionary<string, AudioClip>();
-        foreach (var sound in sounds)
-        {
-            soundDictionary[sound.name] = sound.clip;
-        }
+		soundDictionary = new Dictionary<string, AudioClip>();
+		foreach (var sound in sounds)
+		{
+			soundDictionary[sound.name] = sound.clip;
+		}
 
-        audioSources = new Dictionary<string, AudioSource>();
-        musicSource = gameObject.AddComponent<AudioSource>();
-        musicSource.loop = true;
-        musicSource.volume = musicVolume * masterVolume;
-        masterVolume = 1f;
-        sfxVolume = 1f;
-        musicVolume = 0.5f;
-    }
+		audioSources = new Dictionary<string, AudioSource>();
+		musicSource = gameObject.AddComponent<AudioSource>();
+		musicSource.loop = true;
+		musicSource.volume = musicVolume * masterVolume;
+		masterVolume = 1f;
+		sfxVolume = 1f;
+		musicVolume = 0.5f;
+	}
 
-    private void Start()
-    {
-        masterSliderGameObject = GameObject.Find("MasterSlider");
-        if (masterSliderGameObject == null)
-        {
-            masterSliderGameObject = GameObject.FindObjectsOfType<GameObject>(true)
-                    .FirstOrDefault(o => o.name == "MasterSlider");
-        }
-        sfxSliderGameObject = GameObject.Find("SFXSlider");
-        if (sfxSliderGameObject == null)
-        {
-            sfxSliderGameObject = GameObject.FindObjectsOfType<GameObject>(true)
-                    .FirstOrDefault(o => o.name == "SFXSlider");
-        }
-        musicSliderGameObject = GameObject.Find("MusicSlider");
-        if (musicSliderGameObject == null)
-        {
-            musicSliderGameObject = GameObject.FindObjectsOfType<GameObject>(true)
-                    .FirstOrDefault(o => o.name == "MusicSlider");
-        }
+	private void Start()
+	{
+		masterSliderGameObject = GameObject.Find("MasterSlider");
+		if (masterSliderGameObject == null)
+		{
+			masterSliderGameObject = GameObject.FindObjectsOfType<GameObject>(true)
+					.FirstOrDefault(o => o.name == "MasterSlider");
+		}
+		sfxSliderGameObject = GameObject.Find("SFXSlider");
+		if (sfxSliderGameObject == null)
+		{
+			sfxSliderGameObject = GameObject.FindObjectsOfType<GameObject>(true)
+					.FirstOrDefault(o => o.name == "SFXSlider");
+		}
+		musicSliderGameObject = GameObject.Find("MusicSlider");
+		if (musicSliderGameObject == null)
+		{
+			musicSliderGameObject = GameObject.FindObjectsOfType<GameObject>(true)
+					.FirstOrDefault(o => o.name == "MusicSlider");
+		}
 
-        masterVolume = PlayerPrefs.GetFloat("MasterVolume", 1f);
-        sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1f);
-        musicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.5f);
+		masterVolume = PlayerPrefs.GetFloat("MasterVolume", 1f);
+		sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1f);
+		musicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.5f);
 
-        masterVolumeSlider = masterSliderGameObject.GetComponent<Slider>();
-        sfxVolumeSlider = sfxSliderGameObject.GetComponent<Slider>();
-        musicVolumeSlider = musicSliderGameObject.GetComponent<Slider>();
+		masterVolumeSlider = masterSliderGameObject.GetComponent<Slider>();
+		sfxVolumeSlider = sfxSliderGameObject.GetComponent<Slider>();
+		musicVolumeSlider = musicSliderGameObject.GetComponent<Slider>();
 
-        masterVolumeSlider.value = masterVolume;
-        sfxVolumeSlider.value = sfxVolume;
-        musicVolumeSlider.value = musicVolume;
+		masterVolumeSlider.value = masterVolume;
+		sfxVolumeSlider.value = sfxVolume;
+		musicVolumeSlider.value = musicVolume;
 
-        masterVolumeSlider.onValueChanged.AddListener(SetMasterVolume);
-        sfxVolumeSlider.onValueChanged.AddListener(SetSFXVolume);
-        musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
-    }
+		masterVolumeSlider.onValueChanged.AddListener(SetMasterVolume);
+		sfxVolumeSlider.onValueChanged.AddListener(SetSFXVolume);
+		musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
+	}
 
-    private void Update()
-    {
-        if (Time.timeScale == 0)
-        {
-            PauseAllSounds();
-        }
-        else
-        {
-            ResumeAllSounds();
-        }
-    }
+	private void Update()
+	{
+		if (Time.timeScale == 0)
+		{
+			PauseAllSounds();
+		}
+		else
+		{
+			ResumeAllSounds();
+		}
+	}
 
-    public void PlaySound(string soundName, AudioSource source = null)
-    {
-        if (!soundDictionary.TryGetValue(soundName, out AudioClip clip))
-        {
-            Debug.LogWarning($"Sound '{soundName}' not found");
-            return;
-        }
+	public void PlaySound(string soundName, AudioSource source = null)
+	{
+		if (!soundDictionary.TryGetValue(soundName, out AudioClip clip))
+		{
+			Debug.LogWarning($"Sound '{soundName}' not found");
+			return;
+		}
 
-        if (source != null)
-        {
-            if (source.isPlaying && source.clip == clip)
-                return;
+		if (source != null)
+		{
+			if (source.isPlaying && source.clip == clip)
+				return;
 
-            source.clip = clip;
-            source.volume = sfxVolume * masterVolume;
-            source.Play();
-        }
+			source.clip = clip;
+			source.volume = sfxVolume * masterVolume;
+			source.Play();
+		}
 
-        if (source != null)
-        {
-            if (source.isPlaying && source.clip != clip)
-            {
-                AudioSource newSource = source.gameObject.AddComponent<AudioSource>();
+		if (source != null)
+		{
+			if (source.isPlaying && source.clip != clip)
+			{
+				AudioSource newSource = source.gameObject.AddComponent<AudioSource>();
 
-                if (newSource.isPlaying && newSource.clip == clip)
-                    return;
+				if (newSource.isPlaying && newSource.clip == clip)
+					return;
 
-                newSource.clip = clip;
-                newSource.volume = sfxVolume * masterVolume;
-                newSource.Play();
-                return;
-            }
-        }
+				newSource.clip = clip;
+				newSource.volume = sfxVolume * masterVolume;
+				newSource.Play();
+				return;
+			}
+		}
 
-        else
-        {
-            Play2DSound(clip);
-        }
-    }
+		else
+		{
+			Play2DSound(clip);
+		}
+	}
 
-    private void Play2DSound(AudioClip clip)
-    {
-        AudioSource source2D;
+	private void Play2DSound(AudioClip clip)
+	{
+		AudioSource source2D;
 
-        if (!audioSources.TryGetValue("2D", out source2D))
-        {
-            GameObject obj = new GameObject("2DAudioSource");
-            source2D = obj.AddComponent<AudioSource>();
-            source2D.spatialBlend = 0;
-            DontDestroyOnLoad(obj);
-            audioSources["2D"] = source2D;
-        }
+		if (!audioSources.TryGetValue("2D", out source2D))
+		{
+			GameObject obj = new GameObject("2DAudioSource");
+			source2D = obj.AddComponent<AudioSource>();
+			source2D.spatialBlend = 0;
+			DontDestroyOnLoad(obj);
+			audioSources["2D"] = source2D;
+		}
 
-        source2D.volume = sfxVolume * masterVolume;
-        source2D.PlayOneShot(clip);
-    }
+		source2D.volume = sfxVolume * masterVolume;
+		source2D.PlayOneShot(clip);
+	}
 
-    public void PlayMusic(string musicName)
-    {
-        if (!soundDictionary.TryGetValue(musicName, out AudioClip clip))
-        {
-            Debug.LogWarning("Music not found");
-            return;
-        }
+	public void PlayMusic(string musicName)
+	{
+		if (!soundDictionary.TryGetValue(musicName, out AudioClip clip))
+		{
+			Debug.LogWarning("Music not found");
+			return;
+		}
 
-        if (musicSource.clip == clip && musicSource.isPlaying)
-            return;
+		if (musicSource.clip == clip && musicSource.isPlaying)
+			return;
 
-        currentMusic = musicName;
-        musicSource.clip = clip;
-        UpdateVolumes();
-        musicSource.Play();
-    }
+		currentMusic = musicName;
+		musicSource.clip = clip;
+		UpdateVolumes();
+		musicSource.Play();
+	}
 
-    public void PauseAllSounds()
-    {
-        foreach (var source in audioSources.Values)
-        {
-            if (source.isPlaying)
-            {
-                source.Pause();
-            }
-        }
-    }
+	public void PauseAllSounds()
+	{
+		foreach (var source in audioSources.Values)
+		{
+			if (source.isPlaying)
+			{
+				source.Pause();
+			}
+		}
+	}
 
-    public void ResumeAllSounds()
-    {
-        foreach (var source in audioSources.Values)
-        {
-            if (!source.isPlaying)
-            {
-                source.UnPause();
-            }
-        }
-    }
+	public void ResumeAllSounds()
+	{
+		foreach (var source in audioSources.Values)
+		{
+			if (!source.isPlaying)
+			{
+				source.UnPause();
+			}
+		}
+	}
 
-    public void SetMasterVolume(float volume)
-    {
-        masterVolume = volume;
-        PlayerPrefs.SetFloat("MasterVolume", masterVolume);
-        UpdateVolumes();
-    }
+	public void SetMasterVolume(float volume)
+	{
+		masterVolume = volume;
+		PlayerPrefs.SetFloat("MasterVolume", masterVolume);
+		UpdateVolumes();
+	}
 
-    public void SetSFXVolume(float volume)
-    {
-        sfxVolume = volume;
-        PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
-        UpdateVolumes();
-    }
+	public void SetSFXVolume(float volume)
+	{
+		sfxVolume = volume;
+		PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
+		UpdateVolumes();
+	}
 
-    public void SetMusicVolume(float volume)
-    {
-        musicVolume = volume;
-        PlayerPrefs.SetFloat("MusicVolume", musicVolume);
-        UpdateVolumes();
-    }
+	public void SetMusicVolume(float volume)
+	{
+		musicVolume = volume;
+		PlayerPrefs.SetFloat("MusicVolume", musicVolume);
+		UpdateVolumes();
+	}
 
-    private void UpdateVolumes()
-    {
-        musicSource.volume = musicVolume * masterVolume;
+	private void UpdateVolumes()
+	{
+		musicSource.volume = musicVolume * masterVolume;
 
-        foreach (var source in audioSources.Values)
-        {
-            source.volume = sfxVolume * masterVolume;
-        }
-    }
+		foreach (var source in audioSources.Values)
+		{
+			source.volume = sfxVolume * masterVolume;
+		}
+	}
 
-    public void StopMusic()
-    {
-        if (musicSource.isPlaying)
-        {
-            musicSource.Stop();
-            currentMusic = null;
-        }
-    }
+	public void StopMusic()
+	{
+		if (musicSource.isPlaying)
+		{
+			musicSource.Stop();
+			currentMusic = null;
+		}
+	}
+
+	public void StopThunderSounds()
+	{
+		GameObject[] thunderControls = GameObject.FindGameObjectsWithTag("ThunderControl");
+
+		foreach (GameObject thunder in thunderControls)
+		{
+			AudioSource audioSource = thunder.GetComponent<AudioSource>();
+			if (audioSource != null && audioSource.isPlaying)
+			{
+				audioSource.Stop();
+			}
+		}
+	}
 }
