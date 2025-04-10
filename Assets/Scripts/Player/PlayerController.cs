@@ -146,7 +146,11 @@ public class PlayerController : MonoBehaviour
 	{
 		if (UIManager.Instance.IsPaused())
 		{
+			if (footsteps != null && footsteps.isPlaying)
+				footsteps.Stop();
+
 			bWasPaused = true;
+			return;
 		}
 
 		if (isDead || UIManager.Instance.IsPaused())
@@ -179,6 +183,7 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 	}
+	
 	public void SetSensitivity(float newSensitivity)
 	{
 		lookSensitivity = newSensitivity;
