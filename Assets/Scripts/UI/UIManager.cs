@@ -19,21 +19,21 @@ public class UIManager : MonoBehaviour
 	private List<GameObject> clocks;
 	private ActivityDirector activityDirector;
 
-    public PlayableDirector loseTimeline;
+	public PlayableDirector loseTimeline;
 
-    public PlayerControlActions playerControlActions;
-    
+	public PlayerControlActions playerControlActions;
+
 	private bool allowCursorToggle = true;
-    private UIState previousUIState;
-    [HideInInspector] public bool wasUsingController = false;
-    private Vector3 previousMousePosition;
-    private Vector3 currentMousePosition;
-    private float cursorStateChangeCooldown = 0.5f;
-    private float lastCursorStateChangeTime;
-    private bool lastCursorVisible;
-    private float mouseSensitivity = 1f;
+	private UIState previousUIState;
+	[HideInInspector] public bool wasUsingController = false;
+	private Vector3 previousMousePosition;
+	private Vector3 currentMousePosition;
+	private float cursorStateChangeCooldown = 0.5f;
+	private float lastCursorStateChangeTime;
+	private bool lastCursorVisible;
+	private float mouseSensitivity = 1f;
 
-    public enum UIState
+	public enum UIState
 	{
 		MainMenu,
 		PauseMenu,
@@ -42,6 +42,7 @@ public class UIManager : MonoBehaviour
 		SoundOptions,
 		VideoOptions,
 		Win,
+		FinalWin,
 		Lose,
 		NightPicker,
 		NightInfo,
@@ -75,23 +76,29 @@ public class UIManager : MonoBehaviour
 	public TMP_Text winText;
 	public TMP_Text unlockedNightText;
 
+	[Header("Final Win Screen")]
+	public GameObject finalWinUI;
+	public CanvasGroup finalWinImageCanvasGroup;
+	public CanvasGroup finalWinTextCanvasGroup;
+	[SerializeField] private GameObject finalWinFirstButton;
+
 	[Header("Night Picker and Info UI")]
 	public GameObject nightPickerUI;
 	public GameObject nightInfoUI;
 
 	[Header("DefaultButtons")]
-    [SerializeField] private GameObject mainMenuFirstButton;
-    [SerializeField] private GameObject pauseMenuFirstButton;
-    [SerializeField] private GameObject optionsFirstButton;
-    [SerializeField] private GameObject soundOptionsFirstButton;
-    [SerializeField] private GameObject videoOptionsFirstButton;
-    [SerializeField] private GameObject winFirstButton;
-    [SerializeField] private GameObject loseFirstButton;
-    [SerializeField] private GameObject nightPickerFirstButton;
-    [SerializeField] private GameObject creditsFirstButton;
-    [SerializeField] private GameObject controlsFirstButton;
+	[SerializeField] private GameObject mainMenuFirstButton;
+	[SerializeField] private GameObject pauseMenuFirstButton;
+	[SerializeField] private GameObject optionsFirstButton;
+	[SerializeField] private GameObject soundOptionsFirstButton;
+	[SerializeField] private GameObject videoOptionsFirstButton;
+	[SerializeField] private GameObject winFirstButton;
+	[SerializeField] private GameObject loseFirstButton;
+	[SerializeField] private GameObject nightPickerFirstButton;
+	[SerializeField] private GameObject creditsFirstButton;
+	[SerializeField] private GameObject controlsFirstButton;
 
-    private bool isPaused = false;
+	private bool isPaused = false;
 	private Toggle audioVisualToggle;
 	private Toggle motionBlurToggle;
 	private Toggle chromaticAbberationToggle;
@@ -112,9 +119,9 @@ public class UIManager : MonoBehaviour
 		Instance = this;
 		DontDestroyOnLoad(gameObject);
 
-        playerControlActions = new PlayerControlActions();
-        playerControlActions.Enable();
-    }
+		playerControlActions = new PlayerControlActions();
+		playerControlActions.Enable();
+	}
 
 	private void Start()
 	{
@@ -159,11 +166,11 @@ public class UIManager : MonoBehaviour
 		clocks = new List<GameObject>();
 		clocks.AddRange(GameObject.FindGameObjectsWithTag("Clock"));
 
-        ChangeUIState(UIState.MainMenu);
+		ChangeUIState(UIState.MainMenu);
 
-        ForceInputDetection();
-        
-        if (nightPickerUI != null)
+		ForceInputDetection();
+
+		if (nightPickerUI != null)
 		{
 			NightButton[] nightButtons = nightPickerUI.GetComponentsInChildren<NightButton>(true);
 			foreach (NightButton button in nightButtons)
@@ -173,86 +180,86 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-    private void ForceInputDetection()
-    {
-        bool controllerActive = false;
-        for (int i = 0; i < 20; i++)
-        {
-            if (Input.GetKey((KeyCode)((int)KeyCode.JoystickButton0 + i)))
-            {
-                controllerActive = true;
-                break;
-            }
-        }
+	private void ForceInputDetection()
+	{
+		bool controllerActive = false;
+		for (int i = 0; i < 20; i++)
+		{
+			if (Input.GetKey((KeyCode)((int)KeyCode.JoystickButton0 + i)))
+			{
+				controllerActive = true;
+				break;
+			}
+		}
 
-        bool mouseActive = Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0;
-        bool keyboardActive = Input.anyKey;
+		bool mouseActive = Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0;
+		bool keyboardActive = Input.anyKey;
 
-        if (controllerActive)
-        {
-            wasUsingController = true;
-            SetCursorState(false);
-            SelectDefaultButton(GetCurrentUIState());
-        }
-        else if (mouseActive || keyboardActive)
-        {
-            wasUsingController = false;
-            SetCursorState(true);
-        }
-    }
+		if (controllerActive)
+		{
+			wasUsingController = true;
+			SetCursorState(false);
+			SelectDefaultButton(GetCurrentUIState());
+		}
+		else if (mouseActive || keyboardActive)
+		{
+			wasUsingController = false;
+			SetCursorState(true);
+		}
+	}
 
-    private GameObject GetDefaultButtonForState(UIState state)
-    {
-        switch (state)
-        {
-            case UIState.MainMenu: return mainMenuFirstButton;
-            case UIState.PauseMenu: return pauseMenuFirstButton;
-            case UIState.Options: return optionsFirstButton;
-            case UIState.SoundOptions: return soundOptionsFirstButton;
-            case UIState.VideoOptions: return videoOptionsFirstButton;
-            case UIState.Win: return winFirstButton;
-            case UIState.Lose: return loseFirstButton;
-            case UIState.NightPicker: return nightPickerFirstButton;
-            case UIState.CreditsUI: return creditsFirstButton;
-            case UIState.Controls: return controlsFirstButton;
-            default: return null;
-        }
-    }
+	private GameObject GetDefaultButtonForState(UIState state)
+	{
+		switch (state)
+		{
+			case UIState.MainMenu: return mainMenuFirstButton;
+			case UIState.PauseMenu: return pauseMenuFirstButton;
+			case UIState.Options: return optionsFirstButton;
+			case UIState.SoundOptions: return soundOptionsFirstButton;
+			case UIState.VideoOptions: return videoOptionsFirstButton;
+			case UIState.Win: return winFirstButton;
+			case UIState.Lose: return loseFirstButton;
+			case UIState.NightPicker: return nightPickerFirstButton;
+			case UIState.CreditsUI: return creditsFirstButton;
+			case UIState.Controls: return controlsFirstButton;
+			default: return null;
+		}
+	}
 
-    private void SelectDefaultButton(UIState state)
-    {
-        GameObject defaultButton = GetDefaultButtonForState(state);
-        if (defaultButton != null && defaultButton.activeInHierarchy)
-        {
-            if (EventSystem.current.currentSelectedGameObject != null)
-            {
-                var currentSelected = EventSystem.current.currentSelectedGameObject;
-                var currentGlow = currentSelected.GetComponent<UITextGlow>();
-                if (currentGlow != null)
-                {
-                    currentGlow.OnDeselect(null);
-                }
-            }
+	private void SelectDefaultButton(UIState state)
+	{
+		GameObject defaultButton = GetDefaultButtonForState(state);
+		if (defaultButton != null && defaultButton.activeInHierarchy)
+		{
+			if (EventSystem.current.currentSelectedGameObject != null)
+			{
+				var currentSelected = EventSystem.current.currentSelectedGameObject;
+				var currentGlow = currentSelected.GetComponent<UITextGlow>();
+				if (currentGlow != null)
+				{
+					currentGlow.OnDeselect(null);
+				}
+			}
 
-            EventSystem.current.SetSelectedGameObject(null);
-            EventSystem.current.SetSelectedGameObject(defaultButton);
+			EventSystem.current.SetSelectedGameObject(null);
+			EventSystem.current.SetSelectedGameObject(defaultButton);
 
-            Button button = defaultButton.GetComponent<Button>();
-            if (button != null)
-            {
-                button.Select();
-                button.OnSelect(null);
+			Button button = defaultButton.GetComponent<Button>();
+			if (button != null)
+			{
+				button.Select();
+				button.OnSelect(null);
 
-                var glow = defaultButton.GetComponent<UITextGlow>();
-                if (glow != null)
-                {
-                    glow.OnSelect(null);
-                }
-            }
-        }
-    }
+				var glow = defaultButton.GetComponent<UITextGlow>();
+				if (glow != null)
+				{
+					glow.OnSelect(null);
+				}
+			}
+		}
+	}
 
-    private void DeactivateAllScreens()
+	private void DeactivateAllScreens()
 	{
 		mainMenuUI.SetActive(false);
 		pauseMenuUI.SetActive(false);
@@ -266,163 +273,170 @@ public class UIManager : MonoBehaviour
 		controlsUI.SetActive(false);
 		if (nightPickerUI != null) nightPickerUI.SetActive(false);
 		if (nightInfoUI != null) nightInfoUI.SetActive(false);
+		if (finalWinUI != null) finalWinUI.SetActive(false);
 	}
 
-    public void ChangeUIState(UIState state)
-    {
-        DeactivateAllScreens();
+	public void ChangeUIState(UIState state)
+	{
+		DeactivateAllScreens();
 
-        previousUIState = uiStateHistory.Count > 0 ? uiStateHistory.Peek() : UIState.Gameplay;
+		previousUIState = uiStateHistory.Count > 0 ? uiStateHistory.Peek() : UIState.Gameplay;
 
-        EventSystem.current.SetSelectedGameObject(null);
+		EventSystem.current.SetSelectedGameObject(null);
 
-        switch (state)
-        {
-            case UIState.MainMenu:
-                LoadSettings();
-                if (SoundManager.Instance.currentMusic != "MainMenu")
-                {
-                    SoundManager.Instance.StopMusic();
-                    SoundManager.Instance.PlayMusic("MainMenu");
-                }
-                allowCursorToggle = true;
-                mainMenuUI.SetActive(true);
-                StartCoroutine(SelectDefaultButtonAfterFrame(UIState.MainMenu));
-                break;
-            case UIState.PauseMenu:
-                allowCursorToggle = true;
-                Time.timeScale = 0f;
-                pauseMenuUI.SetActive(true);
-                StartCoroutine(SelectDefaultButtonAfterFrame(UIState.PauseMenu));
-                isPaused = true;
-                break;
-            case UIState.Gameplay:
-                playerControlActions.Enable();
-                LoadSettings();
-                PlayerController playerController = FindObjectOfType<PlayerController>();
-                if (playerController != null)
-                {
-                    playerController.SetSensitivity(sensitivity);
-                }
-                SoundManager.Instance.StopMusic();
-                allowCursorToggle = false;
-                Time.timeScale = 1f;
-                gameplayUI.SetActive(true);
-                isPaused = false;
-                break;
-            case UIState.Options:
-                allowCursorToggle = true;
-                Time.timeScale = 0f;
-                optionsUI.SetActive(true);
-                StartCoroutine(SelectDefaultButtonAfterFrame(UIState.Options));
-                break;
-            case UIState.SoundOptions:
-                allowCursorToggle = true;
-                Time.timeScale = 0f;
-                soundOptionsUI.SetActive(true);
-                StartCoroutine(SelectDefaultButtonAfterFrame(UIState.SoundOptions));
-                break;
-            case UIState.VideoOptions:
-                allowCursorToggle = true;
-                Time.timeScale = 0f;
-                videoOptionsUI.SetActive(true);
-                StartCoroutine(SelectDefaultButtonAfterFrame(UIState.VideoOptions));
-                break;
-            case UIState.Win:
-                allowCursorToggle = true;
-                Time.timeScale = 0f;
-                winUI.SetActive(true);
-                StartCoroutine(SelectDefaultButtonAfterFrame(UIState.Win));
-                break;
-            case UIState.Lose:
-                allowCursorToggle = true;
-                Time.timeScale = 0f;
-                loseUI.SetActive(true);
-                StartCoroutine(SelectDefaultButtonAfterFrame(UIState.Lose));
-                break;
-            case UIState.NightPicker:
-                allowCursorToggle = true;
-                Time.timeScale = 0f;
-                nightPickerUI.SetActive(true);
-                StartCoroutine(SelectDefaultButtonAfterFrame(UIState.NightPicker));
-                break;
-            case UIState.NightInfo:
-                LoadSettings();
-                SoundManager.Instance.StopMusic();
-                allowCursorToggle = true;
-                Time.timeScale = 1f;
-                nightInfoUI.SetActive(true);
-                break;
-            case UIState.CreditsUI:
-                allowCursorToggle = true;
-                Time.timeScale = 0f;
-                creditsUI.SetActive(true);
-                StartCoroutine(SelectDefaultButtonAfterFrame(UIState.CreditsUI));
-                break;
-            case UIState.Controls:
-                allowCursorToggle = true;
-                Time.timeScale = 0f;
-                controlsUI.SetActive(true);
-                StartCoroutine(SelectDefaultButtonAfterFrame(UIState.Controls));
-                break;
-        }
-        uiStateHistory.Push(state);
-        
-        UpdateCursorVisibility();
-    }
+		switch (state)
+		{
+			case UIState.MainMenu:
+				LoadSettings();
+				if (SoundManager.Instance.currentMusic != "MainMenu")
+				{
+					SoundManager.Instance.StopMusic();
+					SoundManager.Instance.PlayMusic("MainMenu");
+				}
+				allowCursorToggle = true;
+				mainMenuUI.SetActive(true);
+				StartCoroutine(SelectDefaultButtonAfterFrame(UIState.MainMenu));
+				break;
+			case UIState.PauseMenu:
+				allowCursorToggle = true;
+				Time.timeScale = 0f;
+				pauseMenuUI.SetActive(true);
+				StartCoroutine(SelectDefaultButtonAfterFrame(UIState.PauseMenu));
+				isPaused = true;
+				break;
+			case UIState.Gameplay:
+				playerControlActions.Enable();
+				LoadSettings();
+				PlayerController playerController = FindObjectOfType<PlayerController>();
+				if (playerController != null)
+				{
+					playerController.SetSensitivity(sensitivity);
+				}
+				SoundManager.Instance.StopMusic();
+				allowCursorToggle = false;
+				Time.timeScale = 1f;
+				gameplayUI.SetActive(true);
+				isPaused = false;
+				break;
+			case UIState.Options:
+				allowCursorToggle = true;
+				Time.timeScale = 0f;
+				optionsUI.SetActive(true);
+				StartCoroutine(SelectDefaultButtonAfterFrame(UIState.Options));
+				break;
+			case UIState.SoundOptions:
+				allowCursorToggle = true;
+				Time.timeScale = 0f;
+				soundOptionsUI.SetActive(true);
+				StartCoroutine(SelectDefaultButtonAfterFrame(UIState.SoundOptions));
+				break;
+			case UIState.VideoOptions:
+				allowCursorToggle = true;
+				Time.timeScale = 0f;
+				videoOptionsUI.SetActive(true);
+				StartCoroutine(SelectDefaultButtonAfterFrame(UIState.VideoOptions));
+				break;
+			case UIState.Win:
+				allowCursorToggle = true;
+				Time.timeScale = 0f;
+				winUI.SetActive(true);
+				StartCoroutine(SelectDefaultButtonAfterFrame(UIState.Win));
+				break;
+			case UIState.Lose:
+				allowCursorToggle = true;
+				Time.timeScale = 0f;
+				loseUI.SetActive(true);
+				StartCoroutine(SelectDefaultButtonAfterFrame(UIState.Lose));
+				break;
+			case UIState.NightPicker:
+				allowCursorToggle = true;
+				Time.timeScale = 0f;
+				nightPickerUI.SetActive(true);
+				StartCoroutine(SelectDefaultButtonAfterFrame(UIState.NightPicker));
+				break;
+			case UIState.NightInfo:
+				LoadSettings();
+				SoundManager.Instance.StopMusic();
+				allowCursorToggle = true;
+				Time.timeScale = 1f;
+				nightInfoUI.SetActive(true);
+				break;
+			case UIState.CreditsUI:
+				allowCursorToggle = true;
+				Time.timeScale = 0f;
+				creditsUI.SetActive(true);
+				StartCoroutine(SelectDefaultButtonAfterFrame(UIState.CreditsUI));
+				break;
+			case UIState.Controls:
+				allowCursorToggle = true;
+				Time.timeScale = 0f;
+				controlsUI.SetActive(true);
+				StartCoroutine(SelectDefaultButtonAfterFrame(UIState.Controls));
+				break;
+			case UIState.FinalWin:
+				allowCursorToggle = true;
+				Time.timeScale = 0f;
+				finalWinUI.SetActive(true);
+				StartCoroutine(SelectDefaultButtonAfterFrame(UIState.FinalWin));
+				break;
+		}
+		uiStateHistory.Push(state);
 
-    private IEnumerator SelectDefaultButtonAfterFrame(UIState state)
-    {
-        yield return null;
-        
-        GameObject defaultButton = GetDefaultButtonForState(state);
-        if (defaultButton != null && defaultButton.activeInHierarchy)
-        {
-            if (EventSystem.current.currentSelectedGameObject != null)
-            {
-                var currentSelected = EventSystem.current.currentSelectedGameObject;
-                var currentGlow = currentSelected.GetComponent<UITextGlow>();
-                if (currentGlow != null)
-                {
-                    currentGlow.OnDeselect(null);
-                }
-            }
+		UpdateCursorVisibility();
+	}
 
-            EventSystem.current.SetSelectedGameObject(null);
-            EventSystem.current.SetSelectedGameObject(defaultButton);
+	private IEnumerator SelectDefaultButtonAfterFrame(UIState state)
+	{
+		yield return null;
 
-            Button button = defaultButton.GetComponent<Button>();
-            if (button != null)
-            {
-                button.Select();
-                button.OnSelect(null);
+		GameObject defaultButton = GetDefaultButtonForState(state);
+		if (defaultButton != null && defaultButton.activeInHierarchy)
+		{
+			if (EventSystem.current.currentSelectedGameObject != null)
+			{
+				var currentSelected = EventSystem.current.currentSelectedGameObject;
+				var currentGlow = currentSelected.GetComponent<UITextGlow>();
+				if (currentGlow != null)
+				{
+					currentGlow.OnDeselect(null);
+				}
+			}
 
-                var glow = defaultButton.GetComponent<UITextGlow>();
-                if (glow != null)
-                {
-                    glow.OnSelect(null);
-                }
-            }
-        }
-    }
+			EventSystem.current.SetSelectedGameObject(null);
+			EventSystem.current.SetSelectedGameObject(defaultButton);
 
-    private void SetCursorState(bool visible)
-    {
-        if (Time.time - lastCursorStateChangeTime < cursorStateChangeCooldown && visible == lastCursorVisible)
-            return;
+			Button button = defaultButton.GetComponent<Button>();
+			if (button != null)
+			{
+				button.Select();
+				button.OnSelect(null);
 
-        Cursor.lockState = visible ? CursorLockMode.None : CursorLockMode.Locked;
-        Cursor.visible = visible;
-        lastCursorVisible = visible;
-        lastCursorStateChangeTime = Time.time;
+				var glow = defaultButton.GetComponent<UITextGlow>();
+				if (glow != null)
+				{
+					glow.OnSelect(null);
+				}
+			}
+		}
+	}
 
-        if (!visible && EventSystem.current.currentSelectedGameObject == null)
-        {
-            SelectDefaultButton(GetCurrentUIState());
-        }
-    }
+	private void SetCursorState(bool visible)
+	{
+		if (Time.time - lastCursorStateChangeTime < cursorStateChangeCooldown && visible == lastCursorVisible)
+			return;
 
-    private GameObject GetActiveUIPanel()
+		Cursor.lockState = visible ? CursorLockMode.None : CursorLockMode.Locked;
+		Cursor.visible = visible;
+		lastCursorVisible = visible;
+		lastCursorStateChangeTime = Time.time;
+
+		if (!visible && EventSystem.current.currentSelectedGameObject == null)
+		{
+			SelectDefaultButton(GetCurrentUIState());
+		}
+	}
+
+	private GameObject GetActiveUIPanel()
 	{
 		if (mainMenuUI.activeSelf) return mainMenuUI;
 		if (pauseMenuUI.activeSelf) return pauseMenuUI;
@@ -436,6 +450,9 @@ public class UIManager : MonoBehaviour
 
 	private void HandleEscapeInput()
 	{
+		if (GetCurrentUIState() == UIState.FinalWin)
+			return;
+
 		if (CutsceneManager.Instance != null && CutsceneManager.Instance.IsPlayingCutscene)
 			return;
 
@@ -445,10 +462,9 @@ public class UIManager : MonoBehaviour
 		{
 			canUseEscape = false;
 		}
-        if (playerControlActions.Player.Escape.WasPressedThisFrame() && canUseEscape)
-
-        {
-            if (optionsUI.activeSelf || soundOptionsUI.activeSelf || videoOptionsUI.activeSelf || controlsUI.activeSelf)
+		if (playerControlActions.Player.Escape.WasPressedThisFrame() && canUseEscape)
+		{
+			if (optionsUI.activeSelf || soundOptionsUI.activeSelf || videoOptionsUI.activeSelf || controlsUI.activeSelf)
 			{
 				OptionsBack();
 			}
@@ -474,175 +490,184 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-    private void Update()
-    {
-        DetectInputMethod();
-        UpdateInputBasedSensitivity();
+	private void Update()
+	{
+		DetectInputMethod();
+		UpdateInputBasedSensitivity();
 
-        UpdateCursorVisibility();
+		UpdateCursorVisibility();
 
-        if (blackScreen != null && blackScreen.activeSelf)
-            return;
+		if (blackScreen != null && blackScreen.activeSelf)
+			return;
 
-        if (winUI.activeSelf || loseUI.activeSelf)
-        {
-            if (wasUsingController && EventSystem.current.currentSelectedGameObject == null)
-            {
-                SelectDefaultButton(GetCurrentUIState());
-            }
-            return;
-        }
+		if (winUI.activeSelf || loseUI.activeSelf)
+		{
+			if (wasUsingController && EventSystem.current.currentSelectedGameObject == null)
+			{
+				SelectDefaultButton(GetCurrentUIState());
+			}
+			return;
+		}
 
-        HandleEscapeInput();
-        CheckBackButtonInput();
+		if ((finalWinUI != null && finalWinUI.activeSelf) || GetCurrentUIState() == UIState.FinalWin)
+		{
+			if (wasUsingController && EventSystem.current.currentSelectedGameObject == null)
+			{
+				SelectDefaultButton(GetCurrentUIState());
+			}
+			return;
+		}
 
-        if (wasUsingController && EventSystem.current.currentSelectedGameObject == null)
-        {
-            SelectDefaultButton(GetCurrentUIState());
-        }
-    }
+		HandleEscapeInput();
+		CheckBackButtonInput();
 
-    private void UpdateCursorVisibility()
-    {
-        UIState currentState = GetCurrentUIState();
-        bool isGameplayState = (currentState == UIState.Gameplay || currentState == UIState.NightInfo);
+		if (wasUsingController && EventSystem.current.currentSelectedGameObject == null)
+		{
+			SelectDefaultButton(GetCurrentUIState());
+		}
+	}
 
-        if (isGameplayState)
-        {
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-        else
-        {
-            Cursor.visible = !wasUsingController;
-            Cursor.lockState = wasUsingController ? CursorLockMode.Locked : CursorLockMode.None;
-        }
-    }
+	private void UpdateCursorVisibility()
+	{
+		UIState currentState = GetCurrentUIState();
+		bool isGameplayState = (currentState == UIState.Gameplay || currentState == UIState.NightInfo);
 
-    private void DetectInputMethod()
-    {
-        bool controllerInput = CheckControllerInput();
-        currentMousePosition = Input.mousePosition;
-        Vector3 mouseDelta = currentMousePosition - previousMousePosition;
-        bool significantMouseMove = mouseDelta.magnitude > mouseSensitivity;
-        bool mouseClicked = CheckMouseClick();
-        bool keyboardInput = CheckAnyKeyboardInput();
+		if (isGameplayState)
+		{
+			Cursor.visible = false;
+			Cursor.lockState = CursorLockMode.Locked;
+		}
+		else
+		{
+			Cursor.visible = !wasUsingController;
+			Cursor.lockState = wasUsingController ? CursorLockMode.Locked : CursorLockMode.None;
+		}
+	}
 
-        if (wasUsingController && (significantMouseMove || mouseClicked || keyboardInput))
-        {
-            wasUsingController = false;
-            EventSystem.current.SetSelectedGameObject(null);
-            UpdateInputBasedSensitivity();
-        }
-        else if (!wasUsingController && controllerInput)
-        {
-            wasUsingController = true;
-            SelectDefaultButton(GetCurrentUIState());
-            UpdateInputBasedSensitivity();
-        }
+	private void DetectInputMethod()
+	{
+		bool controllerInput = CheckControllerInput();
+		currentMousePosition = Input.mousePosition;
+		Vector3 mouseDelta = currentMousePosition - previousMousePosition;
+		bool significantMouseMove = mouseDelta.magnitude > mouseSensitivity;
+		bool mouseClicked = CheckMouseClick();
+		bool keyboardInput = CheckAnyKeyboardInput();
 
-        previousMousePosition = currentMousePosition;
-    }
+		if (wasUsingController && (significantMouseMove || mouseClicked || keyboardInput))
+		{
+			wasUsingController = false;
+			EventSystem.current.SetSelectedGameObject(null);
+			UpdateInputBasedSensitivity();
+		}
+		else if (!wasUsingController && controllerInput)
+		{
+			wasUsingController = true;
+			SelectDefaultButton(GetCurrentUIState());
+			UpdateInputBasedSensitivity();
+		}
 
-    private bool CheckAnyKeyboardInput()
-    {
-        foreach (KeyCode keyCode in System.Enum.GetValues(typeof(KeyCode)))
-        {
-            if (Input.GetKeyDown(keyCode) && IsKeyboardKey(keyCode))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+		previousMousePosition = currentMousePosition;
+	}
 
-    private bool IsKeyboardKey(KeyCode key)
-    {
-        return key < KeyCode.JoystickButton0 &&
-               !IsMouseKey(key);
-    }
+	private bool CheckAnyKeyboardInput()
+	{
+		foreach (KeyCode keyCode in System.Enum.GetValues(typeof(KeyCode)))
+		{
+			if (Input.GetKeyDown(keyCode) && IsKeyboardKey(keyCode))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
-    private bool IsMouseKey(KeyCode key)
-    {
-        return key == KeyCode.Mouse0 ||
-               key == KeyCode.Mouse1 ||
-               key == KeyCode.Mouse2;
-    }
+	private bool IsKeyboardKey(KeyCode key)
+	{
+		return key < KeyCode.JoystickButton0 &&
+			!IsMouseKey(key);
+	}
 
-    private bool CheckMouseClick()
-    {
-        return Input.GetMouseButtonDown(0) ||
-               Input.GetMouseButtonDown(1) ||
-               Input.GetMouseButtonDown(2);
-    }
+	private bool IsMouseKey(KeyCode key)
+	{
+		return key == KeyCode.Mouse0 ||
+			key == KeyCode.Mouse1 ||
+			key == KeyCode.Mouse2;
+	}
 
-    private bool CheckControllerInput()
-    {
-        for (int i = 0; i < 20; i++)
-        {
-            if (Input.GetKey((KeyCode)((int)KeyCode.JoystickButton0 + i)))
-            {
-                return true;
-            }
-        }
+	private bool CheckMouseClick()
+	{
+		return Input.GetMouseButtonDown(0) ||
+			Input.GetMouseButtonDown(1) ||
+			Input.GetMouseButtonDown(2);
+	}
 
-        if (Gamepad.current != null)
-        {
-            Vector2 rightStick = Gamepad.current.rightStick.ReadValue();
-            if (rightStick.magnitude > 0.1f)
-            {
-                return true;
-            }
-        }
+	private bool CheckControllerInput()
+	{
+		for (int i = 0; i < 20; i++)
+		{
+			if (Input.GetKey((KeyCode)((int)KeyCode.JoystickButton0 + i)))
+			{
+				return true;
+			}
+		}
+
 		if (Gamepad.current != null)
-        {
-            Vector2 rightStick = Gamepad.current.leftStick.ReadValue();
-            if (rightStick.magnitude > 0.1f)
-            {
-                return true;
-            }
-        }
+		{
+			Vector2 rightStick = Gamepad.current.rightStick.ReadValue();
+			if (rightStick.magnitude > 0.1f)
+			{
+				return true;
+			}
+		}
+		if (Gamepad.current != null)
+		{
+			Vector2 rightStick = Gamepad.current.leftStick.ReadValue();
+			if (rightStick.magnitude > 0.1f)
+			{
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
 
-    private void CheckBackButtonInput()
-    {
-        if (Input.GetButtonDown("Cancel"))
-        {
-            Button[] buttons = FindObjectsOfType<Button>();
+	private void CheckBackButtonInput()
+	{
+		if (Input.GetButtonDown("Cancel"))
+		{
+			Button[] buttons = FindObjectsOfType<Button>();
 
-            foreach (Button button in buttons)
-            {
-                if (button.name == "BackButton")
-                {
-                    button.onClick.Invoke();
-                    return;
-                }
-            }
-        }
-    }
+			foreach (Button button in buttons)
+			{
+				if (button.name == "BackButton")
+				{
+					button.onClick.Invoke();
+					return;
+				}
+			}
+		}
+	}
 
-    private UIState GetCurrentUIState()
-    {
-        if (mainMenuUI.activeSelf) return UIState.MainMenu;
-        if (pauseMenuUI.activeSelf) return UIState.PauseMenu;
-        if (gameplayUI.activeSelf) return UIState.Gameplay;
-        if (optionsUI.activeSelf) return UIState.Options;
-        if (soundOptionsUI.activeSelf) return UIState.SoundOptions;
-        if (videoOptionsUI.activeSelf) return UIState.VideoOptions;
-        if (winUI.activeSelf) return UIState.Win;
-        if (loseUI.activeSelf) return UIState.Lose;
-        if (nightPickerUI != null && nightPickerUI.activeSelf) return UIState.NightPicker;
-        if (nightInfoUI != null && nightInfoUI.activeSelf) return UIState.NightInfo;
-        if (creditsUI.activeSelf) return UIState.CreditsUI;
-        if (controlsUI.activeSelf) return UIState.Controls;
+	private UIState GetCurrentUIState()
+	{
+		if (mainMenuUI.activeSelf) return UIState.MainMenu;
+		if (pauseMenuUI.activeSelf) return UIState.PauseMenu;
+		if (gameplayUI.activeSelf) return UIState.Gameplay;
+		if (optionsUI.activeSelf) return UIState.Options;
+		if (soundOptionsUI.activeSelf) return UIState.SoundOptions;
+		if (videoOptionsUI.activeSelf) return UIState.VideoOptions;
+		if (winUI.activeSelf) return UIState.Win;
+		if (loseUI.activeSelf) return UIState.Lose;
+		if (nightPickerUI != null && nightPickerUI.activeSelf) return UIState.NightPicker;
+		if (nightInfoUI != null && nightInfoUI.activeSelf) return UIState.NightInfo;
+		if (creditsUI.activeSelf) return UIState.CreditsUI;
+		if (controlsUI.activeSelf) return UIState.Controls;
 
-        return UIState.MainMenu;
-    }
+		return UIState.MainMenu;
+	}
 
-    public void OptionsBack()
+	public void OptionsBack()
 	{
 		if (uiStateHistory.Count > 1)
 		{
@@ -682,36 +707,36 @@ public class UIManager : MonoBehaviour
 
 	public void PauseGame()
 	{
-        if (winUI.activeSelf || loseUI.activeSelf)
-            return;
+		if (winUI.activeSelf || loseUI.activeSelf)
+			return;
 
-        isPaused = true;
-        playerControlActions.Disable();
-        ChangeUIState(UIState.PauseMenu);
-    }
+		isPaused = true;
+		playerControlActions.Disable();
+		ChangeUIState(UIState.PauseMenu);
+	}
 
-    public void ResumeGame()
-    {
-        if (winUI.activeSelf || loseUI.activeSelf)
-            return;
-
-        Input.ResetInputAxes();
-        StartCoroutine(PreventJumpOnResume());
-        ChangeUIState(UIState.Gameplay);
-        isPaused = false;
-    }
-
-    private IEnumerator PreventJumpOnResume()
-    {
-        playerControlActions.Disable();
-        yield return new WaitForSeconds(0.5f);
-        playerControlActions.Enable();
-    }
-
-    public void GoToMainMenu()
+	public void ResumeGame()
 	{
-        Time.timeScale = 1f;
-        if (IconManager.Instance != null)
+		if (winUI.activeSelf || loseUI.activeSelf)
+			return;
+
+		Input.ResetInputAxes();
+		StartCoroutine(PreventJumpOnResume());
+		ChangeUIState(UIState.Gameplay);
+		isPaused = false;
+	}
+
+	private IEnumerator PreventJumpOnResume()
+	{
+		playerControlActions.Disable();
+		yield return new WaitForSeconds(0.5f);
+		playerControlActions.Enable();
+	}
+
+	public void GoToMainMenu()
+	{
+		Time.timeScale = 1f;
+		if (IconManager.Instance != null)
 		{
 			IconManager.Instance.ClearAllIcons();
 		}
@@ -721,24 +746,24 @@ public class UIManager : MonoBehaviour
 		StartCoroutine(LoadMainMenuWithLoading());
 	}
 
-    private IEnumerator LoadMainMenuWithLoading()
-    {
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainMenu");
-        asyncLoad.allowSceneActivation = false;
+	private IEnumerator LoadMainMenuWithLoading()
+	{
+		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainMenu");
+		asyncLoad.allowSceneActivation = false;
 
-        while (!asyncLoad.isDone)
-        {
-            if (asyncLoad.progress >= 0.9f)
-                asyncLoad.allowSceneActivation = true;
+		while (!asyncLoad.isDone)
+		{
+			if (asyncLoad.progress >= 0.9f)
+				asyncLoad.allowSceneActivation = true;
 
-            yield return null;
-        }
+			yield return null;
+		}
 
-        ChangeUIStateWithLoading(UIState.MainMenu);
-        Time.timeScale = 1f;
-    }
+		ChangeUIStateWithLoading(UIState.MainMenu);
+		Time.timeScale = 1f;
+	}
 
-    public void GoToOptions()
+	public void GoToOptions()
 	{
 		ChangeUIState(UIState.Options);
 	}
@@ -770,8 +795,6 @@ public class UIManager : MonoBehaviour
 
 	public void WinGame()
 	{
-		//SoundManager.Instance.PlaySound("AlarmWin");
-
 		ActivityDirector director = FindObjectOfType<ActivityDirector>();
 		int activeNight = director != null ? director.GetActiveNight() : 0;
 
@@ -809,7 +832,14 @@ public class UIManager : MonoBehaviour
 		}
 
 		isPaused = true;
-		StartCoroutine(WinSequence());
+		if(activeNight == 2)
+		{
+			StartCoroutine(FinalWinSequence());
+		}
+		else
+		{
+			StartCoroutine(WinSequence());
+		}
 	}
 
 	private IEnumerator WinSequence()
@@ -824,18 +854,65 @@ public class UIManager : MonoBehaviour
 		{
 			EventSystem.current.SetSelectedGameObject(null);
 			EventSystem.current.SetSelectedGameObject(winFirstButton);
-			
+
 			Button button = winFirstButton.GetComponent<Button>();
 			if (button != null)
 			{
 				button.Select();
 				button.OnSelect(null);
-				
+
 				var glow = winFirstButton.GetComponent<UITextGlow>();
 				if (glow != null)
 				{
 					glow.OnSelect(null);
 				}
+			}
+		}
+	}
+
+	private IEnumerator FinalWinSequence()
+	{
+		ChangeUIState(UIState.FinalWin);
+
+		if(finalWinImageCanvasGroup != null)
+			finalWinImageCanvasGroup.alpha = 0f;
+		if(finalWinTextCanvasGroup != null)
+			finalWinTextCanvasGroup.alpha = 0f;
+
+		yield return new WaitForSecondsRealtime(3f);
+
+		float fadeDuration = 2f;
+		float timer = 0f;
+		while(timer < fadeDuration)
+		{
+			timer += Time.unscaledDeltaTime;
+			if(finalWinImageCanvasGroup != null)
+				finalWinImageCanvasGroup.alpha = Mathf.Lerp(0f, 1f, timer / fadeDuration);
+			yield return null;
+		}
+		if(finalWinImageCanvasGroup != null)
+			finalWinImageCanvasGroup.alpha = 1f;
+
+		timer = 0f;
+		while(timer < fadeDuration)
+		{
+			timer += Time.unscaledDeltaTime;
+			if(finalWinTextCanvasGroup != null)
+				finalWinTextCanvasGroup.alpha = Mathf.Lerp(0f, 1f, timer / fadeDuration);
+			yield return null;
+		}
+		if(finalWinTextCanvasGroup != null)
+			finalWinTextCanvasGroup.alpha = 1f;
+
+		if(finalWinFirstButton != null && finalWinFirstButton.activeInHierarchy)
+		{
+			EventSystem.current.SetSelectedGameObject(null);
+			EventSystem.current.SetSelectedGameObject(finalWinFirstButton);
+			Button button = finalWinFirstButton.GetComponent<Button>();
+			if (button != null)
+			{
+				button.Select();
+				button.OnSelect(null);
 			}
 		}
 	}
@@ -889,13 +966,13 @@ public class UIManager : MonoBehaviour
 		{
 			EventSystem.current.SetSelectedGameObject(null);
 			EventSystem.current.SetSelectedGameObject(loseFirstButton);
-			
+
 			Button button = loseFirstButton.GetComponent<Button>();
 			if (button != null)
 			{
 				button.Select();
 				button.OnSelect(null);
-				
+
 				var glow = loseFirstButton.GetComponent<UITextGlow>();
 				if (glow != null)
 				{
@@ -934,31 +1011,31 @@ public class UIManager : MonoBehaviour
 	public void StartGame()
 	{
 		ChangeUIState(UIState.NightPicker);
-		
+
 	}
 
-    private IEnumerator TransitionToState(UIState newState)
-    {
-        loadingScreen.SetActive(true);
-        CanvasGroup canvasGroup = loadingScreen.GetComponent<CanvasGroup>();
-        canvasGroup.alpha = 1f;
+	private IEnumerator TransitionToState(UIState newState)
+	{
+		loadingScreen.SetActive(true);
+		CanvasGroup canvasGroup = loadingScreen.GetComponent<CanvasGroup>();
+		canvasGroup.alpha = 1f;
 
-        yield return new WaitUntil(() => SceneManager.GetActiveScene().isLoaded);
+		yield return new WaitUntil(() => SceneManager.GetActiveScene().isLoaded);
 
-        ChangeUIState(newState);
+		ChangeUIState(newState);
 
-        float timer = 0f;
-        while (timer < loadingFadeDuration)
-        {
-            timer += Time.deltaTime;
-            canvasGroup.alpha = Mathf.Lerp(1f, 0f, timer / loadingFadeDuration);
-            yield return null;
-        }
+		float timer = 0f;
+		while (timer < loadingFadeDuration)
+		{
+			timer += Time.deltaTime;
+			canvasGroup.alpha = Mathf.Lerp(1f, 0f, timer / loadingFadeDuration);
+			yield return null;
+		}
 
-        loadingScreen.SetActive(false);
-    }
+		loadingScreen.SetActive(false);
+	}
 
-    public void ChangeUIStateWithLoading(UIState newState)
+	public void ChangeUIStateWithLoading(UIState newState)
 	{
 		StartCoroutine(TransitionToState(newState));
 	}
@@ -1022,8 +1099,8 @@ public class UIManager : MonoBehaviour
 	private IEnumerator LoadMainAndShowNightInfo(int night)
 	{
 		Time.timeScale = 1f;
-        isPaused = false;
-        SceneManager.LoadScene("Main");
+		isPaused = false;
+		SceneManager.LoadScene("Main");
 		ChangeUIStateWithLoading(UIState.NightInfo);
 
 		yield return null;
@@ -1057,7 +1134,7 @@ public class UIManager : MonoBehaviour
 				nightInfoText.text = "Sunday, 12:00am";
 				break;
 			default:
-				nightInfoText.text = "Bro what night are you on?";
+				nightInfoText.text = "?, 12:00am";
 				break;
 		}
 
@@ -1164,24 +1241,24 @@ public class UIManager : MonoBehaviour
 		ToggleEffect<Bloom>(enabled);
 	}
 
-    public void UpdateInputBasedSensitivity()
-    {
-        PlayerController playerController = FindObjectOfType<PlayerController>();
-        if (playerController != null)
-        {
-            float adjustedSensitivity = wasUsingController ? sensitivity * 4f : sensitivity;
-            playerController.SetSensitivity(adjustedSensitivity);
-        }
-    }
+	public void UpdateInputBasedSensitivity()
+	{
+		PlayerController playerController = FindObjectOfType<PlayerController>();
+		if (playerController != null)
+		{
+			float adjustedSensitivity = wasUsingController ? sensitivity * 4f : sensitivity;
+			playerController.SetSensitivity(adjustedSensitivity);
+		}
+	}
 
-    public void SetSensitivity(float value)
-    {
-        sensitivity = Mathf.Clamp(value, 0.01f, 1f);
-        PlayerPrefs.SetFloat("Sensitivity", sensitivity);
-        UpdateInputBasedSensitivity();
-    }
+	public void SetSensitivity(float value)
+	{
+		sensitivity = Mathf.Clamp(value, 0.01f, 1f);
+		PlayerPrefs.SetFloat("Sensitivity", sensitivity);
+		UpdateInputBasedSensitivity();
+	}
 
-    public void SetResolution(int index)
+	public void SetResolution(int index)
 	{
 		Resolution selectedResolution = resolutions[index];
 		Screen.SetResolution(selectedResolution.width, selectedResolution.height, Screen.fullScreen);
@@ -1198,9 +1275,9 @@ public class UIManager : MonoBehaviour
 
 	private void LoadSettings()
 	{
-        // Motion Blur as Slider
-        SetSensitivity(sensitivity);
-        motionBlurIntensity = PlayerPrefs.GetFloat("MotionBlurIntensity", 0f);
+		// Motion Blur as Slider
+		SetSensitivity(sensitivity);
+		motionBlurIntensity = PlayerPrefs.GetFloat("MotionBlurIntensity", 0f);
 		if (motionBlurSlider != null)
 		{
 			motionBlurSlider.value = motionBlurIntensity;
@@ -1315,25 +1392,25 @@ public class UIManager : MonoBehaviour
 		SceneManager.sceneLoaded -= OnSceneLoaded;
 	}
 
-    public void ToggleInputMethod()
-    {
-        wasUsingController = !wasUsingController;
-        
-        if (wasUsingController)
-        {
-            if (allowCursorToggle)
-            {
-                SetCursorState(false);
-            }
-            SelectDefaultButton(GetCurrentUIState());
-        }
-        else
-        {
-            if (allowCursorToggle)
-            {
-                SetCursorState(true);
-            }
-            EventSystem.current.SetSelectedGameObject(null);
-        }
-    }
+	public void ToggleInputMethod()
+	{
+		wasUsingController = !wasUsingController;
+
+		if (wasUsingController)
+		{
+			if (allowCursorToggle)
+			{
+				SetCursorState(false);
+			}
+			SelectDefaultButton(GetCurrentUIState());
+		}
+		else
+		{
+			if (allowCursorToggle)
+			{
+				SetCursorState(true);
+			}
+			EventSystem.current.SetSelectedGameObject(null);
+		}
+	}
 }
