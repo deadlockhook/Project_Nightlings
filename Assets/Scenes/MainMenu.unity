@@ -18792,6 +18792,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1431082452554787820, guid: f38aaec9c20b5734aa389e00540bdbf2,
+        type: 3}
+      propertyPath: m_text
+      value: Lead Artist - thelittlebear
+      objectReference: {fileID: 0}
     - target: {fileID: 2084742272529433179, guid: f38aaec9c20b5734aa389e00540bdbf2,
         type: 3}
       propertyPath: m_Pivot.x
@@ -18892,10 +18897,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2502471291726654835, guid: f38aaec9c20b5734aa389e00540bdbf2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3746139352366900139, guid: f38aaec9c20b5734aa389e00540bdbf2,
+        type: 3}
+      propertyPath: m_text
+      value: Project Manager - NitroWolf902
+      objectReference: {fileID: 0}
     - target: {fileID: 4339651990956556867, guid: f38aaec9c20b5734aa389e00540bdbf2,
         type: 3}
       propertyPath: m_Name
       value: UIManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6644715633151797020, guid: f38aaec9c20b5734aa389e00540bdbf2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7342520046835136798, guid: f38aaec9c20b5734aa389e00540bdbf2,
+        type: 3}
+      propertyPath: m_text
+      value: 'Lead Game Designer - Armanlot
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 8069612835986551144, guid: f38aaec9c20b5734aa389e00540bdbf2,
+        type: 3}
+      propertyPath: m_text
+      value: Lead Programmer - Timefallc
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
