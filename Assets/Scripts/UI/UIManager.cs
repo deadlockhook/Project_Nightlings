@@ -45,6 +45,7 @@ public class UIManager : MonoBehaviour
 		FinalWin,
 		Lose,
 		NightPicker,
+		DifficultySelection,
 		NightInfo,
 		CreditsUI,
 		Controls
@@ -86,6 +87,20 @@ public class UIManager : MonoBehaviour
 	public GameObject nightPickerUI;
 	public GameObject nightInfoUI;
 
+	[Header("Difficulty Selection")]
+	public GameObject difficultySelectionUI;
+	[SerializeField] private GameObject difficultySelectionFirstButton;
+	[SerializeField] private TextMeshProUGUI difficultyDescriptionText;
+
+	private readonly string[] difficultyDescriptions = new string[]
+	{
+		"Standard difficulty",
+		"Nightlings are more aggressive",
+		"Nightlings are even more aggressive, less toys spawn",
+		"Extremely aggressive nightlings, even less toys, lower stamina, no activity icons",
+		"Nightlings are relentless, almost no toys, very low stamina, no candy, no activity icons, very dark"
+	};
+
 	[Header("DefaultButtons")]
 	[SerializeField] private GameObject mainMenuFirstButton;
 	[SerializeField] private GameObject pauseMenuFirstButton;
@@ -107,6 +122,9 @@ public class UIManager : MonoBehaviour
 
 	[Header("UI AudioSource")]
 	public AudioSource audioSource;
+
+	private int pendingNightIndex;
+	public static int SelectedDifficulty {get; private set;}
 
 	//Singleton
 	private void Awake()
@@ -220,6 +238,7 @@ public class UIManager : MonoBehaviour
 			case UIState.Win: return winFirstButton;
 			case UIState.Lose: return loseFirstButton;
 			case UIState.NightPicker: return nightPickerFirstButton;
+			case UIState.DifficultySelection: return difficultySelectionFirstButton;
 			case UIState.CreditsUI: return creditsFirstButton;
 			case UIState.Controls: return controlsFirstButton;
 			default: return null;
@@ -273,6 +292,7 @@ public class UIManager : MonoBehaviour
 		controlsUI.SetActive(false);
 		if (nightPickerUI != null) nightPickerUI.SetActive(false);
 		if (nightInfoUI != null) nightInfoUI.SetActive(false);
+		if (difficultySelectionUI != null) difficultySelectionUI.SetActive(false);
 		if (finalWinUI != null) finalWinUI.SetActive(false);
 	}
 
@@ -353,6 +373,12 @@ public class UIManager : MonoBehaviour
 				Time.timeScale = 0f;
 				nightPickerUI.SetActive(true);
 				StartCoroutine(SelectDefaultButtonAfterFrame(UIState.NightPicker));
+				break;
+			case UIState.DifficultySelection:
+				allowCursorToggle = true;
+				Time.timeScale = 0f;
+				difficultySelectionUI.SetActive(true);
+				StartCoroutine(SelectDefaultButtonAfterFrame(UIState.DifficultySelection));
 				break;
 			case UIState.NightInfo:
 				LoadSettings();
@@ -1089,17 +1115,23 @@ public class UIManager : MonoBehaviour
 			return;
 		}
 
-		if(night == 0 && ControlHintManager.Instance != null)
+		pendingNightIndex = night;
+		ChangeUIState(UIState.DifficultySelection);
+	}
+
+	public void DifficultySelected(int difficulty)
+	{
+		SelectedDifficulty = difficulty;
+		PlayerPrefs.SetInt("SelectedDifficulty", difficulty);
+		if (pendingNightIndex == 0 && ControlHintManager.Instance != null)
 		{
 			ControlHintManager.Instance.ResetControlHints();
 		}
-
-		if (HintManager.Instance != null)
+		/*if (HintManager.Instance != null)
 		{
 			HintManager.Instance.ResetGameHints();
-		}
-
-		StartCoroutine(LoadMainAndShowNightInfo(night));
+		}*/
+		StartCoroutine(LoadMainAndShowNightInfo(pendingNightIndex));
 	}
 
 	private IEnumerator LoadMainAndShowNightInfo(int night)
@@ -1418,5 +1450,17 @@ public class UIManager : MonoBehaviour
 			}
 			EventSystem.current.SetSelectedGameObject(null);
 		}
+	}
+
+	public void ShowDifficultyDescription(int difficulty)
+	{
+		if (difficultyDescriptionText != null && difficulty >= 0 && difficulty < difficultyDescriptions.Length)
+			difficultyDescriptionText.text = difficultyDescriptions[difficulty];
+	}
+
+	public void ClearDifficultyDescription()
+	{
+		if (difficultyDescriptionText != null)
+			difficultyDescriptionText.text = string.Empty;
 	}
 }

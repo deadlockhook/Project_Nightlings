@@ -489,6 +489,13 @@ public class PlayerController : MonoBehaviour
 		transform.localPosition = lastSpawnPosition;
 	}
 
+	public void ResetStaminaToMax()
+	{
+		currentStamina = maxStamina;
+		staminaDepleted = false;
+		staminaCoolDownTimer = 0f;
+	}
+
 	public bool EatCandy()
 	{
 		if (isSugarRushActive)

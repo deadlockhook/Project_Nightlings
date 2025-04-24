@@ -61,8 +61,12 @@ public class ActivityDirector : MonoBehaviour
     private int lastActivatedWindow = -1;
     private int lastResetWindow = -1;
 
+    private bool iconsEnabled = true;
+    private Color originalAmbientLight;
+
     void Start()
     {
+        originalAmbientLight = RenderSettings.ambientLight;
         uiManager = FindObjectOfType<UIManager>();
         playerController = FindObjectOfType<PlayerController>();
         soundManager = SoundManager.Instance;
@@ -194,8 +198,11 @@ public class ActivityDirector : MonoBehaviour
         petdoorTimeLimits.SelectRange();
         petdoorEventObject.gameObj.GetComponent<PetDoorActivity>().ActivityTriggerStart();
         int iconID = 0;
-        IconManager.Instance.RegisterIcon(iconID, petdoorEventObject.gameObj.transform.position, IconType.Door);
-        petDoorIcon = IconManager.Instance.GetIcon(iconID);
+        if (iconsEnabled)
+        {
+            IconManager.Instance.RegisterIcon(iconID, petdoorEventObject.gameObj.transform.position, IconType.Door);
+            petDoorIcon = IconManager.Instance.GetIcon(iconID);
+        }
         HintManager.Instance.DisplayGameHint(HintType.PetDoor);
     }
 
@@ -235,8 +242,11 @@ public class ActivityDirector : MonoBehaviour
         basementTimeLimits.SelectRange();
         basementHatchEventObject.gameObj.GetComponent<BasementHatch>().ActivityTriggerStart();
         int iconID = 1;
-        IconManager.Instance.RegisterIcon(iconID, basementHatchEventObject.gameObj.transform.position, IconType.Basement);
-        basementHatchIcon = IconManager.Instance.GetIcon(iconID);
+        if (iconsEnabled)
+        {
+            IconManager.Instance.RegisterIcon(iconID, basementHatchEventObject.gameObj.transform.position, IconType.Basement);
+            basementHatchIcon = IconManager.Instance.GetIcon(iconID);
+        }
         HintManager.Instance.DisplayGameHint(HintType.BasementHatch);
     }
 
@@ -294,9 +304,11 @@ public class ActivityDirector : MonoBehaviour
         windowEventObjects[activityIndex].gameObj.GetComponent<WindowsActivity>().ActivityTriggerStart();
 
         int iconID = 100 + activityIndex;
-        IconManager.Instance.RegisterIcon(iconID, windowEventObjects[activityIndex].gameObj.transform.position, IconType.Window);
-        windowIconIDs[activityIndex] = iconID;
-
+        if (iconsEnabled)
+        {
+            IconManager.Instance.RegisterIcon(iconID, windowEventObjects[activityIndex].gameObj.transform.position, IconType.Window);
+            windowIconIDs[activityIndex] = iconID;
+        }
         HintManager.Instance.DisplayGameHint(HintType.Window);
 
         windowsTimeLimits.lastUpdateTime = gTime.currentTime;
@@ -354,7 +366,7 @@ public class ActivityDirector : MonoBehaviour
 
     private void OnFireplaceActivityUpdate(int activityIndex)
     {
-         fireplaceTimeLimits.SelectRange();
+        fireplaceTimeLimits.SelectRange();
         if (UIManager.Instance == null || !UIManager.Instance.IsInGame())
         {
             if (IconManager.Instance.IsIconRegistered(2))
@@ -376,7 +388,7 @@ public class ActivityDirector : MonoBehaviour
 
         if (progress >= 0.5f)
         {
-            if (!IconManager.Instance.IsIconRegistered(2))
+            if (iconsEnabled && !IconManager.Instance.IsIconRegistered(2))
             {
                 IconManager.Instance.RegisterIcon(2, fireplaceEventObject.gameObj.transform.position, IconType.Fireplace);
                 fireplaceIcon = IconManager.Instance.GetIcon(2);
@@ -416,8 +428,11 @@ public class ActivityDirector : MonoBehaviour
         skylightTimeLimits.SelectRange();
         skylightEventObject.gameObj.GetComponent<SkylightActivity>().ActivityTriggerStart();
         int iconID = 3;
-        IconManager.Instance.RegisterIcon(iconID, skylightEventObject.gameObj.transform.position, IconType.Window);
-        skylightIcon = IconManager.Instance.GetIcon(iconID);
+        if (iconsEnabled)
+        {
+            IconManager.Instance.RegisterIcon(iconID, skylightEventObject.gameObj.transform.position, IconType.Window);
+            skylightIcon = IconManager.Instance.GetIcon(iconID);
+        }
         HintManager.Instance.DisplayGameHint(HintType.Skylight);
     }
 
@@ -457,8 +472,11 @@ public class ActivityDirector : MonoBehaviour
         toiletTimeLimits.SelectRange();
         toiletEventObject.gameObj.GetComponent<ToiletActivity>().ActivityTriggerStart();
         int iconID = 4;
-        IconManager.Instance.RegisterIcon(iconID, toiletEventObject.gameObj.transform.position, IconType.Toilet);
-        toiletIcon = IconManager.Instance.GetIcon(iconID);
+        if (iconsEnabled)
+        {
+            IconManager.Instance.RegisterIcon(iconID, toiletEventObject.gameObj.transform.position, IconType.Toilet);
+            toiletIcon = IconManager.Instance.GetIcon(iconID);
+        }
         HintManager.Instance.DisplayGameHint(HintType.Toilet);
     }
 
@@ -596,6 +614,8 @@ public class ActivityDirector : MonoBehaviour
         nightActivity[2].Deactivate(activeActivites);
         nightActivity[0].Deactivate(activeActivites);
 
+        ApplyDifficultySettings(UIManager.SelectedDifficulty);
+
         gTime.currentTime = 0f;
         nightHasStarted = true;
 
@@ -730,5 +750,79 @@ public class ActivityDirector : MonoBehaviour
     public int GetActiveNight()
     {
         return activeNight;
+    }
+
+    private void ApplyDifficultySettings(int difficulty)
+    {
+        iconsEnabled = difficulty < 3;
+        float timeFactor = 1f;
+        float toyFactor = 1f;
+        float staminaFactor = 1f;
+        bool candyZero = false;
+
+        switch (difficulty)
+        {
+            case 1: // Hard
+                timeFactor = 0.75f;
+                break;
+            case 2: // Very Hard
+                timeFactor = 0.6f;
+                toyFactor = 0.8f;
+                break;
+            case 3: // Extreme
+                timeFactor = 0.5f;
+                toyFactor = 0.6f;
+                staminaFactor = 0.7f;
+                break;
+            case 4: // Nightmare
+                timeFactor = 0.4f;
+                toyFactor = 0.5f;
+                staminaFactor = 0.5f;
+                candyZero = true;
+                break;
+            default:
+                break;
+        }
+
+        windowsTimeLimits.rangeStart *= timeFactor;
+        windowsTimeLimits.rangeEnd   *= timeFactor;
+        windowsTimeLimits.timeLimit  *= timeFactor;
+
+        petdoorTimeLimits.rangeStart *= timeFactor;
+        petdoorTimeLimits.rangeEnd   *= timeFactor;
+        petdoorTimeLimits.timeLimit  *= timeFactor;
+
+        basementTimeLimits.rangeStart *= timeFactor;
+        basementTimeLimits.rangeEnd   *= timeFactor;
+        basementTimeLimits.timeLimit  *= timeFactor;
+
+        fireplaceTimeLimits.rangeStart *= timeFactor;
+        fireplaceTimeLimits.rangeEnd   *= timeFactor;
+        fireplaceTimeLimits.timeLimit  *= timeFactor;
+
+        skylightTimeLimits.rangeStart *= timeFactor;
+        skylightTimeLimits.rangeEnd   *= timeFactor;
+        skylightTimeLimits.timeLimit  *= timeFactor;
+
+        toiletTimeLimits.rangeStart *= timeFactor;
+        toiletTimeLimits.rangeEnd   *= timeFactor;
+        toiletTimeLimits.timeLimit  *= timeFactor;
+
+        minToySpawnLocations = Mathf.Max(0, Mathf.RoundToInt(minToySpawnLocations * toyFactor));
+        maxToySpawnLocations = Mathf.Max(0, Mathf.RoundToInt(maxToySpawnLocations * toyFactor));
+
+        if (candyZero)
+            maxCandySpawns = 0;
+
+        if (playerController != null)
+        {
+            playerController.maxStamina *= staminaFactor;
+            playerController.ResetStaminaToMax();
+        }
+
+        if (difficulty == 4)
+            RenderSettings.ambientLight = Color.black;
+        else
+            RenderSettings.ambientLight = originalAmbientLight;
     }
 }
