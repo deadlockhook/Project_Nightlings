@@ -96,7 +96,7 @@ public class UIManager : MonoBehaviour
 	{
 		"Standard difficulty",
 		"Nightlings are more aggressive",
-		"Nightlings are even more aggressive, less toys spawn",
+		"Nightlings are even more aggressive, less toys",
 		"Extremely aggressive nightlings, even less toys, lower stamina, no activity icons",
 		"Nightlings are relentless, almost no toys, very low stamina, no candy, no activity icons, very dark"
 	};
@@ -729,6 +729,11 @@ public class UIManager : MonoBehaviour
 	public void BackFromNightPicker()
 	{
 		ChangeUIState(UIState.MainMenu);
+	}
+
+	public void GoToNightPicker()
+	{
+		ChangeUIState(UIState.NightPicker);
 	}
 
 	public void PauseGame()
