@@ -814,6 +814,7 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
+    PS4: STEAMWORKS_NET
     Standalone: STEAMWORKS_NET
   additionalCompilerArguments: {}
   platformArchitecture: {}
